@@ -12,16 +12,19 @@ import { TitleEntry } from './catalog';
 import { combineLens, couchNames } from './lens/lens';
 import { PEOPLE, Person, personById } from './lens/people';
 import CouchScreen from './screens/CouchScreen';
+import NoticeScreen from './screens/NoticeScreen';
 import PlayerScreen from './screens/PlayerScreen';
 import TitleScreen from './screens/TitleScreen';
+import { hasSeenNotice, markNoticeSeen } from './storage';
 import { createTheme } from './styles/theme';
 
-type Route = 'couch' | 'titles' | 'player';
+type Route = 'notice' | 'about' | 'couch' | 'titles' | 'player';
 
 const App = () => {
   const hideSplashScreen = useHideSplashScreenCallback();
   const theme = useMemo(() => createTheme(), []);
-  const [route, setRoute] = useState<Route>('couch');
+  // Null until the first-run check resolves, so the notice never flashes after the couch screen.
+  const [route, setRoute] = useState<Route | null>(null);
   const [couch, setCouch] = useState<string[]>([]);
   const [title, setTitle] = useState<TitleEntry | null>(null);
 
@@ -32,21 +35,40 @@ const App = () => {
   const lens = useMemo(() => combineLens(people), [people]);
 
   useEffect(() => {
-    hideSplashScreen();
-  }, [hideSplashScreen]);
+    let live = true;
+    hasSeenNotice().then((seen) => {
+      if (live) {
+        setRoute(seen ? 'couch' : 'notice');
+      }
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
 
-  const routeRef = useRef<Route>(route);
+  useEffect(() => {
+    if (route !== null) {
+      hideSplashScreen();
+    }
+  }, [route, hideSplashScreen]);
+
+  const routeRef = useRef<Route | null>(route);
   routeRef.current = route;
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
-      if (routeRef.current === 'titles') {
+      if (routeRef.current === 'titles' || routeRef.current === 'about') {
         setRoute('couch');
         return true;
       }
-      // The couch screen leaves the app; the player handles its own back first.
+      // The couch and first-run screens leave the app; the player handles its own back first.
       return routeRef.current === 'player';
     });
     return () => sub.remove();
+  }, []);
+
+  const acceptNotice = useCallback(() => {
+    markNoticeSeen();
+    setRoute('couch');
   }, []);
 
   const toggle = useCallback((id: string) => {
@@ -68,12 +90,19 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <>
+        {route === 'notice' && (
+          <NoticeScreen mode="first-run" onDone={acceptNotice} />
+        )}
+        {route === 'about' && (
+          <NoticeScreen mode="about" onDone={() => setRoute('couch')} />
+        )}
         {route === 'couch' && (
           <CouchScreen
             selected={couch}
             lens={lens}
             onToggle={toggle}
             onContinue={() => setRoute('titles')}
+            onAbout={() => setRoute('about')}
           />
         )}
         {route === 'titles' && (

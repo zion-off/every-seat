@@ -12,9 +12,16 @@ type Props = {
   lens: LensSettings;
   onToggle: (id: string) => void;
   onContinue: () => void;
+  onAbout: () => void;
 };
 
-const CouchScreen = ({ selected, lens, onToggle, onContinue }: Props) => {
+const CouchScreen = ({
+  selected,
+  lens,
+  onToggle,
+  onContinue,
+  onAbout,
+}: Props) => {
   const active = describeLens(lens);
   return (
     <View style={styles.root}>
@@ -43,6 +50,15 @@ const CouchScreen = ({ selected, lens, onToggle, onContinue }: Props) => {
         accessibilityLabel="Continue to the films"
         onPress={onContinue}
       />
+      <View style={styles.about}>
+        <Button
+          label="About"
+          variant="secondary"
+          size="md"
+          accessibilityLabel="About Every Seat and the not-a-medical-device notice"
+          onPress={onAbout}
+        />
+      </View>
     </View>
   );
 };
@@ -70,6 +86,9 @@ const styles = StyleSheet.create({
     fontSize: scaleUxToDp(34),
     marginTop: scaleUxToDp(48),
     marginBottom: scaleUxToDp(40),
+  },
+  about: {
+    marginTop: scaleUxToDp(24),
   },
 });
 
