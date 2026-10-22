@@ -1,6 +1,12 @@
 import { KeplerVideoSurfaceView } from '@amazon-devices/react-native-w3cmedia';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import {
+  BackHandler,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import DimOverlay from '../components/DimOverlay';
 import { PlaybackEngine } from '../engine/PlaybackEngine';
 import { LensSettings } from '../engine/types';
@@ -10,9 +16,10 @@ import { COLORS } from '../styles/palette';
 type Props = {
   title: string;
   lens: LensSettings;
+  onExit: () => void;
 };
 
-const PlayerScreen = ({ title, lens }: Props) => {
+const PlayerScreen = ({ title, lens, onExit }: Props) => {
   const { width } = useWindowDimensions();
   const scale = width / 1920;
   const session = useMemo(() => new MediaSession(), []);
@@ -23,6 +30,14 @@ const PlayerScreen = ({ title, lens }: Props) => {
   useEffect(() => {
     engine.setLens(lens);
   }, [engine, lens]);
+
+  useEffect(() => {
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+      onExit();
+      return true;
+    });
+    return () => sub.remove();
+  }, [onExit]);
 
   useEffect(() => {
     const off = session.addListener((name) => {
