@@ -1,0 +1,12 @@
+WEBVTT
+
+NOTE everyseat-header
+{"version":1,"title":"tears-of-steel","analyzer":"hand-written","source_sha256":"efa9062d9cdb7a338e40ad530dfdf234806743f29ae6a1a136b97ece4e588e8f","fps":24,"iris":{"verdict":"PASS_WITH_WARNING"}}
+
+tos-loud-1
+00:07:43.375 --> 00:07:46.500
+{"id":"tos-loud-1","type":"loud","start":463.375,"end":466.5,"anchor":"onset","intensity":5,"preview":"A sudden, very loud crash.","evidence":{"onset_jump_db":43.0,"picture_lag_s":1.3}}
+
+tos-scare-1
+00:07:43.375 --> 00:07:46.500
+{"id":"tos-scare-1","type":"scare","start":463.375,"end":466.5,"anchor":"onset","intensity":4,"lead_s":5,"preview":"A sudden crash, then something large bursts in.","evidence":{"onset_jump_db":43.0,"picture_lag_s":1.3}}

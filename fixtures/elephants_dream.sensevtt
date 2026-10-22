@@ -1,0 +1,8 @@
+WEBVTT
+
+NOTE everyseat-header
+{"version":1,"title":"elephants-dream","analyzer":"hand-written","source_sha256":"6fc295e0e92835316ec95929ccfc664b05ed2434f673e6f5e684f98f7558a547","fps":24,"iris":{"verdict":"FAIL","max_luminance_swing":0.33}}
+
+ed-flash-1
+00:06:17.500 --> 00:06:20.000
+{"id":"ed-flash-1","type":"flash","start":377.5,"end":380.0,"anchor":"iris","intensity":4,"pre_s":1.5,"post_s":1.0,"preview":"Rapid bright flashing for a few seconds."}

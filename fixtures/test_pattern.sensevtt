@@ -1,0 +1,21 @@
+WEBVTT
+
+NOTE everyseat-header
+{"version":1,"title":"test-pattern","analyzer":"hand-written","source_sha256":"0000000000000000000000000000000000000000000000000000000000000000","fps":30,"iris":{"verdict":"NOT_RUN"}}
+
+NOTE One cue of each type for the generated 120 s timecode test stream.
+
+tp-flash-1
+00:00:20.000 --> 00:00:23.000
+{"id":"tp-flash-1","type":"flash","start":20.0,"end":23.0,"anchor":"iris","intensity":3,"preview":"Test pattern: the screen alternates between black and white."}
+
+tp-loud-1
+00:00:45.000 --> 00:00:48.000
+{"id":"tp-loud-1","type":"loud","start":45.0,"end":48.0,"anchor":"onset","intensity":4,"preview":"Test pattern: the tone jumps to a loud level."}
+
+tp-scare-1
+00:01:10.000 --> 00:01:12.000
+{"id":"tp-scare-1","type":"scare","start":70.0,"end":72.0,"anchor":"cut","intensity":3,"lead_s":5,"preview":"Test pattern: a sudden cut to a red frame."}
+
+00:01:35.000 --> 00:01:40.000
+{"id":"tp-ad-1","type":"ad","start":95.0,"end":100.0,"anchor":"approx","intensity":1,"preview":"Test pattern: a spoken description of the on-screen timecode.","audio_ref":{"uri":"ad/tp-ad-1.m4a","duration_s":4.5}}
