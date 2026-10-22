@@ -88,7 +88,11 @@ const App = () => {
           <PlayerScreen
             key={title.folder}
             title={title.folder}
+            name={title.name}
             lens={lens}
+            selected={couch}
+            couchLabel={couchNames(people)}
+            onToggle={toggle}
             onExit={leavePlayer}
           />
         )}
