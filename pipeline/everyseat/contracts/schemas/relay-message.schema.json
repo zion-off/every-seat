@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "relay-message.schema.json",
+  "title": "Relay message",
+  "description": "One newline-delimited JSON message on the relay WebSocket, discriminated by `t`.",
+  "type": "object",
+  "required": ["t"],
+  "properties": {
+    "t": {
+      "enum": ["hello", "ping", "pong", "lens", "clock", "sync?", "sync!"]
+    }
+  },
+  "allOf": [
+    {
+      "if": { "required": ["t"], "properties": { "t": { "const": "hello" } } },
+      "then": { "$ref": "#/$defs/hello" }
+    },
+    {
+      "if": { "required": ["t"], "properties": { "t": { "const": "ping" } } },
+      "then": { "$ref": "#/$defs/ping" }
+    },
+    {
+      "if": { "required": ["t"], "properties": { "t": { "const": "pong" } } },
+      "then": { "$ref": "#/$defs/pong" }
+    },
+    {
+      "if": { "required": ["t"], "properties": { "t": { "const": "lens" } } },
+      "then": { "$ref": "#/$defs/lens" }
+    },
+    {
+      "if": { "required": ["t"], "properties": { "t": { "const": "clock" } } },
+      "then": { "$ref": "#/$defs/clock" }
+    },
+    {
+      "if": { "required": ["t"], "properties": { "t": { "const": "sync?" } } },
+      "then": { "$ref": "#/$defs/syncRequest" }
+    },
+    {
+      "if": { "required": ["t"], "properties": { "t": { "const": "sync!" } } },
+      "then": { "$ref": "#/$defs/syncReply" }
+    }
+  ],
+  "$defs": {
+    "hello": {
+      "description": "Client to relay: connect and declare a role.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t", "role", "household"],
+      "properties": {
+        "t": { "const": "hello" },
+        "role": { "enum": ["tv", "phone", "companion"] },
+        "household": { "type": "string" }
+      }
+    },
+    "ping": {
+      "description": "Heartbeat, either direction, at least every 25 s.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t"],
+      "properties": {
+        "t": { "const": "ping" }
+      }
+    },
+    "pong": {
+      "description": "Heartbeat reply.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t"],
+      "properties": {
+        "t": { "const": "pong" }
+      }
+    },
+    "lens": {
+      "description": "Companion to TV: the people on the couch and the combined lens.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t", "people", "settings"],
+      "properties": {
+        "t": { "const": "lens" },
+        "people": {
+          "type": "array",
+          "items": { "$ref": "lens.schema.json#/$defs/person" }
+        },
+        "settings": {
+          "description": "The combined, most protective lens.",
+          "$ref": "lens.schema.json#/$defs/settings"
+        }
+      }
+    },
+    "clock": {
+      "description": "TV to phone: sent on play, pause, seek, rate change, and every 2 s.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t", "mediaTime", "wallClock", "rate", "title"],
+      "properties": {
+        "t": { "const": "clock" },
+        "mediaTime": {
+          "description": "Media position in seconds.",
+          "type": "number"
+        },
+        "wallClock": {
+          "description": "Sender wall clock in milliseconds since the Unix epoch.",
+          "type": "integer"
+        },
+        "rate": {
+          "description": "Playback rate; 0 when paused.",
+          "type": "number"
+        },
+        "title": {
+          "description": "Title id.",
+          "type": "string"
+        }
+      }
+    },
+    "syncRequest": {
+      "description": "Phone to relay: clock offset probe.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t", "c"],
+      "properties": {
+        "t": { "const": "sync?" },
+        "c": {
+          "description": "Client time in milliseconds when the probe was sent.",
+          "type": "integer"
+        }
+      }
+    },
+    "syncReply": {
+      "description": "Relay to phone: echoes the probe time with the relay's time.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t", "c", "s"],
+      "properties": {
+        "t": { "const": "sync!" },
+        "c": {
+          "description": "The client time from the probe.",
+          "type": "integer"
+        },
+        "s": {
+          "description": "Relay time in milliseconds when the probe arrived.",
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

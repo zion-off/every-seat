@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lens.schema.json",
+  "title": "Comfort lens settings",
+  "description": "Comfort settings for one person, or the combined (most protective) lens for everyone on the couch. These are preferences, never diagnoses.",
+  "$ref": "#/$defs/settings",
+  "$defs": {
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["flashes", "loud", "scares", "ad"],
+      "properties": {
+        "flashes": {
+          "type": "string",
+          "enum": ["soften", "off"]
+        },
+        "loud": {
+          "type": "string",
+          "enum": ["cap", "off"]
+        },
+        "scares": {
+          "type": "string",
+          "enum": ["headsup", "off"]
+        },
+        "ad": {
+          "type": "string",
+          "enum": ["on", "off"]
+        }
+      }
+    },
+    "person": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "settings"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "settings": {
+          "$ref": "#/$defs/settings"
+        }
+      }
+    }
+  }
+}

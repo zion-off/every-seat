@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sensevtt-header.schema.json",
+  "title": "SenseVTT file header",
+  "description": "The JSON line that follows the `NOTE everyseat-header` block of a SenseVTT file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "title", "analyzer", "source_sha256", "fps", "iris"],
+  "properties": {
+    "version": {
+      "description": "Format version.",
+      "const": 1
+    },
+    "title": {
+      "description": "Title id (slug).",
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "analyzer": {
+      "description": "Name and version of whatever produced the file.",
+      "type": "string"
+    },
+    "source_sha256": {
+      "description": "SHA-256 of the analyzed source file, lowercase hex.",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fps": {
+      "description": "Integer constant frame rate of the frame grid all cue times are snapped to.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 120
+    },
+    "iris": {
+      "description": "Photosensitive-epilepsy analysis verdict summary.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verdict"],
+      "properties": {
+        "verdict": {
+          "enum": ["PASS", "PASS_WITH_WARNING", "FAIL", "NOT_RUN"]
+        },
+        "max_luminance_swing": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}
