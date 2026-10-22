@@ -9,7 +9,9 @@
   },
   "scripts": {
     "start": "node src/server.js",
-    "lint": "eslint . && tsc --noEmit"
+    "web:install": "npm --prefix web install",
+    "web:build": "npm --prefix web run build",
+    "lint": "eslint . && tsc --noEmit && npm --prefix web run lint"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.1156.0",
