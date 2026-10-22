@@ -1,4 +1,4 @@
-"""Flash analysis with EA IRIS, run in a local linux/amd64 container.
+"""Flash analysis with EA IRIS, run in a local linux/amd64 container (or a Fargate task).
 
 IRIS always exits 0, so the verdict comes from `result.json`. It rotates and appends
 `framedata*.csv`, so the output directory is cleared before every run and all the CSV parts are
@@ -18,6 +18,7 @@ from everyseat.detectors import tools
 from everyseat.detectors.proxy import Proxy
 
 IMAGE_ENV = "EVERYSEAT_IRIS_IMAGE"
+BACKEND_ENV = "EVERYSEAT_IRIS_BACKEND"
 DEFAULT_IMAGE = "iris-cpp:1.1.0"
 MERGE_GAP_S = 0.5
 
@@ -153,14 +154,9 @@ def _elapsed(text: str) -> float:
     return int(hours) * 3600 + int(minutes) * 60 + float(seconds)
 
 
-def run_iris(proxy: Proxy, out_dir: Path) -> IrisResult:
-    """Analyze the proxy and return the verdict plus the flagged runs.
-
-    The proxy must be at the source resolution: a resized proxy changes the verdict.
-    """
+def _run_docker(media: Path, out_dir: Path) -> None:
     image = image_name()
     _check_image(image)
-    media = proxy.path.resolve()
     _clear(out_dir, keep=media)
     command = [
         *("run", "--rm", "--platform", "linux/amd64", "--network", "none"),
@@ -170,10 +166,35 @@ def run_iris(proxy: Proxy, out_dir: Path) -> IrisResult:
     ]
     result = _docker(*command)
     (out_dir / "run.log").write_text(result.stdout + result.stderr)
-    produced = out_dir / media.name
-    if result.returncode != 0 or not (produced / "result.json").is_file():
+    if result.returncode != 0 or not (out_dir / media.name / "result.json").is_file():
         tail = "\n".join((result.stdout + result.stderr).strip().splitlines()[-6:])
         raise tools.ToolError(f"the flash analyzer failed ({result.returncode}):\n{tail}")
+
+
+def _run_fargate(media: Path, out_dir: Path) -> None:
+    from everyseat.cloud import fargate
+
+    _clear(out_dir, keep=media)
+    fargate.run(media, out_dir)
+    if not (out_dir / media.name / "result.json").is_file():
+        raise tools.ToolError("the flash analyzer wrote no result")
+
+
+def run_iris(proxy: Proxy, out_dir: Path) -> IrisResult:
+    """Analyze the proxy and return the verdict plus the flagged runs.
+
+    The proxy must be at the source resolution: a resized proxy changes the verdict. The analyzer
+    runs in a local container, or as a Fargate task when EVERYSEAT_IRIS_BACKEND is `fargate`.
+    """
+    media = proxy.path.resolve()
+    backend = os.environ.get(BACKEND_ENV, "docker")
+    if backend == "fargate":
+        _run_fargate(media, out_dir)
+    elif backend == "docker":
+        _run_docker(media, out_dir)
+    else:
+        raise tools.ToolError(f"unknown flash analyzer backend {backend!r}: use docker or fargate")
+    produced = out_dir / media.name
 
     summary = json.loads((produced / "result.json").read_text())
     verdict = _VERDICTS.get(summary["OverallResult"])
