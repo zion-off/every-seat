@@ -56,7 +56,10 @@ def loudness_strip(
     while tick <= t1:
         draw.line((x_of(tick), bottom, x_of(tick), bottom + 4), fill=(170, 170, 180))
         draw.text(
-            (x_of(tick) - 18, bottom + 7), clock(tick + label_offset), fill=(170, 170, 180), font=font
+            (x_of(tick) - 18, bottom + 7),
+            clock(tick + label_offset),
+            fill=(170, 170, 180),
+            font=font,
         )
         tick += step
 
@@ -70,5 +73,7 @@ def loudness_strip(
     for onset in onsets:
         if t0 <= onset <= t1:
             draw.line((x_of(onset), top, x_of(onset), bottom), fill=(240, 70, 70), width=2)
-    draw.text((left, 2), "level (dBFS)  red: loud onset  cyan: shot cut", fill=(200, 200, 210), font=font)
+    draw.text(
+        (left, 2), "level (dBFS)  red: loud onset  cyan: shot cut", fill=(200, 200, 210), font=font
+    )
     return image
