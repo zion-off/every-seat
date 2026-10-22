@@ -51,7 +51,7 @@ class EverySeatStack(Stack):
         iris_repo = self._repository("IrisRepository", "everyseat/iris")
         agent_repo = self._repository("AgentRepository", "everyseat/agent")
         cluster, security_group = self._iris_cluster()
-        self._iris_task(iris_repo)
+        iris_logs = self._iris_task(iris_repo)
         trigger = self._trigger(media, results, cluster, security_group)
 
         rule = events.Rule(
@@ -75,7 +75,9 @@ class EverySeatStack(Stack):
         CfnOutput(self, "AgentRepositoryUri", value=agent_repo.repository_uri)
         CfnOutput(self, "IrisImageTag", value=IRIS_IMAGE_TAG)
         CfnOutput(self, "ClusterName", value=CLUSTER_NAME)
+        CfnOutput(self, "IrisLogGroup", value=iris_logs.log_group_name)
         CfnOutput(self, "TriggerFunction", value=trigger.function_name)
+        CfnOutput(self, "TriggerLogGroup", value=trigger.log_group.log_group_name)
 
     def _bucket(self, construct_id: str, name: str, *, emits_events: bool) -> s3.Bucket:
         return s3.Bucket(
@@ -116,8 +118,14 @@ class EverySeatStack(Stack):
         )
         return cluster, security_group
 
-    def _iris_task(self, repository: ecr.Repository) -> ecs.FargateTaskDefinition:
+    def _iris_task(self, repository: ecr.Repository) -> logs.LogGroup:
         assumed_by = iam.ServicePrincipal("ecs-tasks.amazonaws.com")
+        log_group = logs.LogGroup(
+            self,
+            "IrisLogs",
+            retention=logs.RetentionDays.ONE_WEEK,
+            removal_policy=RemovalPolicy.DESTROY,
+        )
         task = ecs.FargateTaskDefinition(
             self,
             "IrisTask",
@@ -141,17 +149,9 @@ class EverySeatStack(Stack):
             IRIS_CONTAINER,
             image=ecs.ContainerImage.from_ecr_repository(repository, IRIS_IMAGE_TAG),
             entry_point=["/usr/local/bin/iris-task"],
-            logging=ecs.LogDrivers.aws_logs(
-                stream_prefix="iris",
-                log_group=logs.LogGroup(
-                    self,
-                    "IrisLogs",
-                    retention=logs.RetentionDays.ONE_WEEK,
-                    removal_policy=RemovalPolicy.DESTROY,
-                ),
-            ),
+            logging=ecs.LogDrivers.aws_logs(stream_prefix="iris", log_group=log_group),
         )
-        return task
+        return log_group
 
     def _trigger(
         self,
