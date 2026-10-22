@@ -29,13 +29,13 @@ def model_id(choice: str) -> str:
     return resolved
 
 
-ROLE_CREDENTIALS_ENV = "EVERYSEAT_ROLE_CREDENTIALS"
+AWS_SESSION_ENV = "EVERYSEAT_AWS_SESSION"
 
 
 def aws_session() -> boto3.Session:
     """The named profile on a workstation; the attached role's credentials in the cloud runtime."""
     region = os.environ.get("AWS_REGION", DEFAULT_REGION)
-    if os.environ.get(ROLE_CREDENTIALS_ENV) == "1":
+    if os.environ.get(AWS_SESSION_ENV) == "role":
         return boto3.Session(region_name=region)
     profile = os.environ.get("AWS_PROFILE", "")
     if not profile or profile == "default":
