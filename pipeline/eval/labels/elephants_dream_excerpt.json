@@ -1,0 +1,17 @@
+{
+ "version": 1,
+ "name": "elephants_dream_excerpt",
+ "film": "elephants-dream",
+ "excerpt": {"start_s": 330, "duration_s": 90},
+ "complete": false,
+ "events": [
+  {
+   "type": "flash",
+   "start_s": 377.5,
+   "end_s": 380.0,
+   "intensity": 4,
+   "source": "flash analyzer",
+   "note": "Rapid bright flashing; the flash analyzer fails this stretch (7 transitions, luminance swing 0.33)."
+  }
+ ]
+}

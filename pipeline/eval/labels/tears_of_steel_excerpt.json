@@ -1,0 +1,23 @@
+{
+ "version": 1,
+ "name": "tears_of_steel_excerpt",
+ "film": "tears-of-steel",
+ "excerpt": {"start_s": 420, "duration_s": 90},
+ "complete": false,
+ "events": [
+  {
+   "type": "loud",
+   "start_s": 463.2,
+   "intensity": 5,
+   "source": "waveform",
+   "note": "Quiet scene, then a crash: the signal jumps from about -60 to -26 dBFS in one 10 ms hop."
+  },
+  {
+   "type": "scare",
+   "start_s": 463.2,
+   "intensity": 4,
+   "source": "reference cue file",
+   "note": "The same crash startles through the picture too; the picture changes shot 1.6 s after the sound."
+  }
+ ]
+}

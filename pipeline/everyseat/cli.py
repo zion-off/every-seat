@@ -12,6 +12,7 @@ from everyseat.detectors import tools
 from everyseat.detectors.candidates import detect
 from everyseat.detectors.cuts import SCENE_THRESHOLD
 from everyseat.detectors.sheet import clock
+from everyseat.evaluate import EvalError, evaluate, load_label_set, render
 
 
 def default_work_dir(video: Path, start: float, duration: float | None) -> Path:
@@ -87,6 +88,19 @@ def _analyze(args: argparse.Namespace) -> int:
     return 0
 
 
+def _eval(args: argparse.Namespace) -> int:
+    labels = load_label_set(args.labels)
+    results = evaluate(labels, args.runs)
+    document = render(labels, results)
+    if args.out:
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(document)
+        print(f"results for {len(results.scored)} runs -> {args.out}", file=sys.stderr)
+    else:
+        sys.stdout.write(document)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="everyseat", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -105,9 +119,17 @@ def main(argv: list[str] | None = None) -> int:
     ana.add_argument("--max-inspections", type=int, default=12, help="frame inspections allowed")
     ana.set_defaults(run=_analyze)
 
+    ev = commands.add_parser("eval", help="score runs against labelled events and compare models")
+    ev.add_argument(
+        "--labels", type=Path, default=Path("pipeline/eval/labels"), help="file or folder"
+    )
+    ev.add_argument("--runs", type=Path, default=Path("pipeline/eval/runs"), help="<model>/<run>/*")
+    ev.add_argument("--out", type=Path, help="write the Markdown table here instead of stdout")
+    ev.set_defaults(run=_eval)
+
     args = parser.parse_args(argv)
     try:
         return args.run(args)
-    except (tools.ToolError, ValueError, AnalysisError, ConfigError) as exc:
+    except (tools.ToolError, ValueError, AnalysisError, ConfigError, EvalError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
