@@ -1,0 +1,8 @@
+{
+  "gain_db": -18,
+  "pre_s": 0.4,
+  "ramp_s": 0.3,
+  "release_s": 1.0,
+  "limiter": 0.25,
+  "windows": [{"onset": 463.375, "end": 466.5}]
+}
