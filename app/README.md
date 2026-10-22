@@ -36,8 +36,10 @@ The media location is set in `src/config.ts`.
 - `src/media` — Shaka player setup and the media session that owns the video element.
 - `src/lens` — the people and their comfort settings, the combined couch lens, and the seek bar
   heat segments built from the cue list.
-- `src/components` — the dim overlay, the couch picker and panel, and the player controls.
-- `src/screens` — the couch, film picker and player screens.
+- `src/components` — the dim overlay, the couch picker and panel, the player controls, the heads-up
+  card, and the comfort badges and volume meter.
+- `src/screens` — the notice, couch, film picker and player screens.
+- `src/notice.ts`, `src/storage.ts` — the notice text and the first-run flag.
 - `src/catalog.ts` — the films on offer.
 - `src/styles` — colors and the UI theme.
 - `src/w3cmedia` — Shaka glue from the Vega video sample; the `dist`, `polyfills` and
@@ -72,6 +74,22 @@ The media location is set in `src/config.ts`.
   the markers repaint right away.
 - Back closes the panel, then leaves the film for the picker, then returns to the couch screen, then
   exits the app.
+
+## Heads-up cards, badges and notice
+
+- Five seconds before a scare or sudden loud moment that the couch lens covers, a heads-up card
+  appears above the controls. It does not take focus, so it never interrupts the film. Press Up from
+  the seek bar or the couch chip to reach **Soften**, **Watch** and **Tell me**.
+  - **Soften** ducks the volume and dims the picture for that moment. **Watch** leaves it alone.
+  - **Tell me** shows a one-line, spoiler-light description and keeps the card open.
+  - With no answer by the deadline the moment is softened. Choosing, or pressing Down or Back, puts
+    focus back where it was.
+  - Moments that start together share one card. The card text is announced for screen readers,
+    because they only read what has focus.
+- While a flash is dimmed a "Flash softened" badge shows at the top left. While the volume is
+  lowered a level meter shows the current reduction in dB. Both are announced once when they appear.
+- A "not a medical device" notice is shown on first run, and again from the **About** button on the
+  couch screen. First run is remembered in local storage.
 
 ## Attribution
 
