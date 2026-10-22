@@ -117,8 +117,9 @@ export class TvClock {
     this.heardAt = performance.now();
     if (!before) return "title";
     if (before.title !== message.title) return "title";
-    if (Math.abs(before.rate - message.rate) > 0.001) return "rate";
+    // A jump is judged first: a real seek arrives as a stopped clock at the new position.
     const expected = before.mediaTime + (before.rate * (message.wallClock - before.wallClock)) / 1000;
-    return Math.abs(message.mediaTime - expected) > 0.2 ? "seek" : undefined;
+    if (Math.abs(message.mediaTime - expected) > 0.2) return "seek";
+    return Math.abs(before.rate - message.rate) > 0.001 ? "rate" : undefined;
   }
 }
