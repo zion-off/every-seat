@@ -1,0 +1,27 @@
+{
+  "elephants-dream": {
+    "name": "Elephants Dream",
+    "aliases": ["Elephant's Dream"],
+    "durationS": 653.792
+  },
+  "tears-of-steel": {
+    "name": "Tears of Steel",
+    "aliases": [],
+    "durationS": 734.167
+  },
+  "big-buck-bunny": {
+    "name": "Big Buck Bunny",
+    "aliases": [],
+    "durationS": 596.458
+  },
+  "sintel": {
+    "name": "Sintel",
+    "aliases": [],
+    "durationS": 888
+  },
+  "test-pattern": {
+    "name": "Test Pattern",
+    "aliases": ["timecode test stream"],
+    "durationS": 120
+  }
+}
