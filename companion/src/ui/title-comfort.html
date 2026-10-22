@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comfort check</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #10141c;
+    --panel: #181e2b;
+    --text: #eef1f6;
+    --muted: #a3aec1;
+    --line: #2b3548;
+    --flash: #f5b942;
+    --loud: #6ea8ff;
+    --scare: #ff7d8d;
+    --ok: #5fd8a0;
+  }
+  [data-theme="light"] {
+    color-scheme: light;
+    --bg: #ffffff;
+    --panel: #f2f4f8;
+    --text: #151a25;
+    --muted: #55617a;
+    --line: #d3d9e5;
+    --flash: #a86400;
+    --loud: #1b5bd0;
+    --scare: #bd1f36;
+    --ok: #12794a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body { font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { padding: 20px 24px 16px; max-width: 760px; margin: 0 auto; }
+  .eyebrow { margin: 0; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  h1 { margin: 2px 0 0; font-size: 28px; line-height: 1.15; }
+  .who { margin: 4px 0 0; color: var(--muted); }
+  .summary { margin: 12px 0 0; font-size: 18px; }
+  .chart { margin: 16px 0 4px; padding: 12px 12px 4px; background: var(--panel); border-radius: 14px; }
+  .chart svg { display: block; width: 100%; height: auto; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin: 0 0 12px; padding: 0; list-style: none; font-size: 13px; color: var(--muted); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .legend .open { background: transparent !important; border: 1.5px dashed var(--muted); }
+  ul.moments { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .moment { display: grid; grid-template-columns: 4.6em 1fr; gap: 2px 12px; padding: 10px 12px; background: var(--panel); border-radius: 12px; border-left: 4px solid var(--line); }
+  .moment.flash { border-left-color: var(--flash); }
+  .moment.loud { border-left-color: var(--loud); }
+  .moment.scare { border-left-color: var(--scare); }
+  .moment time { grid-row: span 2; font-size: 20px; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .moment .what { font-weight: 600; }
+  .moment .what span { font-weight: 400; color: var(--muted); }
+  .moment .how { color: var(--ok); }
+  .moment .how.none { color: var(--muted); }
+  .moment .preview { grid-column: 2; color: var(--muted); font-size: 14px; }
+  footer { margin-top: 12px; font-size: 12px; color: var(--muted); }
+  .empty { margin-top: 12px; color: var(--muted); }
+  svg text { fill: var(--muted); font: 11px system-ui, sans-serif; }
+</style>
+</head>
+<body>
+<main aria-live="polite">
+  <p class="eyebrow">Comfort check</p>
+  <h1 id="title">Loading</h1>
+  <p class="who" id="who"></p>
+  <p class="summary" id="summary"></p>
+  <div class="chart" id="chart" hidden>
+    <svg id="timeline" viewBox="0 0 640 132" role="img"></svg>
+    <ul class="legend">
+      <li><i style="background:var(--flash)"></i>Flash</li>
+      <li><i style="background:var(--loud)"></i>Loud</li>
+      <li><i style="background:var(--scare)"></i>Scare</li>
+      <li><i class="open"></i>Not covered tonight</li>
+    </ul>
+  </div>
+  <ul class="moments" id="moments"></ul>
+  <footer>Comfort settings, not medical advice.</footer>
+</main>
+<script>
+(function () {
+  "use strict";
+  var SVG = "http://www.w3.org/2000/svg";
+  var LABELS = { flash: "Flashing", loud: "Loud sound", scare: "Scare" };
+  var HOW = {
+    dim: "Dimmed automatically",
+    "comfort-audio": "Quieter comfort sound",
+    "heads-up": "Heads-up card before it starts",
+  };
+
+  function el(tag, props, children) {
+    var node = document.createElement(tag);
+    Object.keys(props || {}).forEach(function (key) { node[key] = props[key]; });
+    (children || []).forEach(function (child) {
+      node.appendChild(typeof child === "string" ? document.createTextNode(child) : child);
+    });
+    return node;
+  }
+
+  function svg(tag, attrs, text) {
+    var node = document.createElementNS(SVG, tag);
+    Object.keys(attrs || {}).forEach(function (key) { node.setAttribute(key, String(attrs[key])); });
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function clock(seconds) {
+    var total = Math.round(seconds);
+    var h = Math.floor(total / 3600);
+    var m = Math.floor((total % 3600) / 60);
+    var s = total % 60;
+    var ss = (s < 10 ? "0" : "") + s;
+    return h > 0 ? h + ":" + (m < 10 ? "0" : "") + m + ":" + ss : m + ":" + ss;
+  }
+
+  function names(list) {
+    if (list.length <= 1) return list.join("");
+    return list.slice(0, -1).join(", ") + " and " + list[list.length - 1];
+  }
+
+  function drawTimeline(data) {
+    var W = 640, left = 8, right = 632, base = 98, maxH = 80, minW = 6;
+    var duration = Math.max(1, data.title.durationS);
+    var root = document.getElementById("timeline");
+    root.textContent = "";
+    root.setAttribute("aria-label", "Intensity timeline: " + data.moments.length + " moments over " + clock(duration));
+    root.appendChild(svg("rect", { x: left, y: base, width: right - left, height: 4, rx: 2, fill: "var(--line)" }));
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (f) {
+      var x = left + f * (right - left);
+      root.appendChild(svg("text", { x: x, y: 122, "text-anchor": f === 0 ? "start" : f === 1 ? "end" : "middle" }, clock(f * duration)));
+    });
+
+    var groups = [];
+    data.moments.forEach(function (moment) {
+      var last = groups[groups.length - 1];
+      if (last && moment.start < last.end) {
+        last.items.push(moment);
+        last.end = Math.max(last.end, moment.end);
+      } else {
+        groups.push({ items: [moment], start: moment.start, end: moment.end });
+      }
+    });
+
+    groups.forEach(function (group) {
+      var x0 = left + (group.start / duration) * (right - left);
+      var span = Math.max(minW * group.items.length, ((group.end - group.start) / duration) * (right - left));
+      var x = Math.min(x0, W - 8 - span);
+      var width = span / group.items.length;
+      group.items.forEach(function (moment, index) {
+        var h = (moment.intensity / 5) * maxH;
+        var covered = moment.handling.length > 0;
+        var color = "var(--" + moment.type + ")";
+        var bar = svg("rect", {
+          x: x + index * width + 0.75, y: base - h, width: Math.max(2, width - 1.5), height: h, rx: 2,
+          fill: covered ? color : "none", stroke: color, "stroke-width": 1.5,
+          "stroke-dasharray": covered ? "none" : "3 2",
+        });
+        bar.appendChild(svg("title", {}, clock(moment.start) + " " + LABELS[moment.type] + ", intensity " + moment.intensity + " of 5"));
+        root.appendChild(bar);
+      });
+    });
+  }
+
+  function drawMoments(data) {
+    var list = document.getElementById("moments");
+    list.textContent = "";
+    data.moments.forEach(function (moment) {
+      var how = moment.handling.length
+        ? moment.handling.map(function (key) { return HOW[key]; }).join(" · ")
+        : "Not covered by tonight's settings";
+      list.appendChild(el("li", { className: "moment " + moment.type }, [
+        el("time", { textContent: clock(moment.start) }),
+        el("div", { className: "what" }, [
+          LABELS[moment.type],
+          el("span", { textContent: " · intensity " + moment.intensity + " of 5" }),
+        ]),
+        el("div", { className: "how" + (moment.handling.length ? "" : " none"), textContent: how }),
+        el("div", { className: "preview", textContent: moment.preview }),
+      ]));
+    });
+  }
+
+  function render(data) {
+    if (!data || typeof data !== "object") return;
+    var title = document.getElementById("title");
+    var who = document.getElementById("who");
+    var summary = document.getElementById("summary");
+    var chart = document.getElementById("chart");
+    if (!data.found) {
+      title.textContent = "No comfort check yet";
+      who.textContent = "";
+      summary.textContent = data.summary || "This title hasn't been analyzed.";
+      chart.hidden = true;
+      document.getElementById("moments").textContent = "";
+      return;
+    }
+    title.textContent = data.title.name;
+    who.textContent = data.viewers.length ? "For " + names(data.viewers.map(function (v) { return v.name; })) : "Nobody on the couch yet";
+    summary.textContent = data.summary;
+    chart.hidden = false;
+    drawTimeline(data);
+    drawMoments(data);
+  }
+
+  var parentWindow = window.parent;
+  var nextId = 1;
+  var pending = {};
+
+  function post(message) {
+    message.jsonrpc = "2.0";
+    parentWindow.postMessage(message, "*");
+  }
+
+  function request(method, params) {
+    var id = nextId++;
+    return new Promise(function (resolve, reject) {
+      pending[id] = { resolve: resolve, reject: reject };
+      post({ id: id, method: method, params: params });
+    });
+  }
+
+  function applyContext(context) {
+    if (context && (context.theme === "light" || context.theme === "dark")) {
+      document.documentElement.setAttribute("data-theme", context.theme);
+    }
+  }
+
+  window.addEventListener("message", function (event) {
+    var message = event.data;
+    if (event.source !== parentWindow || !message || message.jsonrpc !== "2.0") return;
+    if (message.method === undefined && message.id in pending) {
+      var waiting = pending[message.id];
+      delete pending[message.id];
+      if (message.error) waiting.reject(message.error); else waiting.resolve(message.result);
+    } else if (message.method === "ui/notifications/tool-result") {
+      render(message.params && message.params.structuredContent);
+    } else if (message.method === "ui/notifications/host-context-changed") {
+      applyContext(message.params);
+    } else if (message.id !== undefined && (message.method === "ping" || message.method === "ui/resource-teardown")) {
+      post({ id: message.id, result: {} });
+    }
+  });
+
+  var lastSize = "";
+  function reportSize() {
+    var root = document.documentElement;
+    var height = Math.ceil(root.getBoundingClientRect().height);
+    var width = Math.ceil(window.innerWidth);
+    var key = width + "x" + height;
+    if (key === lastSize) return;
+    lastSize = key;
+    post({ method: "ui/notifications/size-changed", params: { width: width, height: height } });
+  }
+
+  request("ui/initialize", {
+    appInfo: { name: "everyseat-title-comfort", version: "0.1.0" },
+    appCapabilities: {},
+    protocolVersion: "2026-01-26",
+  }).then(function (result) {
+    applyContext(result && result.hostContext);
+    post({ method: "ui/notifications/initialized" });
+    new ResizeObserver(reportSize).observe(document.body);
+    reportSize();
+  }, function (error) {
+    document.getElementById("title").textContent = "Couldn't load the comfort check";
+    console.error(error);
+  });
+})();
+</script>
+</body>
+</html>
