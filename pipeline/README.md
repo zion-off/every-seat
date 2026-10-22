@@ -67,6 +67,40 @@ AWS_PROFILE=personal AWS_REGION=us-east-1 \
 - **Cost:** $0.03 to $0.10 for a 90 s excerpt with Nova Pro. Images are paid for once: after the
   model has seen a tool image, later calls carry a text note instead.
 
+## Audio description
+
+`everyseat describe` finds the dialogue-free stretches of a film, has Nova Pro write a short
+description of the picture for each, voices it with Polly, and writes `ad` cues that point at the
+audio clips:
+
+```sh
+AWS_PROFILE=personal AWS_REGION=us-east-1 \
+  everyseat describe film.mkv --subtitles film_en.srt --title my-film \
+  --cast "Name=who they are" --clips-dir build/ad
+```
+
+- **Windows:** the gaps of at least `--min-gap` (10 s) between subtitle lines, trimmed by 0.5 s at
+  each end and cut into equal windows of at most `--max-window` (30 s), all on the frame grid. The
+  quiet stretch before the first line and after the last counts too.
+- **What the writer sees:** a contact sheet with one frame per shot in the window (labelled in
+  plain seconds), the dialogue just before and after, the earlier descriptions and the `--cast`
+  notes, so names stay consistent. It writes to a budget of about 2.5 words a second, in the
+  present tense, only what is visible and essential, without interpretation or spoilers, and may
+  decline a window where nothing essential is on screen.
+- **Fitting:** Polly neural renders 16 kHz mono PCM, so the clip length is exactly bytes divided by
+  32000. A clip longer than its window goes back to the writer to be shortened (up to 3 times);
+  the last resort is SSML prosody at 110%. A window that still does not fit stops the run.
+- **Outputs:** one `<title>-ad-<n>.wav` per window in `<clips-dir>/<title>/`, the cue file
+  (`generated/<title>.sensevtt`; each cue starts at its window start and carries
+  `audio_ref {uri, duration_s}`, a one-line `preview` and the full text in `evidence`) and
+  `<title>.run.json` beside it with every attempt, token usage and the estimated cost. Clip
+  addresses are relative (`ad/<title>/<id>.wav`) so the companion can serve them.
+- **`--dry-run`:** placeholder text and silent clips of the length a voice would take, written next
+  to the clips as `<title>.dry-run.sensevtt`. Nothing touches AWS (no session is created, so no
+  credentials are read), which makes it the way to check the whole flow offline.
+- **Cost:** about 33 Nova Pro calls for Sintel (one contact sheet each) plus rewrites, a few cents;
+  Polly neural is $16 per million characters.
+
 ## Evaluation
 
 `everyseat eval` scores the cue files from `analyze` against labelled events (timing error, events

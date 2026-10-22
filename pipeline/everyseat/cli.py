@@ -8,6 +8,7 @@ from pathlib import Path
 
 from everyseat.agent.model import NOVA_MODELS, ConfigError
 from everyseat.analyze import AnalysisError, analyze, excerpt_name
+from everyseat.describe import DescribeError
 from everyseat.detectors import tools
 from everyseat.detectors.candidates import detect
 from everyseat.detectors.cuts import SCENE_THRESHOLD
@@ -88,6 +89,55 @@ def _analyze(args: argparse.Namespace) -> int:
     return 0
 
 
+def _describe(args: argparse.Namespace) -> int:
+    from everyseat.describe.run import describe
+    from everyseat.describe.voices import StubVoice
+    from everyseat.describe.writers import StubWriter
+
+    title = args.title or re.sub(r"[^a-z0-9]+", "-", args.video.stem.lower()).strip("-")
+    clips_dir = args.clips_dir / title
+    if args.dry_run:
+        writer, voice = StubWriter(), StubVoice()
+        default_cues = clips_dir / f"{title}.dry-run.sensevtt"
+    else:
+        # Imported here so a dry run never builds an AWS session.
+        from everyseat.describe.nova import NovaWriter
+        from everyseat.describe.polly import PollyVoice
+
+        writer, voice = NovaWriter(args.model), PollyVoice(args.voice)
+        default_cues = Path("generated") / f"{title}.sensevtt"
+    cast = []
+    for entry in args.cast:
+        name, sep, who = entry.partition("=")
+        if not sep or not name.strip() or not who.strip():
+            raise ValueError(f"--cast takes NAME=WHO, got {entry!r}")
+        cast.append(f"{name.strip()}: {who.strip()}")
+    cues_path = args.cues or default_cues
+    result = describe(
+        args.video,
+        args.subtitles,
+        title=title,
+        writer=writer,
+        voice=voice,
+        clips_dir=clips_dir,
+        cues_path=cues_path,
+        work_dir=args.work_dir or Path("build/work") / f"{args.video.stem}_ad",
+        dry_run=args.dry_run,
+        cast=cast,
+        min_gap_s=args.min_gap,
+        max_window_s=args.max_window,
+        progress=lambda line: print(line, file=sys.stderr),
+    )
+    print(
+        f"{result.cue_count} descriptions -> {result.sensevtt}\n"
+        f"{len(result.clips)} clips in {clips_dir}; log {result.log}",
+        file=sys.stderr,
+    )
+    if result.skipped:
+        print(f"{len(result.skipped)} windows left without a description", file=sys.stderr)
+    return 0
+
+
 def _eval(args: argparse.Namespace) -> int:
     labels = load_label_set(args.labels)
     results = evaluate(labels, args.runs)
@@ -119,6 +169,38 @@ def main(argv: list[str] | None = None) -> int:
     ana.add_argument("--max-inspections", type=int, default=12, help="frame inspections allowed")
     ana.set_defaults(run=_analyze)
 
+    des = commands.add_parser(
+        "describe", help="write and voice audio descriptions for the dialogue-free stretches"
+    )
+    des.add_argument("video", type=Path, help="the film")
+    des.add_argument("--subtitles", type=Path, required=True, help="SRT file with the dialogue")
+    des.add_argument("--title", help="title slug for the cue file (default: from the file name)")
+    des.add_argument("--dry-run", action="store_true", help="placeholder text and silent clips")
+    des.add_argument("--model", choices=sorted(NOVA_MODELS), default="nova-pro")
+    des.add_argument("--voice", default="Joanna", help="Polly neural voice")
+    des.add_argument(
+        "--cast",
+        action="append",
+        default=[],
+        metavar="NAME=WHO",
+        help="a character and who they are, for consistent names (repeatable)",
+    )
+    des.add_argument("--min-gap", type=float, default=10.0, help="shortest quiet stretch, seconds")
+    des.add_argument(
+        "--max-window", type=float, default=30.0, help="longest single description window, seconds"
+    )
+    des.add_argument(
+        "--clips-dir", type=Path, default=Path("build/ad"), help="clips go to <dir>/<title>/"
+    )
+    des.add_argument(
+        "--cues",
+        type=Path,
+        help="cue file to write (default: generated/<title>.sensevtt; with --dry-run, next to "
+        "the clips as <title>.dry-run.sensevtt)",
+    )
+    des.add_argument("--work-dir", type=Path, help="where the proxy and contact sheets go")
+    des.set_defaults(run=_describe)
+
     ev = commands.add_parser("eval", help="score runs against labelled events and compare models")
     ev.add_argument(
         "--labels", type=Path, default=Path("pipeline/eval/labels"), help="file or folder"
@@ -130,6 +212,13 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         return args.run(args)
-    except (tools.ToolError, ValueError, AnalysisError, ConfigError, EvalError) as exc:
+    except (
+        tools.ToolError,
+        ValueError,
+        AnalysisError,
+        ConfigError,
+        DescribeError,
+        EvalError,
+    ) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
