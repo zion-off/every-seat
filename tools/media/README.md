@@ -5,7 +5,7 @@ Scripts that turn films into the local streams the Fire TV app plays, and into t
 ## Build and serve
 
 ```sh
-tools/media/prepare.sh                      # all three titles: downloads, comfort audio, HLS
+tools/media/prepare.sh                      # all three titles: downloads, comfort audio, HLS, cue list
 tools/media/prepare.sh tears_of_steel       # one title
 pipeline/.venv/bin/python tools/media/serve_media.py --port 8080
 ```
@@ -20,7 +20,7 @@ The emulator reaches the Mac's localhost as `10.0.2.2`, so a stream is at `http:
 
 Sources are downloaded to `build/downloads/`, intermediates (the normalised main track and the comfort render) go to `build/work/<title>/`. A title is skipped when its output exists and is newer than its recipe; `--force` rebuilds.
 
-Each output is an HLS master playlist with one H.264 video rendition and two AAC audio renditions in one group, both `LANGUAGE="en"`: `main` (default) and `comfort`. Segments are fMP4, 1 s long, and each starts on a keyframe (1 s GOPs, no B-frames), so the player can switch audio renditions at any segment boundary. Main and comfort segments have identical durations.
+Each output is an HLS master playlist with one H.264 video rendition and two AAC audio renditions in one group, both `LANGUAGE="en"`: `main` (default) and `comfort`. Segments are fMP4, 1 s long, and each starts on a keyframe (1 s GOPs, no B-frames), so the player can switch audio renditions at any segment boundary. Main and comfort segments have identical durations. The title's cue list is copied next to it as `cues.sensevtt` (from `generated/<title>.sensevtt`, else `fixtures/<title>.sensevtt`).
 
 ## Comfort recipes
 

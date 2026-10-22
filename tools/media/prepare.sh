@@ -12,7 +12,9 @@
 #   2. extracts a normalised 48 kHz stereo main track into BUILD/work/FILM,
 #   3. renders the comfort track from generated/FILM.recipe.json, else fixtures/FILM.recipe.json
 #      (with neither, the default recipe applies: a limiter on the whole track),
-#   4. packages BUILD/media/FILM/master.m3u8.
+#   4. packages BUILD/media/FILM/master.m3u8,
+#   5. copies the cue list (generated/FILM.sensevtt, else fixtures/FILM.sensevtt) to
+#      BUILD/media/FILM/cues.sensevtt.
 # Serve the result with serve_media.py.
 #
 # Environment: BUILD_DIR (default: build at the repository root), PYTHON (needs 3.12 or newer),
@@ -144,6 +146,19 @@ build_test_pattern() {
   "$PY" "$HERE/test_pattern.py" --out "$MEDIA/test_pattern"
 }
 
+publish_cues() {
+  local dir
+  for dir in generated fixtures; do
+    if [ -f "$ROOT/$dir/$1.sensevtt" ]; then
+      mkdir -p "$MEDIA/$1"
+      cp "$ROOT/$dir/$1.sensevtt" "$MEDIA/$1/cues.sensevtt"
+      log "$1: cues from $dir/$1.sensevtt"
+      return
+    fi
+  done
+  log "$1: no cue list found"
+}
+
 FORCE=0
 FILMS=""
 while [ $# -gt 0 ]; do
@@ -178,5 +193,6 @@ for film in $FILMS; do
   else
     build_film "$film"
   fi
+  publish_cues "$film"
 done
 log "done: serve the result with tools/media/serve_media.py"
