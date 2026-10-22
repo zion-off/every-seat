@@ -1,0 +1,40 @@
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Python / Node
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Media
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.m4s
+*.wav
+*.mp3
+*.npz
+!*.mp4/
+!*.mov/
+!*.mkv/
+!*.webm/
+frameData.json
+framedata*.csv
+
+# Build output
+build/
+dist/
+*.vpkg
+*.vpack
