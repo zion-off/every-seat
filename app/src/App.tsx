@@ -10,6 +10,7 @@ import React, {
 import { AccessibilityInfo, BackHandler } from 'react-native';
 import { TitleEntry } from './catalog';
 import { HOUSEHOLD, RELAY_URL } from './config';
+import { LensLink, watchLensLinks } from './deeplink';
 import {
   HouseholdContext,
   mergePeople,
@@ -107,6 +108,36 @@ const App = () => {
     client.start();
     return () => client.stop();
   }, []);
+
+  // A link waits here until the first-run notice is out of the way, so it never skips that screen.
+  const householdRef = useRef(household);
+  householdRef.current = household;
+  const [pendingLink, setPendingLink] = useState<LensLink | null>(null);
+  useEffect(() => watchLensLinks(setPendingLink), []);
+  useEffect(() => {
+    if (!pendingLink || route === null || route === 'notice') {
+      return;
+    }
+    setPendingLink(null);
+    const person = householdRef.current.find(
+      (p) => p.id === pendingLink.person,
+    );
+    if (!person) {
+      console.info('link', 'no such person', pendingLink.person);
+      return;
+    }
+    setCouch([person.id]);
+    lastLens.current = '';
+    AccessibilityInfo.announceForAccessibility(
+      `Tonight's couch is now ${person.name}`,
+    );
+    if (pendingLink.title) {
+      setTitle(pendingLink.title);
+      setRoute('player');
+    } else if (route !== 'player') {
+      setRoute('titles');
+    }
+  }, [pendingLink, route]);
 
   const acceptNotice = useCallback(() => {
     markNoticeSeen();

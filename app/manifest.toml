@@ -122,13 +122,23 @@ id = "com.amazon.gipc.uuid.*"
 [[offers.interaction]]
 id = "com.everyseat.app.main"
 
+[[offers.message-target]]
+uses-component = "com.everyseat.app.main"
+uris = ["everyseat://lens"]
+
 [[offers.module]]
 id = "/com.everyseat.app.main@IMod1"
 includes-messages = [
-    "pkg://com.everyseat.app.main"
+    "pkg://com.everyseat.app.main",
+    "everyseat://lens"
 ]
 
 [[message]]
 uri = "pkg://com.everyseat.app.main"
+sender-privileges = ["*"]
+receiver-privileges = ["self"]
+
+[[message]]
+uri = "everyseat://lens"
 sender-privileges = ["*"]
 receiver-privileges = ["self"]
