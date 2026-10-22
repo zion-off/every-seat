@@ -195,7 +195,7 @@ class Session:
             )
         if _needs_a_look(cue_type, candidate) and not self._inspected(start, end):
             return (
-                f"a {cue_type} cue is judged from the picture, but no inspected window covers "
+                f"a {cue_type} cue is decided from the picture, but no inspected window covers "
                 f"{_s(start)} to {_s(end)}; call inspect on it first"
             )
         return None

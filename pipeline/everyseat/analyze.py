@@ -1,4 +1,4 @@
-"""`everyseat analyze`: detect, let the agent judge, then write the cue file, recipe and run log."""
+"""`everyseat analyze`: detect, let the agent decide, then write the cue file, recipe and log."""
 
 import hashlib
 import json

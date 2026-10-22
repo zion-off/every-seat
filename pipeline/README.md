@@ -42,7 +42,7 @@ analysis and reports its verdict as `NOT_RUN`.
 
 ## Analysis
 
-`everyseat analyze` runs the detectors, then a Strands agent on Amazon Nova Pro judges the
+`everyseat analyze` runs the detectors, then a Strands agent on Amazon Nova Pro assesses the
 candidates and writes the cue file:
 
 ```sh

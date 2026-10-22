@@ -96,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
     cand.add_argument("--out", type=Path, help="write the JSON here instead of stdout")
     cand.set_defaults(run=_candidates)
 
-    ana = commands.add_parser("analyze", help="detect, judge with Nova and write the cue file")
+    ana = commands.add_parser("analyze", help="assess candidates with Nova and write the cue file")
     _add_detector_options(ana)
     ana.add_argument("--model", choices=sorted(NOVA_MODELS), default="nova-pro")
     ana.add_argument("--title", help="title slug for the cue file (default: from the file name)")

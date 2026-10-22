@@ -39,7 +39,7 @@ Submit every cue with submit_cue. When a candidate needs no cue, call skip_candi
 
 How to work
 1. Read the candidate list. Group candidates that lie close together.
-2. Use inspect on the windows you need to judge. Times are film time in seconds, written like \
+2. Use inspect on the windows you need to look at. Times are film time in seconds, written like \
 463.2 (not minutes). A good window for a loud candidate runs from 3 s before its time to 5 s \
 after, and one inspection can cover several candidates. You have a limited number of \
 inspections: spend them on loud candidates, to see whether the picture startles too, and on \
