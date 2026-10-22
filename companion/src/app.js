@@ -3,6 +3,7 @@ import { existsSync } from "node:fs";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import cors from "cors";
 import express from "express";
+import { mountAd } from "./ad.js";
 import { converseRequestSchema, createConverse, hasAwsCredentials } from "./converse.js";
 import { createMcpServer } from "./mcp.js";
 
@@ -201,6 +202,8 @@ export function createApp({ config, catalog, store, relay }) {
         });
     });
   }
+
+  mountAd(app, { config, catalog, requireKey });
 
   if (existsSync(config.webDir)) app.use(express.static(config.webDir));
 

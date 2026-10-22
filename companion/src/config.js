@@ -59,6 +59,10 @@ export function loadConfig(env = process.env) {
     sandboxPort: Number(env.EVERYSEAT_SANDBOX_PORT ?? 8788),
     /** The built page (`npm run build` in `web/`), served at `/` when it exists. */
     webDir: env.EVERYSEAT_WEB_DIR ?? path.join(companionRoot, "web", "dist"),
+    /** The phone page for audio description, served at `/phone/`. */
+    phoneDir: path.join(companionRoot, "phone"),
+    /** Voiced description clips, served at `/ad/`; `everyseat describe --clips-dir` writes here. */
+    adDir: env.EVERYSEAT_AD_DIR ?? path.join(repoRoot, "build", "ad"),
   };
 }
 
