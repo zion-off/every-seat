@@ -11,7 +11,7 @@
     "start": "node src/server.js",
     "web:install": "npm --prefix web install",
     "web:build": "npm --prefix web run build",
-    "lint": "eslint . && tsc --noEmit && npm --prefix web run lint"
+    "lint": "eslint . && tsc --noEmit && tsc --noEmit -p phone && npm --prefix web run lint"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.1156.0",

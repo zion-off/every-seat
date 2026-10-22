@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#101418" />
+    <title>Every Seat · Audio description</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Audio description</h1>
+      <p id="status" role="status">Connecting…</p>
+
+      <button id="start" type="button" class="primary">Start audio description</button>
+      <p id="start-hint" class="hint">
+        Turn the phone's volume up first. Tapping Start lets this page play sound, and it follows
+        the film on the TV from then on.
+      </p>
+
+      <p id="banner" role="alert" hidden>Sound was interrupted. Tap anywhere to carry on.</p>
+
+      <section id="live" hidden aria-label="Current description">
+        <p id="position"></p>
+        <blockquote id="caption"></blockquote>
+        <p class="label">AI-generated description</p>
+      </section>
+
+      <section id="controls" hidden aria-label="Timing">
+        <label for="offset">Sound timing: <output id="offset-value">on time</output></label>
+        <input id="offset" type="range" min="-500" max="500" step="10" value="0" />
+        <p class="hint">
+          If the description comes too early, move the slider to Later. If it comes too late, move
+          it to Earlier.
+        </p>
+        <div class="row">
+          <button id="earlier" type="button">10 ms earlier</button>
+          <button id="later" type="button">10 ms later</button>
+        </div>
+        <div class="row">
+          <button id="resync" type="button">Resync</button>
+          <button id="beep" type="button">Test sound</button>
+        </div>
+      </section>
+
+      <details>
+        <summary>Timing details</summary>
+        <dl id="details"></dl>
+      </details>
+    </main>
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
