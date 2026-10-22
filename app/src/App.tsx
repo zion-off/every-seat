@@ -21,6 +21,7 @@ import {
 import { combineLens, couchNames } from './lens/lens';
 import { PEOPLE, Person } from './lens/people';
 import { LensMessage, RelayClient } from './relay/RelayClient';
+import { RelayContext } from './relay/RelayContext';
 import CouchScreen from './screens/CouchScreen';
 import NoticeScreen from './screens/NoticeScreen';
 import PlayerScreen from './screens/PlayerScreen';
@@ -99,15 +100,19 @@ const App = () => {
   }, []);
   const applyLensRef = useRef(applyLens);
   applyLensRef.current = applyLens;
+  const relay = useMemo(
+    () =>
+      new RelayClient({
+        url: RELAY_URL,
+        household: HOUSEHOLD,
+        onLens: (message) => applyLensRef.current(message),
+      }),
+    [],
+  );
   useEffect(() => {
-    const client = new RelayClient({
-      url: RELAY_URL,
-      household: HOUSEHOLD,
-      onLens: (message) => applyLensRef.current(message),
-    });
-    client.start();
-    return () => client.stop();
-  }, []);
+    relay.start();
+    return () => relay.stop();
+  }, [relay]);
 
   // A link waits here until the first-run notice is out of the way, so it never skips that screen.
   const householdRef = useRef(household);
@@ -159,44 +164,46 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <HouseholdContext.Provider value={household}>
-        {route === 'notice' && (
-          <NoticeScreen mode="first-run" onDone={acceptNotice} />
-        )}
-        {route === 'about' && (
-          <NoticeScreen mode="about" onDone={() => setRoute('couch')} />
-        )}
-        {route === 'couch' && (
-          <CouchScreen
-            selected={couch}
-            lens={lens}
-            onToggle={toggle}
-            onContinue={() => setRoute('titles')}
-            onAbout={() => setRoute('about')}
-          />
-        )}
-        {route === 'titles' && (
-          <TitleScreen
-            key={JSON.stringify(lens)}
-            couchNames={couchNames(people)}
-            lens={lens}
-            onChangeCouch={() => setRoute('couch')}
-            onPick={pick}
-          />
-        )}
-        {route === 'player' && title && (
-          <PlayerScreen
-            key={title.folder}
-            title={title.folder}
-            name={title.name}
-            lens={lens}
-            selected={couch}
-            couchLabel={couchNames(people)}
-            onToggle={toggle}
-            onExit={leavePlayer}
-          />
-        )}
-      </HouseholdContext.Provider>
+      <RelayContext.Provider value={relay}>
+        <HouseholdContext.Provider value={household}>
+          {route === 'notice' && (
+            <NoticeScreen mode="first-run" onDone={acceptNotice} />
+          )}
+          {route === 'about' && (
+            <NoticeScreen mode="about" onDone={() => setRoute('couch')} />
+          )}
+          {route === 'couch' && (
+            <CouchScreen
+              selected={couch}
+              lens={lens}
+              onToggle={toggle}
+              onContinue={() => setRoute('titles')}
+              onAbout={() => setRoute('about')}
+            />
+          )}
+          {route === 'titles' && (
+            <TitleScreen
+              key={JSON.stringify(lens)}
+              couchNames={couchNames(people)}
+              lens={lens}
+              onChangeCouch={() => setRoute('couch')}
+              onPick={pick}
+            />
+          )}
+          {route === 'player' && title && (
+            <PlayerScreen
+              key={title.folder}
+              title={title.folder}
+              name={title.name}
+              lens={lens}
+              selected={couch}
+              couchLabel={couchNames(people)}
+              onToggle={toggle}
+              onExit={leavePlayer}
+            />
+          )}
+        </HouseholdContext.Provider>
+      </RelayContext.Provider>
     </ThemeProvider>
   );
 };

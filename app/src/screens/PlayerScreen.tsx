@@ -2,6 +2,7 @@ import { FocusManager } from '@amazon-devices/react-native-kepler';
 import { KeplerVideoSurfaceView } from '@amazon-devices/react-native-w3cmedia';
 import React, {
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -22,6 +23,8 @@ import PlayerControls from '../components/PlayerControls';
 import { PlaybackEngine } from '../engine/PlaybackEngine';
 import { Cue, LensSettings } from '../engine/types';
 import { MediaSession } from '../media/MediaSession';
+import { startClockMessages } from '../relay/clockMessages';
+import { RelayContext } from '../relay/RelayContext';
 import { COLORS } from '../styles/palette';
 
 type Props = {
@@ -48,6 +51,7 @@ const PlayerScreen = ({
   const scale = width / 1920;
   const session = useMemo(() => new MediaSession(), []);
   const engine = useMemo(() => new PlaybackEngine(session), [session]);
+  const relay = useContext(RelayContext);
   const [surfaceOn, setSurfaceOn] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [cues, setCues] = useState<Cue[]>([]);
@@ -90,6 +94,13 @@ const PlayerScreen = ({
     });
     return () => sub.remove();
   }, [closePanel]);
+
+  // Phones follow the film from this clock, for the audio description they play.
+  useEffect(
+    () =>
+      relay ? startClockMessages(session, engine, relay, title) : undefined,
+    [session, engine, relay, title],
+  );
 
   useEffect(() => {
     const off = session.addListener((eventName) => {

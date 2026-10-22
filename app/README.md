@@ -96,6 +96,21 @@ The media location and the companion's relay address are set in `src/config.ts`.
   after the deadline the moment is softened straight away. If the warning stays on, the card, its
   focus and its countdown are not touched.
 
+## Clock for phones
+
+- While a film is open the TV tells phones where it is, so a phone can play the film's audio
+  description in step. A `clock` message carries the media time of the frame on screen, the rate
+  (1 while the picture moves, 0 when paused, seeking or stalled) and the film's id (`tears_of_steel`
+  is sent as `tears-of-steel`). It is sent on play, playing, pause, seeking, seeked, waiting and
+  ended, and every 2 s; closing the film sends a last one with rate 0. The first two `timeupdate`s
+  after each `playing` are sent too, because `playing` can fire up to about 0.15 s before the
+  picture moves.
+- The TV's clock can differ from the companion's by a second or more (on the Virtual Device it runs
+  about a second behind the Mac), so the time stamped on each message is the companion's. The
+  client sends `sync?` probes on connecting (eight) and every 10 s (three), keeps the probe with the
+  shortest round trip of the last minute, and stamps `wallClock` with its clock plus that offset.
+  Nothing is sent until the first reply arrives.
+
 ## Deep links
 
 `everyseat://lens/<person>` opens the app with that person alone on the couch. Add a film after
