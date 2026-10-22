@@ -22,6 +22,15 @@ const RETRY_MIN_MS = 1000;
 const RETRY_MAX_MS = 10000;
 /** A line longer than this is a broken stream, not a message. */
 const MAX_LINE_CHARS = 1024 * 1024;
+/** Probes sent on connecting, so the first clock message already carries a good offset. */
+const SYNC_FIRST_PROBES = 8;
+const SYNC_GAP_MS = 120;
+/** Probes sent every SYNC_EVERY_MS afterwards, to follow the two clocks drifting apart. */
+const SYNC_LATER_PROBES = 3;
+const SYNC_EVERY_MS = 10000;
+/** Only recent probes count, and the one with the shortest round trip wins. */
+const SYNC_KEEP = 12;
+const SYNC_MAX_AGE_MS = 60000;
 
 /**
  * Splits text chunks into lines. A message over about 8 KB can arrive in several pieces, and two
@@ -94,7 +103,8 @@ type Options = {
 
 /**
  * The TV's end of the relay: joins a household, answers pings, passes on lens messages and
- * reconnects when the link drops or goes quiet.
+ * reconnects when the link drops or goes quiet. It also measures how far the TV's clock is from
+ * the relay's, so the clock messages it sends are stamped in the relay's time.
  */
 export class RelayClient {
   private ws: WebSocket | null = null;
@@ -106,6 +116,9 @@ export class RelayClient {
   private retryTimer: ReturnType<typeof setTimeout> | null = null;
   private pingTimer: ReturnType<typeof setInterval> | null = null;
   private connectTimer: ReturnType<typeof setTimeout> | null = null;
+  private syncTimer: ReturnType<typeof setInterval> | null = null;
+  private samples: Array<{ rtt: number; offset: number; at: number }> = [];
+  private offsetMs: number | null = null;
 
   constructor(private options: Options) {}
 
@@ -155,6 +168,13 @@ export class RelayClient {
         household: this.options.household,
       });
       this.pingTimer = setInterval(() => this.beat(), PING_MS);
+      this.samples = [];
+      this.offsetMs = null;
+      this.probes(SYNC_FIRST_PROBES);
+      this.syncTimer = setInterval(
+        () => this.probes(SYNC_LATER_PROBES),
+        SYNC_EVERY_MS,
+      );
       this.setConnected(true);
     };
     ws.onmessage = (event: any) => {
@@ -190,6 +210,10 @@ export class RelayClient {
     }
     if (json?.t === 'ping') {
       this.send({ t: 'pong' });
+    } else if (json?.t === 'sync!') {
+      if (Number.isFinite(json.c) && Number.isFinite(json.s)) {
+        this.onSyncReply(json.c, json.s);
+      }
     } else if (json?.t === 'lens') {
       const lens = readLensMessage(json);
       if (lens) {
@@ -205,6 +229,51 @@ export class RelayClient {
     if (this.ws && this.ws.readyState === 1) {
       this.ws.send(JSON.stringify(message) + '\n');
     }
+  }
+
+  private probes(count: number) {
+    for (let i = 0; i < count; i++) {
+      setTimeout(
+        () => this.send({ t: 'sync?', c: Date.now() }),
+        i * SYNC_GAP_MS,
+      );
+    }
+  }
+
+  /** One probe gives the relay's time minus the middle of the round trip. */
+  private onSyncReply(sent: number, relayTime: number) {
+    const now = Date.now();
+    const rtt = now - sent;
+    if (rtt < 0 || rtt > 5000) {
+      return;
+    }
+    this.samples = this.samples
+      .concat({ rtt, offset: relayTime - (sent + rtt / 2), at: now })
+      .filter((s) => now - s.at < SYNC_MAX_AGE_MS)
+      .slice(-SYNC_KEEP);
+    const best = this.samples.reduce((a, b) => (b.rtt < a.rtt ? b : a));
+    if (this.offsetMs === null) {
+      console.info('relay', 'clock offset', best.offset.toFixed(1), 'ms');
+    }
+    this.offsetMs = best.offset;
+  }
+
+  /**
+   * Sends the playback clock to phones, stamped with the relay's time. Nothing is sent until the
+   * offset to the relay's clock is known, since an unstamped time would be worse than none.
+   */
+  sendClock(mediaTime: number, rate: number, title: string): boolean {
+    if (this.offsetMs === null || !this.ws || this.ws.readyState !== 1) {
+      return false;
+    }
+    this.send({
+      t: 'clock',
+      mediaTime: Math.round(Math.max(0, mediaTime) * 1000) / 1000,
+      wallClock: Math.round(Date.now() + this.offsetMs),
+      rate,
+      title,
+    });
+    return true;
   }
 
   private beat() {
@@ -264,6 +333,10 @@ export class RelayClient {
     if (this.pingTimer) {
       clearInterval(this.pingTimer);
       this.pingTimer = null;
+    }
+    if (this.syncTimer) {
+      clearInterval(this.syncTimer);
+      this.syncTimer = null;
     }
     if (this.retryTimer) {
       clearTimeout(this.retryTimer);
