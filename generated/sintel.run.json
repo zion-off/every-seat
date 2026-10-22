@@ -1,0 +1,410 @@
+{
+ "version": 1,
+ "dry_run": false,
+ "writer": "us.amazon.nova-pro-v1:0",
+ "voice": "polly neural Joanna",
+ "usage": {
+  "input_tokens": 175817,
+  "output_tokens": 4544,
+  "model_calls": 69,
+  "model_cost_usd": 0.155194,
+  "voice_characters": 2299,
+  "voice_cost_usd": 0.036784
+ },
+ "windows": [
+  {
+   "cue": "sintel-ad-1",
+   "start": 27.042,
+   "end": 53.625,
+   "text": "Sintel fights soldiers with a sword. She is knocked down, gets up, and continues fighting.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 15,
+     "duration_s": 5.505,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-2",
+   "start": 53.625,
+   "end": 80.167,
+   "text": "Sintel fights soldiers with a sword. She knocks one down, gets up, and continues fighting.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 15,
+     "duration_s": 5.605,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-3",
+   "start": 80.167,
+   "end": 106.75,
+   "text": "Close-up of a sword with intricate designs. Snowy landscape with distant lights. Campfire in a cave with Sintel sitting nearby.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 20,
+     "duration_s": 8.098,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-4",
+   "start": 156.375,
+   "end": 181.542,
+   "text": "Sintel climbs a building. She hangs from a ledge.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 9,
+     "duration_s": 3.355,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-5",
+   "start": 181.542,
+   "end": 206.75,
+   "text": "Sintel holds food. She gives it to Scales, who eats it.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 11,
+     "duration_s": 4.155,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-6",
+   "start": 214.0,
+   "end": 227.75,
+   "text": "Sintel holds Scales close. They are in a dark, sheltered place.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 11,
+     "duration_s": 4.53,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-7",
+   "start": 232.75,
+   "end": 249.833,
+   "text": "Sintel holds Scales. They move through a dark, cluttered space.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 10,
+     "duration_s": 4.405,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-8",
+   "start": 268.75,
+   "end": 286.125,
+   "text": "Sintel runs across rooftops. Scales flies above her.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 8,
+     "duration_s": 3.868,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-9",
+   "start": 286.125,
+   "end": 303.5,
+   "text": "Sintel runs and jumps across rooftops. Scales flies above her.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 10,
+     "duration_s": 4.367,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-10",
+   "start": 308.0,
+   "end": 323.125,
+   "text": "Sintel looks up at the sky. A dragon flies above her.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 11,
+     "duration_s": 3.655,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-11",
+   "start": 323.125,
+   "end": 338.25,
+   "text": "Sintel runs and jumps. Scales flies above her. They move through a ruined cityscape.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 14,
+     "duration_s": 5.747,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-12",
+   "start": 342.5,
+   "end": 368.167,
+   "text": "Sintel stands near a ruined structure, looking around. She runs across a sandy landscape.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 14,
+     "duration_s": 5.768,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-13",
+   "start": 368.167,
+   "end": 393.875,
+   "text": "Sintel runs through a desert. She enters a bamboo forest and continues running. She stops on a hill with a spear.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 21,
+     "duration_s": 7.298,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-14",
+   "start": 393.875,
+   "end": 419.583,
+   "text": "Sintel holds Scales, looking up. Final frame shows only white fog.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 11,
+     "duration_s": 4.905,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-15",
+   "start": 419.583,
+   "end": 445.333,
+   "text": "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 17,
+     "duration_s": 5.893,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-16",
+   "start": 464.5,
+   "end": 487.625,
+   "text": "Sintel holds a torch, walking through a dark cave. Glowing crystals and a large tree are visible.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 17,
+     "duration_s": 6.093,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-17",
+   "start": 487.625,
+   "end": 510.75,
+   "text": "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 17,
+     "duration_s": 5.893,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-18",
+   "start": 510.75,
+   "end": 533.917,
+   "text": "Sintel stands in a dark cave, holding a spear. She looks around, then stands on a rock with the spear.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 20,
+     "duration_s": 6.468,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-19",
+   "start": 560.0,
+   "end": 580.333,
+   "text": "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 17,
+     "duration_s": 5.893,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-20",
+   "start": 580.333,
+   "end": 600.708,
+   "text": "Sintel fights a large, armored creature with a spear.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 9,
+     "duration_s": 3.038,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-21",
+   "start": 600.708,
+   "end": 621.083,
+   "text": "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 17,
+     "duration_s": 5.893,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-22",
+   "start": 630.333,
+   "end": 658.875,
+   "text": "Sintel moves through a dark cave, her expression changing as she searches. She stops, looks around, and continues moving.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 19,
+     "duration_s": 7.555,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-23",
+   "start": 658.875,
+   "end": 687.458,
+   "text": "Sintel calls out for Scales. She looks around, searching for the baby dragon.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 13,
+     "duration_s": 5.168,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-24",
+   "start": 687.458,
+   "end": 716.042,
+   "text": "Sintel sits on a cliff, looking out at the landscape. She stands and walks through a rocky area. She stops near a plant with white flowers.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 26,
+     "duration_s": 8.748,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-25",
+   "start": 716.042,
+   "end": 744.625,
+   "text": "Sintel walks through a rocky landscape. She stops and looks around. Scales lies injured on the ground.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 17,
+     "duration_s": 6.723,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-26",
+   "start": 830.333,
+   "end": 858.917,
+   "text": "Sintel moves through a dark cave, her expression changing as she searches. She stops, looks around, and continues moving. Scales lies injured on the ground.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 25,
+     "duration_s": 9.947,
+     "rate": 100
+    }
+   ]
+  }
+ ],
+ "skipped": [
+  {
+   "window": 1,
+   "reason": "nothing to describe"
+  },
+  {
+   "window": 9,
+   "reason": "nothing to describe"
+  },
+  {
+   "window": 21,
+   "reason": "nothing to describe"
+  },
+  {
+   "window": 29,
+   "reason": "nothing to describe"
+  },
+  {
+   "window": 30,
+   "reason": "nothing to describe"
+  },
+  {
+   "window": 31,
+   "reason": "nothing to describe"
+  },
+  {
+   "window": 33,
+   "reason": "nothing to describe"
+  }
+ ]
+}
