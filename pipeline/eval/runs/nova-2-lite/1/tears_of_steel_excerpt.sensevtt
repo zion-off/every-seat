@@ -1,0 +1,16 @@
+WEBVTT
+
+NOTE everyseat-header
+{"version":1,"title":"tears-of-steel","analyzer":"everyseat 0.1.0 (us.amazon.nova-2-lite-v1:0)","source_sha256":"efa9062d9cdb7a338e40ad530dfdf234806743f29ae6a1a136b97ece4e588e8f","fps":24,"iris":{"verdict":"PASS_WITH_WARNING","max_luminance_swing":0.165}}
+
+tears-of-steel-loud-1
+00:07:06.083 --> 00:07:07.667
+{"id":"tears-of-steel-loud-1","type":"loud","start":426.083,"end":427.667,"anchor":"onset","intensity":3,"lead_s":5,"preview":"A sudden loud noise","evidence":{"baseline_db":-18.9,"peak_db":-3.0,"jump_db":15.9,"rise_db":15.6,"cut_offset_s":-0.59,"cuts_next_2s":1,"next_cut_s":1.7,"reasoning":"The loudness jump is 15.9 dB, meeting the threshold for a loud cue. The visual context shows a sudden impact."}}
+
+tears-of-steel-loud-2
+00:07:43.208 --> 00:07:46.208
+{"id":"tears-of-steel-loud-2","type":"loud","start":463.208,"end":466.208,"anchor":"onset","intensity":5,"lead_s":5,"preview":"A very loud, sudden crash","evidence":{"baseline_db":-50.3,"peak_db":-7.2,"jump_db":43.1,"rise_db":16.7,"cut_offset_s":null,"cuts_next_2s":1,"next_cut_s":1.63,"reasoning":"The loudness jump is 43.1 dB, well above the threshold. The visual context shows a loud impact."}}
+
+tears-of-steel-flash-1
+00:07:44.833 --> 00:07:45.833
+{"id":"tears-of-steel-flash-1","type":"flash","start":464.833,"end":465.833,"anchor":"iris","intensity":2,"pre_s":1.5,"post_s":1.0,"preview":"Rapid flashing lights","evidence":{"worst":"warning","channels":["luminance"],"max_transitions":4,"peak_swing":0.1248,"flagged_frames":7,"reasoning":"The flash analyzer flagged rapid flashing with max_transitions=4 and peak_swing=0.1248, meeting the criteria for a flash cue."}}

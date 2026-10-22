@@ -1,0 +1,95 @@
+{
+ "version": 1,
+ "ok": true,
+ "model": "us.amazon.nova-pro-v1:0",
+ "usage": {
+  "input_tokens": 18902,
+  "output_tokens": 744,
+  "cost_usd": 0.017502,
+  "usd_per_million_tokens": {
+   "input": 0.8,
+   "output": 3.2
+  }
+ },
+ "model_calls": 3,
+ "tool_calls": 8,
+ "repair_rounds": 0,
+ "elapsed_s": 12.0,
+ "source": {
+  "file": "tears_of_steel_720p.mov",
+  "start_s": 420.0,
+  "duration_s": 90.0,
+  "fps": 24,
+  "measured_fps": 24.0,
+  "width": 1280,
+  "height": 534
+ },
+ "candidates": 4,
+ "inspections": [
+  {
+   "start_s": 488.583,
+   "end_s": 495.583,
+   "tiles": 8
+  },
+  {
+   "start_s": 460.208,
+   "end_s": 468.208,
+   "tiles": 8
+  },
+  {
+   "start_s": 423.083,
+   "end_s": 430.083,
+   "tiles": 8
+  }
+ ],
+ "skipped": {
+  "c3": "Flash analyzer verdict is a warning, and the peak swing is below the threshold for a flash cue.",
+  "c4": "Flash analyzer verdict is a warning, and the peak swing is below the threshold for a flash cue."
+ },
+ "cues": [
+  {
+   "candidate": "c1",
+   "id": "tears-of-steel-loud-1",
+   "type": "loud",
+   "start": 426.083,
+   "end": 427.667,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden, moderately loud noise.",
+   "evidence": {
+    "baseline_db": -18.9,
+    "peak_db": -3.0,
+    "jump_db": 15.9,
+    "rise_db": 15.6,
+    "cut_offset_s": -0.59,
+    "cuts_next_2s": 1,
+    "next_cut_s": 1.7,
+    "reasoning": "Loudness jump is 15.9 dB, peak loudness is -3.0 dBFS."
+   }
+  },
+  {
+   "candidate": "c2",
+   "id": "tears-of-steel-loud-2",
+   "type": "loud",
+   "start": 463.208,
+   "end": 466.208,
+   "anchor": "onset",
+   "intensity": 5,
+   "lead_s": 5,
+   "preview": "A sudden, very loud noise.",
+   "evidence": {
+    "baseline_db": -50.3,
+    "peak_db": -7.2,
+    "jump_db": 43.1,
+    "rise_db": 16.7,
+    "cut_offset_s": null,
+    "cuts_next_2s": 1,
+    "next_cut_s": 1.63,
+    "reasoning": "Loudness jump is 43.1 dB, peak loudness is -7.2 dBFS."
+   }
+  }
+ ],
+ "open_problems": [],
+ "final_message": "I have recorded a loud cue for candidate c1 at 426.083 s to 427.667 s with an intensity of 3 and a preview of \"A sudden, moderately loud noise.\" I have recorded a loud cue for candidate c2 at 463.208 s to 466.208 s with an intensity of 5 and a preview of \"A sudden, very loud noise.\" I have skipped candidates c3 and c4 as they did not meet the criteria for a flash cue. The validation check returned \"ok\", indicating that all cues are correctly formatted and within the player's rules."
+}
