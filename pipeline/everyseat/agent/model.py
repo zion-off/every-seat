@@ -29,19 +29,23 @@ def model_id(choice: str) -> str:
     return resolved
 
 
+def aws_session() -> boto3.Session:
+    """A session on the named AWS profile and region, never the default profile."""
+    profile = os.environ.get("AWS_PROFILE", "")
+    if not profile or profile == "default":
+        raise ConfigError("set AWS_PROFILE to a named profile (the default profile is not used)")
+    region = os.environ.get("AWS_REGION", DEFAULT_REGION)
+    return boto3.Session(profile_name=profile, region_name=region)
+
+
 def bedrock_model(model: str, *, max_tokens: int = 4096, temperature: float = 0.2) -> BedrockModel:
     """A Bedrock model that uses the named AWS profile and region, never the default profile.
 
     Strands defaults to a different model family and to another region, so both are always set.
     """
-    profile = os.environ.get("AWS_PROFILE", "")
-    if not profile or profile == "default":
-        raise ConfigError("set AWS_PROFILE to a named profile (the default profile is not used)")
-    region = os.environ.get("AWS_REGION", DEFAULT_REGION)
-    session = boto3.Session(profile_name=profile, region_name=region)
     return BedrockModel(
         model_id=model_id(model),
-        boto_session=session,
+        boto_session=aws_session(),
         max_tokens=max_tokens,
         temperature=temperature,
     )
