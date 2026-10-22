@@ -132,6 +132,12 @@ const PlayerControls = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
+  // A new lens repaints the markers, so bring the bar up where the change can be seen.
+  useEffect(() => {
+    show();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lens]);
+
   const endScrub = () => {
     scrubbingRef.current = false;
     setScrubbing(false);
