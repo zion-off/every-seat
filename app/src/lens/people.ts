@@ -11,21 +11,21 @@ export const PEOPLE: Person[] = [
   {
     id: 'leo',
     name: 'Leo',
-    settings: { flashes: 'soften', loud: 'cap', scares: 'headsup', ad: 'off' },
+    settings: { flashes: 'off', loud: 'cap', scares: 'off', ad: 'off' },
   },
   {
-    id: 'mira',
-    name: 'Mira',
+    id: 'mom',
+    name: 'Mom',
     settings: { flashes: 'soften', loud: 'off', scares: 'off', ad: 'off' },
   },
   {
-    id: 'nana',
-    name: 'Nana',
-    settings: { flashes: 'off', loud: 'cap', scares: 'off', ad: 'on' },
+    id: 'grandpa',
+    name: 'Grandpa',
+    settings: { flashes: 'off', loud: 'off', scares: 'off', ad: 'on' },
   },
   {
-    id: 'sam',
-    name: 'Sam',
+    id: 'dad',
+    name: 'Dad',
     settings: { flashes: 'off', loud: 'off', scares: 'off', ad: 'off' },
   },
 ];
