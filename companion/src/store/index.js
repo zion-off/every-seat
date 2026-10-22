@@ -21,7 +21,8 @@ import { JsonStore } from "./json.js";
  */
 
 /**
- * @typedef {{ kind: "json", file: string, seedFile: string }} StoreOptions
+ * @typedef {{ kind: "json", file: string, seedFile: string }
+ *   | { kind: "dynamodb", table: string, region: string, endpoint?: string, seedFile: string }} StoreOptions
  */
 
 /**
@@ -29,5 +30,9 @@ import { JsonStore } from "./json.js";
  * @returns {Promise<PreferenceStore>}
  */
 export async function createStore(options) {
+  if (options.kind === "dynamodb") {
+    const { DynamoStore } = await import("./dynamo.js");
+    return DynamoStore.create(options);
+  }
   return JsonStore.create(options);
 }

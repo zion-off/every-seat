@@ -29,13 +29,22 @@ export function loadConfig(env = process.env) {
       ? env.EVERYSEAT_CUES_DIR.split(path.delimiter)
       : [path.join(repoRoot, "fixtures"), path.join(repoRoot, "generated")],
     titlesFile: env.EVERYSEAT_TITLES_FILE ?? path.join(companionRoot, "data", "titles.json"),
-    store: {
-      kind: /** @type {const} */ ("json"),
-      file:
-        env.EVERYSEAT_STORE_FILE ??
-        path.join(companionRoot, "node_modules", ".cache", "everyseat", "preferences.json"),
-      seedFile: path.join(companionRoot, "data", "household.json"),
-    },
+    /** Local JSON by default; set a table name to keep settings in DynamoDB instead. */
+    store: env.EVERYSEAT_DYNAMODB_TABLE
+      ? {
+          kind: /** @type {const} */ ("dynamodb"),
+          table: env.EVERYSEAT_DYNAMODB_TABLE,
+          region: env.AWS_REGION ?? "us-east-1",
+          endpoint: env.EVERYSEAT_DYNAMODB_ENDPOINT || undefined,
+          seedFile: path.join(companionRoot, "data", "household.json"),
+        }
+      : {
+          kind: /** @type {const} */ ("json"),
+          file:
+            env.EVERYSEAT_STORE_FILE ??
+            path.join(companionRoot, "node_modules", ".cache", "everyseat", "preferences.json"),
+          seedFile: path.join(companionRoot, "data", "household.json"),
+        },
     /** Browser origins allowed besides the local ones. */
     allowedOrigins: list(env.EVERYSEAT_ALLOWED_ORIGINS),
     heartbeatMs: Number(env.EVERYSEAT_HEARTBEAT_MS ?? 20_000),

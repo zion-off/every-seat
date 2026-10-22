@@ -1,15 +1,13 @@
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
-import { personKey, settingsSchema } from "../lens.js";
+import { personKey } from "../lens.js";
+import { loadSeed, personSchema } from "./seed.js";
 
 /** @typedef {import("../contracts.d.ts").LensPerson} LensPerson */
 /** @typedef {import("../contracts.d.ts").LensMessage} LensMessage */
 /** @typedef {import("./index.js").PreferenceStore} PreferenceStore */
-
-const personSchema = z.object({ name: z.string().min(1), settings: settingsSchema });
-
-const seedSchema = z.record(z.string(), z.object({ people: z.array(personSchema) }));
+/** @typedef {import("./seed.js").Seed} Seed */
 
 const stateSchema = z.object({
   households: z.record(
@@ -33,7 +31,7 @@ const stateSchema = z.object({
 export class JsonStore {
   /**
    * @param {string} file
-   * @param {z.infer<typeof seedSchema>} seed
+   * @param {Seed} seed
    * @param {State} state
    */
   constructor(file, seed, state) {
@@ -46,7 +44,7 @@ export class JsonStore {
 
   /** @param {{ file: string, seedFile: string }} options */
   static async create({ file, seedFile }) {
-    const seed = seedSchema.parse(JSON.parse(await readFile(seedFile, "utf8")));
+    const seed = await loadSeed(seedFile);
     /** @type {State} */
     let state = { households: {} };
     try {

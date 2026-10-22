@@ -28,5 +28,9 @@
     "eslint": "^10.13.0",
     "globals": "^17.13.0",
     "typescript": "^5.9.3"
+  },
+  "optionalDependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1156.0",
+    "@aws-sdk/lib-dynamodb": "^3.1156.0"
   }
 }
