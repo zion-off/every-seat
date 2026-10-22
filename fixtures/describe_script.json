@@ -1,0 +1,92 @@
+{
+  "2": {
+    "write": [
+      "Sintel fights soldiers with a sword. She is knocked down, gets up, and continues fighting."
+    ]
+  },
+  "3": {
+    "write": [
+      "Sintel fights soldiers with a sword. She knocks one down, gets up, and continues fighting.",
+      "Sintel is pinned to the snow under a soldier. She kicks him off and limps away from the others."
+    ]
+  },
+  "4": {
+    "write": [
+      "Close-up of a sword with intricate designs. Snowy landscape with distant lights. Campfire in a cave with Sintel sitting nearby.",
+      "A sword with carved designs lies in the snow. Lights glow far off across the valley. Sintel sits beside a campfire in a cave."
+    ]
+  },
+  "6": {
+    "write": ["Sintel holds food. She gives it to Scales, who eats it."]
+  },
+  "7": {
+    "write": [
+      "Sintel crouches in a dark, sheltered hollow with Scales pressed against her chest. She strokes his small pale head and whispers to him while cold wind blows snow past the opening of the shelter behind them.",
+      "Sintel crouches in a dark, sheltered hollow with Scales pressed against her chest. She strokes his small pale head and whispers to him while snow blows past the opening behind them."
+    ],
+    "shorten": [
+      "Sintel crouches in a dark hollow with Scales pressed against her chest. She strokes his small pale head and whispers softly to him while snow blows past the opening.",
+      "Sintel crouches in a dark hollow, holding Scales to her chest. This shows her stroking his small pale head while snow blows past.",
+      "Sintel crouches in a dark hollow, holding Scales to her chest. She strokes his small pale head as snow blows past."
+    ]
+  },
+  "10": {
+    "write": ["Sintel runs across rooftops. Scales flies above her."]
+  },
+  "11": {
+    "write": ["Sintel runs and jumps across rooftops. Scales flies above her.", null]
+  },
+  "16": {
+    "write": [
+      "Sintel holds Scales, looking up. Final frame shows only white fog.",
+      "The camera pulls back from Sintel and Scales as white fog covers everything.",
+      "White fog swallows Sintel and Scales until nothing else can be seen."
+    ]
+  },
+  "17": {
+    "write": [
+      "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks."
+    ]
+  },
+  "19": {
+    "write": [
+      "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks.",
+      "The armored creature rears back and strikes Sintel's shoulder. She stumbles, then lunges at it with her spear."
+    ]
+  },
+  "22": {
+    "write": [
+      "Close-up of Sintel fighting a large, armored creature with a spear. The creature moves and reacts to her attacks.",
+      "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks.",
+      null
+    ]
+  },
+  "23": {
+    "write": [
+      "Sintel fights a large, armored creature with a spear.",
+      "Sintel fights.",
+      "The camera follows Sintel as she fights a large, armored creature with a spear.",
+      "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks.",
+      "Sintel fights a large, armored creature with a spear. The creature reacts to her attacks."
+    ]
+  },
+  "25": {
+    "write": [
+      "Sintel moves through a dark cave, her expression changing as she searches. She stops, looks around, and continues moving."
+    ]
+  },
+  "26": {
+    "write": ["Sintel calls out for Scales. She looks around, searching for the baby dragon."]
+  },
+  "28": {
+    "write": [
+      "Sintel walks through a rocky landscape. She stops and looks around. Scales lies injured on the ground."
+    ]
+  },
+  "32": {
+    "write": [
+      "Sintel moves through a dark cave, her expression changing as she searches. She stops, looks around, and continues moving. Scales lies injured on the ground.",
+      "Sintel kneels and lifts Scales into her arms."
+    ]
+  }
+}

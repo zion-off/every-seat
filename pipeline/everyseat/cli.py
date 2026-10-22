@@ -92,12 +92,15 @@ def _analyze(args: argparse.Namespace) -> int:
 def _describe(args: argparse.Namespace) -> int:
     from everyseat.describe.run import describe
     from everyseat.describe.voices import StubVoice
-    from everyseat.describe.writers import StubWriter
+    from everyseat.describe.writers import StubWriter, load_script
 
     title = args.title or re.sub(r"[^a-z0-9]+", "-", args.video.stem.lower()).strip("-")
     clips_dir = args.clips_dir / title
+    if args.script and not args.dry_run:
+        raise ValueError("--script needs --dry-run: it replaces the model's answers")
     if args.dry_run:
-        writer, voice = StubWriter(), StubVoice()
+        writer = StubWriter(load_script(args.script) if args.script else None)
+        voice = StubVoice()
         default_cues = clips_dir / f"{title}.dry-run.sensevtt"
     else:
         # Imported here so a dry run never builds an AWS session.
@@ -176,6 +179,12 @@ def main(argv: list[str] | None = None) -> int:
     des.add_argument("--subtitles", type=Path, required=True, help="SRT file with the dialogue")
     des.add_argument("--title", help="title slug for the cue file (default: from the file name)")
     des.add_argument("--dry-run", action="store_true", help="placeholder text and silent clips")
+    des.add_argument(
+        "--script",
+        type=Path,
+        help="with --dry-run, a JSON file of answers per window that stand in for the model's, "
+        "to exercise the review",
+    )
     des.add_argument("--model", choices=sorted(NOVA_MODELS), default="nova-pro")
     des.add_argument("--voice", default="Joanna", help="Polly neural voice")
     des.add_argument(
