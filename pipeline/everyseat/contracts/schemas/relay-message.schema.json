@@ -12,31 +12,31 @@
   },
   "allOf": [
     {
-      "if": { "required": ["t"], "properties": { "t": { "const": "hello" } } },
+      "if": { "type": "object", "required": ["t"], "properties": { "t": { "const": "hello" } } },
       "then": { "$ref": "#/$defs/hello" }
     },
     {
-      "if": { "required": ["t"], "properties": { "t": { "const": "ping" } } },
+      "if": { "type": "object", "required": ["t"], "properties": { "t": { "const": "ping" } } },
       "then": { "$ref": "#/$defs/ping" }
     },
     {
-      "if": { "required": ["t"], "properties": { "t": { "const": "pong" } } },
+      "if": { "type": "object", "required": ["t"], "properties": { "t": { "const": "pong" } } },
       "then": { "$ref": "#/$defs/pong" }
     },
     {
-      "if": { "required": ["t"], "properties": { "t": { "const": "lens" } } },
+      "if": { "type": "object", "required": ["t"], "properties": { "t": { "const": "lens" } } },
       "then": { "$ref": "#/$defs/lens" }
     },
     {
-      "if": { "required": ["t"], "properties": { "t": { "const": "clock" } } },
+      "if": { "type": "object", "required": ["t"], "properties": { "t": { "const": "clock" } } },
       "then": { "$ref": "#/$defs/clock" }
     },
     {
-      "if": { "required": ["t"], "properties": { "t": { "const": "sync?" } } },
+      "if": { "type": "object", "required": ["t"], "properties": { "t": { "const": "sync?" } } },
       "then": { "$ref": "#/$defs/syncRequest" }
     },
     {
-      "if": { "required": ["t"], "properties": { "t": { "const": "sync!" } } },
+      "if": { "type": "object", "required": ["t"], "properties": { "t": { "const": "sync!" } } },
       "then": { "$ref": "#/$defs/syncReply" }
     }
   ],
