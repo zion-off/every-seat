@@ -90,7 +90,7 @@ def _analyze(args: argparse.Namespace) -> int:
 
 
 def _describe(args: argparse.Namespace) -> int:
-    from everyseat.describe.run import describe
+    from everyseat.describe.run import describe, read_plot
     from everyseat.describe.voices import StubVoice
     from everyseat.describe.writers import StubWriter, load_script
 
@@ -98,6 +98,7 @@ def _describe(args: argparse.Namespace) -> int:
     clips_dir = args.clips_dir / title
     if args.script and not args.dry_run:
         raise ValueError("--script needs --dry-run: it replaces the model's answers")
+    plot = read_plot(args.plot) if args.plot else ""
     if args.dry_run:
         writer = StubWriter(load_script(args.script) if args.script else None)
         voice = StubVoice()
@@ -127,6 +128,7 @@ def _describe(args: argparse.Namespace) -> int:
         work_dir=args.work_dir or Path("build/work") / f"{args.video.stem}_ad",
         dry_run=args.dry_run,
         cast=cast,
+        plot=plot,
         min_gap_s=args.min_gap,
         max_window_s=args.max_window,
         progress=lambda line: print(line, file=sys.stderr),
@@ -193,6 +195,13 @@ def main(argv: list[str] | None = None) -> int:
         default=[],
         metavar="NAME=WHO",
         help="a character and who they are, for consistent names (repeatable)",
+    )
+    des.add_argument(
+        "--plot",
+        type=Path,
+        metavar="FILE",
+        help="a short plain-text synopsis of the film, given to the writer as background so it "
+        "recognises characters and places (up to 2000 characters)",
     )
     des.add_argument("--min-gap", type=float, default=10.0, help="shortest quiet stretch, seconds")
     des.add_argument(

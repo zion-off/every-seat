@@ -39,9 +39,9 @@ Rules:
 - Stay within the word limit. Fewer words are fine when little happens.
 - If nothing essential is visible in the window, say so by setting nothing_to_describe.
 
-You are shown one contact sheet: one frame per shot in the window, each labelled with its time
-in seconds from the start of the film. Answer only by calling submit_description once. If it
-returns an error, correct the description as the error says and call it again.
+You are shown a contact sheet of stills from the window, one for each cut, each labelled with
+its time in seconds from the start of the film. Answer only by calling submit_description once.
+If it returns an error, correct the description as the error says and call it again.
 """
 
 
@@ -83,6 +83,12 @@ def request_text(request: Request) -> str:
         f"Quiet window: {_time(w.start)} to {_time(w.end)} ({w.duration:.1f} s).",
         f"Word limit: at most {request.budget} words.",
     ]
+    if request.plot:
+        parts.append(
+            "Story background, only for recognising characters and places and keeping their "
+            "names consistent. Never describe anything that is not visible in this window, and "
+            f"never say what has not happened yet:\n{request.plot}"
+        )
     if request.cast:
         parts.append("Characters:\n" + "\n".join(f"  {entry}" for entry in request.cast))
     parts.append(_dialogue("Dialogue just before", request.before))

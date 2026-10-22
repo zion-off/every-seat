@@ -24,6 +24,7 @@ Relay message streams (one JSON object per line) can be checked with `everyseat-
 | File | Contents |
 |---|---|
 | `describe_script.json` | Scripted answers for a dry run of `everyseat describe` on the Sintel film, per window: each of the writer's rejection paths (repeats, camera words, too long, too short, nothing to add, no acceptable answer) and the shorten loop |
+| `sintel.plot.txt` | A short, spoiler-light synopsis of Sintel, passed with `--plot` so the descriptions recognise the characters and places and keep their names consistent |
 
 ```sh
 pipeline/.venv/bin/everyseat describe film.mkv --subtitles film.srt --dry-run --script fixtures/describe_script.json

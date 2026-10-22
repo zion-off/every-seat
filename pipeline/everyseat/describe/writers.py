@@ -26,6 +26,7 @@ class Request:
     earlier: list[Earlier]  # every description kept so far, oldest first
     check: Check  # every answer goes through it before it can be kept
     cast: list[str] = field(default_factory=list)
+    plot: str = ""  # a short synopsis of the film, for recognising characters and places
 
     @property
     def budget(self) -> int:

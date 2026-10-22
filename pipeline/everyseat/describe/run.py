@@ -25,6 +25,7 @@ from everyseat.detectors import proxy as proxies
 from everyseat.detectors.cuts import find_cuts
 
 MAX_SHORTENS = 3
+MAX_PLOT_CHARS = 2000
 NOTHING_TO_DESCRIBE = "nothing to describe"
 FASTER_RATE_PERCENT = 110
 PREVIEW_CHARS = 140
@@ -65,6 +66,22 @@ class Described:
 
 def _words(text: str) -> int:
     return len(text.split())
+
+
+def read_plot(path: Path) -> str:
+    """The synopsis in a plain-text file, to give the writer as context."""
+    try:
+        plot = path.read_text().strip()
+    except (OSError, UnicodeDecodeError) as exc:
+        raise DescribeError(f"cannot read the plot file {path}: {exc}") from exc
+    if not plot:
+        raise DescribeError(f"the plot file {path} is empty")
+    if len(plot) > MAX_PLOT_CHARS:
+        raise DescribeError(
+            f"the plot file {path} has {len(plot)} characters; keep it to {MAX_PLOT_CHARS} "
+            "(a short synopsis)"
+        )
+    return plot
 
 
 def _target_words(text: str, spoken_s: float, limit_s: float) -> int:
@@ -168,6 +185,7 @@ def describe(
     work_dir: Path,
     dry_run: bool,
     cast: list[str] | None = None,
+    plot: str = "",
     min_gap_s: float = subtitles.MIN_GAP_S,
     max_window_s: float = subtitles.MAX_WINDOW_S,
     progress: Callable[[str], None] | None = None,
@@ -207,6 +225,7 @@ def describe(
             earlier=review.earlier,
             check=review.check,
             cast=cast or [],
+            plot=plot,
         )
         say(
             f"window {window.index}/{len(windows)}: {window.start:g}-{window.end:g} s "
@@ -253,7 +272,7 @@ def describe(
     skipped_log = [s.log() for s in skipped]
     log_path = cues_path.with_suffix(".run.json")
     log_path.write_text(
-        json.dumps(_log(writer, voice, fitted, skipped, cues, dry_run), indent=1) + "\n"
+        json.dumps(_log(writer, voice, fitted, skipped, cues, dry_run, plot), indent=1) + "\n"
     )
     return Described(cues_path, log_path, clips, skipped_log, len(cues))
 
@@ -271,6 +290,7 @@ def _log(
     skipped: list[Skipped],
     cues: list[Cue],
     dry_run: bool,
+    plot: str,
 ) -> dict:
     characters = sum(f.speech.characters for f in fitted)
     return {
@@ -278,6 +298,7 @@ def _log(
         "dry_run": dry_run,
         "writer": writer.name,
         "voice": voice.name,
+        "plot_chars": len(plot),
         "usage": {
             "input_tokens": writer.usage.input_tokens,
             "output_tokens": writer.usage.output_tokens,
