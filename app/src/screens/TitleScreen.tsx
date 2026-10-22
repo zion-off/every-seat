@@ -6,10 +6,10 @@ import {
 } from '@amazon-devices/kepler-ui-components';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Cue, loadSenseVtt } from 'react-native-sensevtt';
 import { formatClock, TitleEntry, TITLES } from '../catalog';
 import { cuesUrl } from '../config';
-import { loadCues } from '../engine/sensevtt';
-import { Cue, LensSettings } from '../engine/types';
+import { LensSettings } from '../engine/types';
 import { buildHeatmap } from '../lens/heatmap';
 import { COLORS } from '../styles/palette';
 import { scaleUxToDp } from '../utils/pixelUtils';
@@ -84,8 +84,8 @@ const TitleScreen = ({ couchNames, lens, onChangeCouch, onPick }: Props) => {
     let live = true;
     Promise.all(
       TITLES.map((t) =>
-        loadCues(cuesUrl(t.folder))
-          .then((file) => [t.folder, file ? file.cues : null] as const)
+        loadSenseVtt(cuesUrl(t.folder))
+          .then((file) => [t.folder, file.cues] as const)
           .catch(() => [t.folder, null] as const),
       ),
     ).then((entries) => {

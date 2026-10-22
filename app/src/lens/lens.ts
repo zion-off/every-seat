@@ -1,4 +1,5 @@
-import { Cue, LensSettings, NO_LENS } from '../engine/types';
+import { Cue } from 'react-native-sensevtt';
+import { LensSettings, NO_LENS } from '../engine/types';
 import { Person } from './people';
 
 /** The most protective setting of everyone on the couch; an empty couch changes nothing. */

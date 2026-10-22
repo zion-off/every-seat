@@ -1,5 +1,8 @@
-import { PlaybackEngine } from '../engine/PlaybackEngine';
-import { MediaEventName, MediaSession } from '../media/MediaSession';
+import {
+  MediaEventName,
+  SenseController,
+  VegaAdapter,
+} from 'react-native-sensevtt';
 import { RelayClient } from './RelayClient';
 
 /** Phones treat a clock that has been quiet for 6 s as lost, so it is repeated well within that. */
@@ -29,26 +32,26 @@ export const phoneTitleId = (folder: string): string =>
  * sends a final stopped clock and ends the messages.
  */
 export const startClockMessages = (
-  session: MediaSession,
-  engine: PlaybackEngine,
+  adapter: VegaAdapter,
+  controller: SenseController,
   relay: RelayClient,
   folder: string,
 ): (() => void) => {
   const title = phoneTitleId(folder);
   const sendNow = (reason: string, quiet = false) => {
-    const mediaTime = engine.clock.now();
-    const rate = engine.clock.moving ? 1 : 0;
+    const mediaTime = controller.clock.now();
+    const rate = controller.clock.moving ? 1 : 0;
     const sent = relay.sendClock(mediaTime, rate, title);
     if (!quiet) {
       console.info('clock', 'sent', reason, mediaTime.toFixed(3), rate, sent);
     }
   };
 
-  // Registered after the engine's own listener, so the clock has taken the event before it is read.
-  // `playing` can fire a little before the picture moves, which leaves the clock ahead by up to
-  // about 0.15 s until the next `timeupdate` anchors it again, so the first two of those are sent.
+  // Registered after the controller's own listener, so the clock has taken the event before it is
+  // read. `playing` can fire a little before the picture moves, which leaves the clock ahead by up
+  // to about 0.15 s until the next `timeupdate` anchors it again, so the first two of those are sent.
   let settling = 0;
-  const off = session.addListener((name) => {
+  const off = adapter.addListener((name) => {
     if (name === 'playing') {
       settling = SETTLE_UPDATES;
     }
@@ -65,6 +68,6 @@ export const startClockMessages = (
   return () => {
     off();
     clearInterval(timer);
-    relay.sendClock(engine.clock.now(), 0, title);
+    relay.sendClock(controller.clock.now(), 0, title);
   };
 };

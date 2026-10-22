@@ -2,11 +2,10 @@ import { SeekBar, SeekBarHandle } from '@amazon-devices/kepler-ui-components';
 import { useTVEventHandler } from '@amazon-devices/react-native-kepler';
 import React, { RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Cue, SenseController, VegaAdapter } from 'react-native-sensevtt';
 import { formatClock } from '../catalog';
-import { PlaybackEngine } from '../engine/PlaybackEngine';
-import { Cue, LensSettings } from '../engine/types';
+import { LensSettings } from '../engine/types';
 import { buildHeatmap } from '../lens/heatmap';
-import { MediaSession } from '../media/MediaSession';
 import { COLORS, HEAT } from '../styles/palette';
 import { scaleUxToDp } from '../utils/pixelUtils';
 
@@ -20,8 +19,8 @@ const SCRUB_THRESHOLD_MS = 1500;
 const POSITION_TICK_MS = 1000;
 
 type Props = {
-  session: MediaSession;
-  engine: PlaybackEngine;
+  adapter: VegaAdapter;
+  controller: SenseController;
   name: string;
   cues: Cue[];
   lens: LensSettings;
@@ -43,8 +42,8 @@ const momentsLabel = (n: number): string => {
 };
 
 const PlayerControls = ({
-  session,
-  engine,
+  adapter,
+  controller,
   name,
   cues,
   lens,
@@ -106,16 +105,16 @@ const PlayerControls = ({
   useEffect(() => {
     show();
     const tick = setInterval(() => {
-      pausedRef.current = session.paused;
+      pausedRef.current = adapter.paused;
       if (!scrubbingRef.current) {
-        const ms = Math.round(session.currentTime * 1000);
+        const ms = Math.round(adapter.currentTime * 1000);
         positionRef.current = ms;
         setPositionMs(ms);
       }
     }, POSITION_TICK_MS);
-    const off = session.addListener((n) => {
+    const off = adapter.addListener((n) => {
       if (n === 'play' || n === 'pause') {
-        pausedRef.current = session.paused;
+        pausedRef.current = adapter.paused;
         show();
       }
     });
@@ -130,7 +129,7 @@ const PlayerControls = ({
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session]);
+  }, [adapter]);
 
   // A new lens repaints the markers, so bring the bar up where the change can be seen.
   useEffect(() => {
@@ -171,12 +170,12 @@ const PlayerControls = ({
       endScrub();
       positionRef.current = thumb;
       setPositionMs(thumb);
-      engine.seek(thumb / 1000);
-      session.play();
-    } else if (session.paused) {
-      session.play();
+      controller.seek(thumb / 1000);
+      adapter.play();
+    } else if (adapter.paused) {
+      adapter.play();
     } else {
-      session.pause();
+      adapter.pause();
     }
   };
 

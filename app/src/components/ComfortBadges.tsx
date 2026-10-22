@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { AccessibilityInfo, StyleSheet, Text, View } from 'react-native';
-import { PlaybackEngine } from '../engine/PlaybackEngine';
-import { useEngineState } from '../engine/useEngineState';
+import { SenseController } from 'react-native-sensevtt';
+import { useControllerState } from '../engine/useController';
 import { COLORS } from '../styles/palette';
 import { scaleUxToDp } from '../utils/pixelUtils';
 import { CARD_Z_INDEX } from './HeadsUpCard';
@@ -25,15 +25,15 @@ const useAnnounceOnRise = (on: boolean, text: string) => {
 };
 
 type Props = {
-  engine: PlaybackEngine;
+  controller: SenseController;
 };
 
 /**
  * Shows what the TV is doing right now, so it can be seen with the sound off: a badge while a
  * flash is dimmed and a level meter while the volume is lowered.
  */
-const ComfortBadges = ({ engine }: Props) => {
-  const { flashDimming, ducking, volume } = useEngineState(engine);
+const ComfortBadges = ({ controller }: Props) => {
+  const { flashDimming, ducking, volume } = useControllerState(controller);
   useAnnounceOnRise(flashDimming, 'Flash softened');
   useAnnounceOnRise(ducking, 'Sound lowered for a loud moment');
 

@@ -1,10 +1,8 @@
 import { FocusManager } from '@amazon-devices/react-native-kepler';
-import { KeplerVideoSurfaceView } from '@amazon-devices/react-native-w3cmedia';
 import React, {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -15,14 +13,17 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import { Cue, loadSenseVtt, VegaVideoSurface } from 'react-native-sensevtt';
+import { DimOverlay } from 'react-native-sensevtt/react';
 import ComfortBadges from '../components/ComfortBadges';
 import CouchPanel from '../components/CouchPanel';
-import DimOverlay from '../components/DimOverlay';
 import HeadsUpCard from '../components/HeadsUpCard';
 import PlayerControls from '../components/PlayerControls';
-import { PlaybackEngine } from '../engine/PlaybackEngine';
-import { Cue, LensSettings } from '../engine/types';
-import { MediaSession } from '../media/MediaSession';
+import { cuesUrl, manifestUrl } from '../config';
+import { audioLabelFor } from '../engine/comfort';
+import { LensSettings } from '../engine/types';
+import { useController } from '../engine/useController';
+import { usePlayer } from '../media/usePlayer';
 import { startClockMessages } from '../relay/clockMessages';
 import { RelayContext } from '../relay/RelayContext';
 import { COLORS } from '../styles/palette';
@@ -49,19 +50,58 @@ const PlayerScreen = ({
 }: Props) => {
   const { width } = useWindowDimensions();
   const scale = width / 1920;
-  const session = useMemo(() => new MediaSession(), []);
-  const engine = useMemo(() => new PlaybackEngine(session), [session]);
+  const { adapter, loaded, surfaceOn, durationMs, error } = usePlayer(
+    manifestUrl(title),
+    audioLabelFor(lens),
+  );
+  const controller = useController(adapter, lens);
   const relay = useContext(RelayContext);
-  const [surfaceOn, setSurfaceOn] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [cues, setCues] = useState<Cue[]>([]);
-  const [durationMs, setDurationMs] = useState(0);
+  const [cues, setCues] = useState<Cue[] | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const focusBeforePanel = useRef<number | undefined>();
+  const started = useRef(false);
+
+  // Without a cue list the film plays on with nothing to soften or warn about.
+  useEffect(() => {
+    let live = true;
+    loadSenseVtt(cuesUrl(title))
+      .then(
+        (file) => {
+          if (file.issues.length > 0) {
+            console.warn('cues', title, `${file.issues.length} skipped`);
+          }
+          return file.cues;
+        },
+        (e: any) => {
+          console.warn('cues', title, 'load failed', e?.message ?? '');
+          return [] as Cue[];
+        },
+      )
+      .then((list) => {
+        if (live) {
+          setCues(list);
+        }
+      });
+    return () => {
+      live = false;
+    };
+  }, [title]);
 
   useEffect(() => {
-    engine.setLens(lens);
-  }, [engine, lens]);
+    if (controller && cues) {
+      controller.setCues(cues);
+    }
+  }, [controller, cues]);
+
+  // The film starts once the stream and the cue list are both in, so no moment is missed.
+  useEffect(() => {
+    if (started.current || !adapter || !controller || !loaded || !cues) {
+      return;
+    }
+    started.current = true;
+    console.info('cues', title, `${cues.length} cues`);
+    adapter.play();
+  }, [adapter, controller, loaded, cues, title]);
 
   const openPanel = useCallback(() => {
     focusBeforePanel.current = FocusManager.getFocused();
@@ -98,71 +138,50 @@ const PlayerScreen = ({
   // Phones follow the film from this clock, for the audio description they play.
   useEffect(
     () =>
-      relay ? startClockMessages(session, engine, relay, title) : undefined,
-    [session, engine, relay, title],
+      relay && adapter && controller
+        ? startClockMessages(adapter, controller, relay, title)
+        : undefined,
+    [adapter, controller, relay, title],
   );
 
   useEffect(() => {
-    const off = session.addListener((eventName) => {
+    if (!adapter || !controller) {
+      return undefined;
+    }
+    return adapter.addListener((eventName) =>
       console.info(
         'media',
         eventName,
-        session.currentTime.toFixed(3),
-        engine.clock.now().toFixed(3),
-      );
-      if (eventName === 'loadedmetadata') {
-        setSurfaceOn(true);
-        setDurationMs(Math.round(session.duration * 1000));
-      }
-    });
-    session.onError = (e: any) => setError(`playback error ${e?.code ?? ''}`);
-    engine
-      .open(title)
-      .then(() => {
-        setCues(engine.cueList);
-        session.play();
-      })
-      .catch((e: any) => setError(`load error ${e?.code ?? e?.message ?? ''}`));
-    return () => {
-      off();
-      engine.destroy();
-      session.destroy();
-    };
-  }, [engine, session, title]);
-
-  const onSurfaceViewCreated = useCallback(
-    (handle: string) => session.onSurfaceViewCreated(handle),
-    [session],
-  );
-  const onSurfaceViewDestroyed = useCallback(
-    (handle: string) => session.onSurfaceViewDestroyed(handle),
-    [session],
-  );
+        adapter.currentTime.toFixed(3),
+        controller.clock.now().toFixed(3),
+      ),
+    );
+  }, [adapter, controller]);
 
   return (
     <View style={styles.root}>
-      {surfaceOn && (
-        <KeplerVideoSurfaceView
-          style={styles.surface}
-          onSurfaceViewCreated={onSurfaceViewCreated}
-          onSurfaceViewDestroyed={onSurfaceViewDestroyed}
+      {adapter && surfaceOn && (
+        <VegaVideoSurface adapter={adapter} style={styles.surface} />
+      )}
+      {controller && <DimOverlay controller={controller} />}
+      {adapter && controller && (
+        <PlayerControls
+          adapter={adapter}
+          controller={controller}
+          name={name}
+          cues={cues ?? []}
+          lens={lens}
+          couchLabel={couchLabel}
+          durationMs={durationMs}
+          locked={panelOpen}
+          chipRef={chipRef}
+          onOpenCouch={openPanel}
         />
       )}
-      <DimOverlay opacity={engine.dim} />
-      <PlayerControls
-        session={session}
-        engine={engine}
-        name={name}
-        cues={cues}
-        lens={lens}
-        couchLabel={couchLabel}
-        durationMs={durationMs}
-        locked={panelOpen}
-        chipRef={chipRef}
-        onOpenCouch={openPanel}
-      />
-      <ComfortBadges engine={engine} />
-      <HeadsUpCard engine={engine} anchors={[chipRef]} />
+      {controller && <ComfortBadges controller={controller} />}
+      {controller && (
+        <HeadsUpCard controller={controller} anchors={[chipRef]} />
+      )}
       {panelOpen && (
         <CouchPanel
           selected={selected}

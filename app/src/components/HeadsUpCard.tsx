@@ -15,9 +15,8 @@ import {
   Text,
   View,
 } from 'react-native';
-import { PlaybackEngine } from '../engine/PlaybackEngine';
-import { Cue } from '../engine/types';
-import { useEngineState } from '../engine/useEngineState';
+import { Cue, SenseController } from 'react-native-sensevtt';
+import { useControllerState } from '../engine/useController';
 import { COLORS } from '../styles/palette';
 import { scaleUxToDp } from '../utils/pixelUtils';
 
@@ -84,7 +83,7 @@ const CardButton = ({
 };
 
 type BodyProps = {
-  engine: PlaybackEngine;
+  controller: SenseController;
   cards: Cue[];
   /** Controls the card can be reached from, besides whatever held focus when it appeared. */
   anchors: Array<RefObject<View>>;
@@ -93,7 +92,7 @@ type BodyProps = {
 const tagOf = (ref: RefObject<View>): number | null =>
   ref.current ? findNodeHandle(ref.current) : null;
 
-const CardBody = ({ engine, cards, anchors }: BodyProps) => {
+const CardBody = ({ controller, cards, anchors }: BodyProps) => {
   const softenRef = useRef<View>(null);
   const watchRef = useRef<View>(null);
   const tellRef = useRef<View>(null);
@@ -150,7 +149,9 @@ const CardBody = ({ engine, cards, anchors }: BodyProps) => {
         announce('Softened');
       } else if (choice.current === 'watch') {
         announce('Watching as it is');
-      } else if (watched.some((id) => engine.decisionFor(id) === 'soften')) {
+      } else if (
+        watched.some((id) => controller.decisionFor(id) === 'soften')
+      ) {
         announce('No answer, so the moment is softened');
       }
     };
@@ -173,7 +174,7 @@ const CardBody = ({ engine, cards, anchors }: BodyProps) => {
   const decide = (picked: Choice) => {
     choice.current = picked;
     ids.current.forEach((id) =>
-      picked === 'soften' ? engine.soften(id) : engine.watch(id),
+      picked === 'soften' ? controller.soften(id) : controller.watch(id),
     );
   };
 
@@ -240,7 +241,7 @@ const CardBody = ({ engine, cards, anchors }: BodyProps) => {
 };
 
 type Props = {
-  engine: PlaybackEngine;
+  controller: SenseController;
   anchors?: Array<RefObject<View>>;
 };
 
@@ -248,12 +249,12 @@ type Props = {
  * A card that asks what to do about a coming scare or sudden loud sound. It does not take
  * focus: Up from the controls reaches it, and focus goes back to where it was when it closes.
  */
-const HeadsUpCard = ({ engine, anchors = [] }: Props) => {
-  const { cards } = useEngineState(engine);
+const HeadsUpCard = ({ controller, anchors = [] }: Props) => {
+  const { cards } = useControllerState(controller);
   if (cards.length === 0) {
     return null;
   }
-  return <CardBody engine={engine} cards={cards} anchors={anchors} />;
+  return <CardBody controller={controller} cards={cards} anchors={anchors} />;
 };
 
 const styles = StyleSheet.create({

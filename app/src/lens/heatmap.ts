@@ -1,5 +1,6 @@
 import { SegmentColorsConfig } from '@amazon-devices/kepler-ui-components';
-import { Cue, LensSettings } from '../engine/types';
+import { Cue } from 'react-native-sensevtt';
+import { LensSettings } from '../engine/types';
 import { COLORS, HEAT } from '../styles/palette';
 import { coversCue } from './lens';
 
