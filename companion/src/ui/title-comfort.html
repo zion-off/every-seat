@@ -244,11 +244,10 @@
   function reportSize() {
     var root = document.documentElement;
     var height = Math.ceil(root.getBoundingClientRect().height);
-    var width = Math.ceil(window.innerWidth);
-    var key = width + "x" + height;
-    if (key === lastSize) return;
-    lastSize = key;
-    post({ method: "ui/notifications/size-changed", params: { width: width, height: height } });
+    if (String(height) === lastSize) return;
+    lastSize = String(height);
+    // Height only: the host decides how wide the card is.
+    post({ method: "ui/notifications/size-changed", params: { height: height } });
   }
 
   request("ui/initialize", {
