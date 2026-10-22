@@ -22,6 +22,11 @@ class Cue:
     post_s: float | None = None
     evidence: dict = field(default_factory=dict)
     id: str = ""
+    ref: str = ""  # what the cue came from (a candidate id); not written to the file
+
+    @property
+    def refs(self) -> list[str]:
+        return self.ref.split("+")
 
     @property
     def lead(self) -> float:

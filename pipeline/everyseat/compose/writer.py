@@ -4,6 +4,7 @@ import json
 from dataclasses import dataclass, replace
 
 from everyseat.compose.cues import Cue, ordered
+from everyseat.compose.merge import merge_close
 
 HEADER_MARK = "NOTE everyseat-header"
 
@@ -44,10 +45,10 @@ def header(
 
 
 def finalize(title: str, cues: list[Cue]) -> list[Cue]:
-    """Sort cues by start and number them per type: `<title>-<type>-<n>`."""
+    """Merge cues that are too close, sort by start and number them: `<title>-<type>-<n>`."""
     counts: dict[str, int] = {}
     out = []
-    for cue in ordered(cues):
+    for cue in ordered(merge_close(cues)):
         counts[cue.type] = counts.get(cue.type, 0) + 1
         out.append(replace(cue, id=f"{title}-{cue.type}-{counts[cue.type]}"))
     return out
