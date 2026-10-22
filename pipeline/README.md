@@ -67,6 +67,12 @@ AWS_PROFILE=personal AWS_REGION=us-east-1 \
 - **Cost:** $0.03 to $0.10 for a 90 s excerpt with Nova Pro. Images are paid for once: after the
   model has seen a tool image, later calls carry a text note instead.
 
+## Evaluation
+
+`everyseat eval` scores the cue files from `analyze` against labelled events (timing error, events
+found, extra cues, cost) and compares models. The label format, the run script and the committed
+results are in `eval/`.
+
 ## Lint
 
 ```sh
