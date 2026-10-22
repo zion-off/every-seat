@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, field
 
-CUE_TYPES = ("flash", "loud", "scare")
+CUE_TYPES = ("flash", "loud", "scare", "ad")
 TYPE_ORDER = {name: rank for rank, name in enumerate(CUE_TYPES)}
 DEFAULT_LEAD_S = 5
 FLASH_PRE_S = 1.5
@@ -21,6 +21,7 @@ class Cue:
     pre_s: float | None = None
     post_s: float | None = None
     evidence: dict = field(default_factory=dict)
+    audio_ref: dict | None = None  # `ad` cues: {"uri", "duration_s"} of the spoken clip
     id: str = ""
     ref: str = ""  # what the cue came from (a candidate id); not written to the file
 
@@ -50,7 +51,11 @@ class Cue:
             "anchor": self.anchor,
             "intensity": self.intensity,
         }
-        if self.type == "flash":
+        if self.type == "ad":
+            if self.audio_ref is None:
+                raise ValueError(f"ad cue {self.id!r} has no audio_ref")
+            data["audio_ref"] = self.audio_ref
+        elif self.type == "flash":
             data["pre_s"] = self.pre
             data["post_s"] = self.post
         else:
