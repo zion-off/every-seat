@@ -1,38 +1,52 @@
 import { KeplerVideoSurfaceView } from '@amazon-devices/react-native-w3cmedia';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import { manifestUrl } from '../config';
+import DimOverlay from '../components/DimOverlay';
+import { PlaybackEngine } from '../engine/PlaybackEngine';
+import { LensSettings } from '../engine/types';
 import { MediaSession } from '../media/MediaSession';
 import { COLORS } from '../styles/palette';
 
 type Props = {
   title: string;
+  lens: LensSettings;
 };
 
-const PlayerScreen = ({ title }: Props) => {
+const PlayerScreen = ({ title, lens }: Props) => {
   const { width } = useWindowDimensions();
   const scale = width / 1920;
   const session = useMemo(() => new MediaSession(), []);
+  const engine = useMemo(() => new PlaybackEngine(session), [session]);
   const [surfaceOn, setSurfaceOn] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    engine.setLens(lens);
+  }, [engine, lens]);
+
+  useEffect(() => {
     const off = session.addListener((name) => {
-      console.info('media', name, session.currentTime.toFixed(3));
+      console.info(
+        'media',
+        name,
+        session.currentTime.toFixed(3),
+        engine.clock.now().toFixed(3),
+      );
       if (name === 'loadedmetadata') {
         setSurfaceOn(true);
       }
     });
     session.onError = (e: any) => setError(`playback error ${e?.code ?? ''}`);
-    session
-      .load(manifestUrl(title))
+    engine
+      .open(title)
       .then(() => session.play())
       .catch((e: any) => setError(`load error ${e?.code ?? e?.message ?? ''}`));
     return () => {
       off();
+      engine.destroy();
       session.destroy();
     };
-  }, [session, title]);
+  }, [engine, session, title]);
 
   const onSurfaceViewCreated = useCallback(
     (handle: string) => session.onSurfaceViewCreated(handle),
@@ -52,6 +66,7 @@ const PlayerScreen = ({ title }: Props) => {
           onSurfaceViewDestroyed={onSurfaceViewDestroyed}
         />
       )}
+      <DimOverlay opacity={engine.dim} />
       {error && (
         <Text style={[styles.error, { fontSize: 36 * scale }]}>{error}</Text>
       )}
@@ -72,6 +87,7 @@ const styles = StyleSheet.create({
     top: 40,
     left: 40,
     color: COLORS.ACCENT,
+    zIndex: 20,
   },
 });
 

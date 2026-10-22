@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@amazon-devices/kepler-ui-components';
 import { useHideSplashScreenCallback } from '@amazon-devices/react-native-kepler';
 import React, { useEffect, useMemo } from 'react';
-import { DEFAULT_TITLE } from './config';
+import { DEFAULT_LENS, DEFAULT_TITLE } from './config';
 import PlayerScreen from './screens/PlayerScreen';
 import { createTheme } from './styles/theme';
 
@@ -15,7 +15,11 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <PlayerScreen title={DEFAULT_TITLE} />
+      <PlayerScreen
+        key={DEFAULT_TITLE}
+        title={DEFAULT_TITLE}
+        lens={DEFAULT_LENS}
+      />
     </ThemeProvider>
   );
 };
