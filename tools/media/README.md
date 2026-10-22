@@ -5,7 +5,7 @@ Scripts that turn films into the local streams the Fire TV app plays, and into t
 ## Build and serve
 
 ```sh
-tools/media/prepare.sh                      # all three titles: downloads, comfort audio, HLS, cue list
+tools/media/prepare.sh                      # all four titles: downloads, comfort audio, HLS, cue list
 tools/media/prepare.sh tears_of_steel       # one title
 pipeline/.venv/bin/python tools/media/serve_media.py --port 8080
 ```
@@ -16,6 +16,7 @@ The emulator reaches the Mac's localhost as `10.0.2.2`, so a stream is at `http:
 |---|---|---|
 | `elephants_dream` | official download, sha256 checked | `build/media/elephants_dream/` (720x404, 24 fps) |
 | `tears_of_steel` | official download, sha256 checked | `build/media/tears_of_steel/` (1280x534, 24 fps) |
+| `sintel` | official download, sha256 checked; English subtitles saved as `build/downloads/sintel_en.srt` | `build/media/sintel/` (1690x720, 24 fps) |
 | `test_pattern` | generated, 120 s at 30 fps | `build/media/test_pattern/` (1280x720) |
 
 Sources are downloaded to `build/downloads/`, intermediates (the normalised main track and the comfort render) go to `build/work/<title>/`. A title is skipped when its output exists and is newer than its recipe; `--force` rebuilds.

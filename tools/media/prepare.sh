@@ -4,11 +4,12 @@
 # published: everything is written under the build directory, which git ignores.
 #
 # Usage: prepare.sh [--force] [FILM...]
-#   FILM     elephants_dream, tears_of_steel or test_pattern (default: all three)
+#   FILM     elephants_dream, tears_of_steel, sintel or test_pattern (default: all four)
 #   --force  rebuild even when the output is up to date
 #
 # For each film this
-#   1. downloads the source into BUILD/downloads and checks its sha256,
+#   1. downloads the source into BUILD/downloads and checks its sha256 (sintel also gets its
+#      English subtitles, BUILD/downloads/sintel_en.srt, which the description writer reads),
 #   2. extracts a normalised 48 kHz stereo main track into BUILD/work/FILM,
 #   3. renders the comfort track from generated/FILM.recipe.json, else fixtures/FILM.recipe.json
 #      (with neither, the default recipe applies: a limiter on the whole track),
@@ -29,14 +30,16 @@ BUILD="${BUILD_DIR:-$ROOT/build}"
 DOWNLOADS="$BUILD/downloads"
 WORK="$BUILD/work"
 MEDIA="$BUILD/media"
-ALL_FILMS="elephants_dream tears_of_steel test_pattern"
+ALL_FILMS="elephants_dream tears_of_steel sintel test_pattern"
 
 usage() {
   print_usage "${BASH_SOURCE[0]}"
 }
 
-# film_source FILM: set URL, FILE and SHA256 for a downloadable film.
+# film_source FILM: set URL, FILE and SHA256 for a downloadable film, and SUBS_URL and SUBS_SHA256
+# when it has subtitles.
 film_source() {
+  SUBS_URL="" SUBS_SHA256=""
   case "$1" in
     elephants_dream)
       URL="https://download.blender.org/ED/elephantsdream-720-h264-st-aac.mov"
@@ -45,6 +48,12 @@ film_source() {
     tears_of_steel)
       URL="https://download.blender.org/demo/movies/ToS/tears_of_steel_720p.mov"
       SHA256="efa9062d9cdb7a338e40ad530dfdf234806743f29ae6a1a136b97ece4e588e8f"
+      ;;
+    sintel)
+      URL="https://download.blender.org/durian/movies/Sintel.2010.1080p.mkv"
+      SHA256="97f1dbc66231df42ad49bd8c29aa174b8f48933058e47e7157d4ba63d93a8efa"
+      SUBS_URL="https://durian.blender.org/wp-content/content/subtitles/sintel_en.srt"
+      SUBS_SHA256="4ed7e1f1bc5ff69fe33606960e4c048ba6766237bf33b132fef76e1a92cb64b2"
       ;;
     *) die "unknown film $1 (known: $ALL_FILMS)" ;;
   esac
@@ -84,6 +93,23 @@ download() {
   [ "$(sha256_of "$FILE")" = "$SHA256" ] ||
     die "$FILE does not match the expected sha256 (delete it to download again)"
   log "source ok: $(basename "$FILE")"
+  if [ -n "$SUBS_URL" ]; then
+    download_subtitles
+  fi
+}
+
+# download_subtitles: fetch SUBS_URL into DOWNLOADS and check its sha256.
+download_subtitles() {
+  local subs
+  subs="$DOWNLOADS/$(basename "$SUBS_URL")"
+  if [ ! -f "$subs" ]; then
+    log "downloading $SUBS_URL"
+    curl -fL --retry 3 --retry-delay 5 -o "$subs.part" "$SUBS_URL"
+    mv "$subs.part" "$subs"
+  fi
+  [ "$(sha256_of "$subs")" = "$SUBS_SHA256" ] ||
+    die "$subs does not match the expected sha256 (delete it to download again)"
+  log "subtitles ok: $(basename "$subs")"
 }
 
 # recipe_for FILM: print the recipe path to use, or nothing.
@@ -117,9 +143,13 @@ build_film() {
   work="$WORK/$film"
   mkdir -p "$work"
 
-  # The audio stops where the video does, so the renditions have the same length.
+  # The audio stops where the video does, so the renditions have the same length. Some containers
+  # (Matroska) carry no stream duration, so the container's is the fallback.
   duration=$("$FFPROBE" -v error -select_streams v:0 -show_entries stream=duration \
     -of csv=p=0 "$src" | head -1 | tr -d ',')
+  if [ -z "$duration" ] || [ "$duration" = "N/A" ]; then
+    duration=$("$FFPROBE" -v error -show_entries format=duration -of csv=p=0 "$src" | head -1)
+  fi
   [ -n "$duration" ] || die "cannot read the video duration of $src"
   "$FFMPEG" -hide_banner -loglevel error -y -nostdin -i "$src" -map 0:a:0 -vn -t "$duration" \
     -af "aresample=async=1:first_pts=0,aformat=sample_rates=48000:channel_layouts=stereo" \
