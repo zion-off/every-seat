@@ -29,6 +29,13 @@ export const TITLES: TitleEntry[] = [
     durationS: 734.167,
     accent: '#2c5a5f',
   },
+  {
+    folder: 'sintel',
+    name: 'Sintel',
+    byline: 'Blender Foundation, 2010',
+    durationS: 888.032,
+    accent: '#5d3a63',
+  },
 ];
 
 export const formatClock = (seconds: number): string => {
