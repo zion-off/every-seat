@@ -6,13 +6,20 @@ build-backend = "setuptools.build_meta"
 name = "everyseat"
 version = "0.1.0"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = ["jsonschema>=4.23"]
 
 [project.optional-dependencies]
 dev = ["ruff>=0.6"]
 
-[tool.setuptools]
-packages = ["everyseat"]
+[project.scripts]
+everyseat-validate = "everyseat.contracts.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["everyseat*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+"everyseat.contracts" = ["schemas/*.json"]
 
 [tool.ruff]
 target-version = "py312"
