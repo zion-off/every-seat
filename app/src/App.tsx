@@ -1,57 +1,39 @@
-// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-// SPDX-License-Identifier: MIT-0
 import { ThemeProvider } from '@amazon-devices/kepler-ui-components';
-import {
-  Platform,
-  useHideSplashScreenCallback,
-  usePreventHideSplashScreen,
-} from '@amazon-devices/react-native-kepler';
-import { NavigationContainer } from '@amazon-devices/react-navigation__native';
-import { Store } from '@reduxjs/toolkit';
-import React, { useEffect, useMemo, useState } from 'react';
-import { Provider } from 'react-redux';
-import AppStack from './components/navigation/AppStack';
-import { initializeStore } from './store';
-import { createTheme } from './styles/ThemeBuilders';
+import { useHideSplashScreenCallback } from '@amazon-devices/react-native-kepler';
+import React, { useEffect, useMemo } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { COLORS } from './styles/palette';
+import { createTheme } from './styles/theme';
+import { scaleUxToDp } from './utils/pixelUtils';
 
 const App = () => {
-  const [store, setStore] = useState<Store | null>(null);
-  const isTv = Platform.isTV;
-  const preventHideSplashScreen = usePreventHideSplashScreen;
   const hideSplashScreen = useHideSplashScreenCallback();
-
-  if (isTv) {
-    preventHideSplashScreen();
-  }
-
-  if (__DEV__) {
-    hideSplashScreen();
-  }
-
-  const initStore = async () => {
-    const initializedStore = await initializeStore();
-    setStore(initializedStore);
-  };
-
-  useEffect(() => {
-    initStore();
-  }, []);
-
   const theme = useMemo(() => createTheme(), []);
 
-  if (!store) {
-    return null;
-  }
+  useEffect(() => {
+    hideSplashScreen();
+  }, [hideSplashScreen]);
 
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <AppStack />
-        </NavigationContainer>
-      </ThemeProvider>
-    </Provider>
+    <ThemeProvider theme={theme}>
+      <View style={styles.root}>
+        <Text style={styles.title}>Every Seat</Text>
+      </View>
+    </ThemeProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.BACKGROUND,
+  },
+  title: {
+    color: COLORS.TEXT,
+    fontSize: scaleUxToDp(72),
+  },
+});
 
 export default App;

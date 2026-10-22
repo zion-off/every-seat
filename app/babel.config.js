@@ -16,8 +16,6 @@ module.exports = api => {
         runtime: 'automatic',
       },
     ],
-    ['module:react-native-dotenv'],
-    '@amazon-devices/react-native-reanimated/plugin',
   ];
 
   // plugins pushed only for "development" env

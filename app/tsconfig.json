@@ -43,10 +43,9 @@
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
     "typeRoots": [
       "src/w3cmedia/shakaplayer/dist",
-      "node_modules/@types",
-      "types"
+      "node_modules/@types"
     ] /* List of folders to include type definitions from. */,
-    // "types": [],                           /* Type declaration files to be included in compilation. */
+    "types": ["react"] /* Only these packages are included automatically; the newest node typings use syntax this TypeScript cannot parse. */,
     "allowSyntheticDefaultImports": true /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */,
     "esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */,
     // "preserveSymlinks": true,              /* Do not resolve the real path of symlinks. */
@@ -67,7 +66,6 @@
     "node_modules",
     "babel.config.js",
     "metro.config.js",
-    "jest.config.js",
     "src/w3cmedia/shakaplayer/dist/wrapper.js",
     "shaka-setup/**/*"
   ]
