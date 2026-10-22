@@ -1,1 +1,1 @@
-"""Composing the outputs: SenseVTT cue files and the comfort audio recipe."""
+"""Composing the comfort audio recipe from the cue file."""

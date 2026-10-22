@@ -4,9 +4,9 @@ from dataclasses import dataclass, field
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
+from sensevtt.writer import Cue
 
 from everyseat.agent import anchors
-from everyseat.compose.cues import Cue
 from everyseat.detectors import sheet, strip
 from everyseat.detectors.candidates import Candidate, Detection
 

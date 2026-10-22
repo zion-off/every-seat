@@ -2,7 +2,7 @@ import { Cue, CueAnchor, CueType, SenseVttFile, SenseVttHeader } from './types';
 
 const CUE_TYPES: CueType[] = ['flash', 'loud', 'scare', 'ad'];
 const ANCHORS: CueAnchor[] = ['iris', 'onset', 'cut', 'approx'];
-const HEADER_NOTE = 'NOTE everyseat-header';
+const HEADER_NOTE = 'NOTE sensevtt-header';
 
 const toBlocks = (text: string): string[][] => {
   const blocks: string[][] = [];

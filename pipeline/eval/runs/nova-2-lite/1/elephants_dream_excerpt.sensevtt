@@ -1,6 +1,6 @@
 WEBVTT
 
-NOTE everyseat-header
+NOTE sensevtt-header
 {"version":1,"title":"elephants-dream","analyzer":"everyseat 0.1.0 (us.amazon.nova-2-lite-v1:0)","source_sha256":"6fc295e0e92835316ec95929ccfc664b05ed2434f673e6f5e684f98f7558a547","fps":24,"iris":{"verdict":"FAIL","max_luminance_swing":0.3283}}
 
 elephants-dream-loud-1

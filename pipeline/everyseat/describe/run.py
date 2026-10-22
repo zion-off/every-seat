@@ -10,11 +10,12 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from sensevtt import writer as cue_writer
+from sensevtt.validate import validate_sensevtt
+from sensevtt.writer import Cue
+
 from everyseat import __version__
 from everyseat.analyze import TITLE, file_sha256
-from everyseat.compose import writer as cue_writer
-from everyseat.compose.cues import Cue
-from everyseat.contracts.validate import validate_sensevtt
 from everyseat.describe import DescribeError, shots, subtitles
 from everyseat.describe.subtitles import Window
 from everyseat.describe.voices import Speech, Voice, write_wav
@@ -209,8 +210,8 @@ def describe(
         fps=proxy.fps,
         verdict="NOT_RUN",
     )
-    rendered = cue_writer.render(head, cues)
-    issues = validate_sensevtt(rendered.text)
+    text = cue_writer.render(head, cues)
+    issues = validate_sensevtt(text)
     if issues:
         raise DescribeError("; ".join(f"line {i.line}: {i.message}" for i in issues))
 
@@ -223,7 +224,7 @@ def describe(
         write_wav(path, item.speech)
         clips.append(path)
     cues_path.parent.mkdir(parents=True, exist_ok=True)
-    cues_path.write_text(rendered.text)
+    cues_path.write_text(text)
     log_path = cues_path.with_suffix(".run.json")
     log_path.write_text(
         json.dumps(_log(writer, voice, fitted, skipped, cues, dry_run), indent=1) + "\n"

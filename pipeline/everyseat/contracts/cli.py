@@ -3,8 +3,10 @@
 import argparse
 import sys
 
-from everyseat.contracts.sensevtt import Issue, parse
-from everyseat.contracts.validate import relay_lines, validate_parsed, validate_relay
+from sensevtt.format import Issue, parse
+from sensevtt.validate import validate_parsed
+
+from everyseat.contracts.validate import relay_lines, validate_relay
 
 _STDIN = "-"
 

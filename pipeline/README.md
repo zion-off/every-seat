@@ -7,8 +7,13 @@ app reads.
 
 ```sh
 python3.12 -m venv .venv
+.venv/bin/pip install -r requirements-local.txt
 .venv/bin/pip install -e ".[dev]"
 ```
+
+Cue files are read, validated and written by the `sensevtt` Python package (the SenseVTT library).
+`requirements-local.txt` installs it from a sibling checkout (`../../sensevtt`) and is the one place
+that path lives; it goes away once the package is installed from PyPI.
 
 Needs `ffmpeg` and `ffprobe` on `PATH` (or `FFMPEG` / `FFPROBE` set), and Docker for the flash
 analyzer, which ships as an x86 image:

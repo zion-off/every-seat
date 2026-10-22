@@ -34,7 +34,7 @@ const TIMING = /^\d{2,}:\d{2}:\d{2}\.\d{3} --> \d{2,}:\d{2}:\d{2}\.\d{3}$/;
 
 /**
  * Reads a SenseVTT file: WebVTT whose cue payloads are one line of JSON, after a
- * `NOTE everyseat-header` block holding one line of JSON. Throws on a bad header; cues
+ * `NOTE sensevtt-header` block holding one line of JSON. Throws on a bad header; cues
  * that do not parse are skipped and reported in `problems`.
  * @param {string} text
  * @returns {{ header: SenseVttHeader, cues: CuePayload[], problems: string[] }}
@@ -52,7 +52,7 @@ export function parseSenseVtt(text) {
 
   for (const block of splitBlocks(lines.slice(1))) {
     const [first = "", ...rest] = block.lines;
-    if (first === "NOTE everyseat-header") {
+    if (first === "NOTE sensevtt-header") {
       const parsed = headerSchema.safeParse(parseJson(rest.join("\n")));
       if (!parsed.success) throw new Error(`bad header: ${parsed.error.issues[0]?.message}`);
       header = parsed.data;
@@ -70,7 +70,7 @@ export function parseSenseVtt(text) {
     cues.push(parsed.data);
   }
 
-  if (!header) throw new Error("missing everyseat-header block");
+  if (!header) throw new Error("missing sensevtt-header block");
   return { header, cues, problems };
 }
 

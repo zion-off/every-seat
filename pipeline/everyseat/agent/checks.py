@@ -3,11 +3,11 @@
 import math
 from bisect import bisect_right
 
+from sensevtt import writer
+from sensevtt.validate import validate_sensevtt
+from sensevtt.writer import MIN_LOUD_GAP_S, Cue
+
 from everyseat.agent.session import STRONG_FLASH, Session
-from everyseat.compose import writer
-from everyseat.compose.cues import Cue
-from everyseat.compose.merge import MIN_LOUD_GAP_S
-from everyseat.contracts.validate import validate_sensevtt
 
 MIN_FLASH_INTENSITY_FAIL = 4
 
@@ -15,7 +15,7 @@ MIN_FLASH_INTENSITY_FAIL = 4
 def problems(session: Session) -> list[str]:
     """Everything that stops the drafted cues from being final; an empty list means done."""
     cues = writer.finalize(session.title, session.cues())
-    rendered = writer.render(session.head, cues)
+    rendered = writer.render_indexed(session.head, cues)
     found = []
     for issue in validate_sensevtt(rendered.text):
         index = bisect_right(rendered.cue_lines, issue.line) - 1

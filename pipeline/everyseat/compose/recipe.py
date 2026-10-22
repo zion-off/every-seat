@@ -1,6 +1,6 @@
 """The comfort audio recipe: gain-ride windows around the loud moments."""
 
-from everyseat.compose.cues import Cue
+from sensevtt.writer import Cue
 
 DEFAULTS = {"gain_db": -18, "pre_s": 0.4, "ramp_s": 0.3, "release_s": 1.0, "limiter": 0.25}
 

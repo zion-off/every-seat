@@ -7,13 +7,14 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
+from sensevtt import writer
+from sensevtt.validate import validate_sensevtt
+
 from everyseat import __version__
 from everyseat.agent import model
 from everyseat.agent.run import AgentRun, run_agent
 from everyseat.agent.session import Session
-from everyseat.compose import writer
 from everyseat.compose.recipe import comfort_recipe
-from everyseat.contracts.validate import validate_sensevtt
 from everyseat.detectors.candidates import Detection, detect
 from everyseat.detectors.cuts import SCENE_THRESHOLD
 
@@ -130,12 +131,12 @@ def analyze(
         )
 
     cues = writer.finalize(title, session.cues())
-    rendered = writer.render(head, cues)
-    issues = validate_sensevtt(rendered.text)
+    text = writer.render(head, cues)
+    issues = validate_sensevtt(text)
     if issues:
         raise AnalysisError("; ".join(f"line {i.line}: {i.message}" for i in issues))
     sensevtt_path = out_dir / f"{name}.sensevtt"
     recipe_path = out_dir / f"{name}.recipe.json"
-    sensevtt_path.write_text(rendered.text)
+    sensevtt_path.write_text(text)
     recipe_path.write_text(json.dumps(comfort_recipe(cues), indent=1) + "\n")
     return Analysis(sensevtt_path, recipe_path, log_path, len(cues), run)

@@ -11,8 +11,7 @@ from pathlib import Path
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
-
-from everyseat.contracts.sensevtt import parse
+from sensevtt.format import parse
 
 CueType = Literal["flash", "loud", "scare"]
 DEFAULT_TOLERANCE_S = {"flash": 1.0, "loud": 0.5, "scare": 0.5}

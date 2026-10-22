@@ -1,5 +1,6 @@
 // Shared data contracts. Hand-written mirror of the JSON Schemas in
-// pipeline/everyseat/contracts/schemas/ and the types in pipeline/everyseat/contracts/types.py.
+// pipeline/everyseat/contracts/schemas/ (lens and relay), the types in
+// pipeline/everyseat/contracts/types.py, and the SenseVTT cue file schemas of the sensevtt library.
 
 export type CueType = "flash" | "loud" | "scare" | "ad";
 
@@ -13,7 +14,7 @@ export interface IrisSummary {
   max_luminance_swing?: number;
 }
 
-/** The JSON line after the `NOTE everyseat-header` block of a SenseVTT file. */
+/** The JSON line after the `NOTE sensevtt-header` block of a SenseVTT file. */
 export interface SenseVttHeader {
   version: 1;
   /** Title id, matching ^[a-z0-9-]+$ */

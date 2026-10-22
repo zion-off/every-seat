@@ -1,6 +1,6 @@
 WEBVTT
 
-NOTE everyseat-header
+NOTE sensevtt-header
 {"version":1,"title":"test-pattern","analyzer":"hand-written","source_sha256":"0000000000000000000000000000000000000000000000000000000000000000","fps":30,"iris":{"verdict":"NOT_RUN"}}
 
 NOTE One cue of each type for the generated 120 s timecode test stream.

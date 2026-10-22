@@ -1,6 +1,6 @@
 WEBVTT
 
-NOTE everyseat-header
+NOTE sensevtt-header
 {"version":1,"title":"tears-of-steel","analyzer":"everyseat 0.1.0 (us.amazon.nova-pro-v1:0)","source_sha256":"efa9062d9cdb7a338e40ad530dfdf234806743f29ae6a1a136b97ece4e588e8f","fps":24,"iris":{"verdict":"PASS_WITH_WARNING","max_luminance_swing":0.165}}
 
 tears-of-steel-loud-1
