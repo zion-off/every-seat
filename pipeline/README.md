@@ -40,6 +40,33 @@ Times in the JSON are seconds on the film's clock (excerpt start included) and o
 Work files go to `build/work/<name>` unless `--work-dir` is given. `--no-iris` skips the flash
 analysis and reports its verdict as `NOT_RUN`.
 
+## Analysis
+
+`everyseat analyze` runs the detectors, then a Strands agent on Amazon Nova Pro judges the
+candidates and writes the cue file:
+
+```sh
+AWS_PROFILE=personal AWS_REGION=us-east-1 \
+  everyseat analyze film.mov --start 420 --duration 90 --title my-film --out-dir generated
+```
+
+- **Division of work:** detectors set every time and anchor; the model decides which candidates
+  get a cue, how intense it is, and writes a short preview. `--model nova-2-lite` selects the
+  other supported model.
+- **Tools:** `inspect` returns a contact sheet and a loudness strip for a window (film-time
+  seconds), `submit_cue`, `skip_candidate`, `drop_cue` and `validate`. A scare or a flash warning
+  can only be submitted for a window that was inspected, and a loud cue needs a jump of at least
+  15 dB to a peak above -20 dBFS.
+- **Checks:** every candidate needs a decision, flash failures get intensity 4 or 5, and the cue
+  file must pass the SenseVTT validator, with heads-up cards that never overlap an earlier
+  moment. Loud or scare cues less than 2 s apart (flash cues: closer than their margins) are
+  merged.
+- **Outputs:** `<name>.sensevtt`, `<name>.recipe.json` (the comfort render settings, built from
+  the loud cues) and `<name>.run.json` (model, token usage and estimated cost, inspections,
+  skipped candidates, open problems).
+- **Cost:** $0.03 to $0.10 for a 90 s excerpt with Nova Pro. Images are paid for once: after the
+  model has seen a tool image, later calls carry a text note instead.
+
 ## Lint
 
 ```sh
