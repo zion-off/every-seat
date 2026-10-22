@@ -270,7 +270,7 @@ def render(labels: list[Labels], results: Results) -> str:
             "",
             "No event is hand-labelled yet: the events come from instrument readings and a "
             "reference cue file, so this table checks the harness and the timing, not how well "
-            "the cues match a viewer's judgement.",
+            "the cues match what a viewer would want.",
         ]
     lines += [
         "",

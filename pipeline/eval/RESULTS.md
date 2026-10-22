@@ -2,7 +2,7 @@
 
 3 labelled events in 2 excerpts (0 hand-labelled). A cue finds an event when it has the same type and starts within the tolerance (flash 1 s, loud 0.5 s, scare 0.5 s); each cue and event is used once. Start error is the cue start minus the labelled start, in seconds. Precision needs every event of an excerpt to be labelled, so it is only computed for label files marked complete; other cues are counted as extra, not as wrong.
 
-No event is hand-labelled yet: the events come from instrument readings and a reference cue file, so this table checks the harness and the timing, not how well the cues match a viewer's judgement.
+No event is hand-labelled yet: the events come from instrument readings and a reference cue file, so this table checks the harness and the timing, not how well the cues match what a viewer would want.
 
 ## Models
 
