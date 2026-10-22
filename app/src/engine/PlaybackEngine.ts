@@ -38,6 +38,8 @@ export type EngineState = {
   flashDimming: boolean;
   /** The live volume duck is in effect. */
   ducking: boolean;
+  /** The live volume gain, 1 when untouched. */
+  volume: number;
   audio: string;
 };
 
@@ -67,6 +69,7 @@ export class PlaybackEngine {
     cards: [],
     flashDimming: false,
     ducking: false,
+    volume: 1,
     audio: MAIN_AUDIO,
   };
   private listeners = new Set<Listener>();
@@ -161,6 +164,14 @@ export class PlaybackEngine {
     this.cards.delete(id);
     this.replan();
     this.tick();
+  }
+
+  /** How a heads-up moment was settled, whether by a choice or by the deadline. */
+  decisionFor(id: string): 'soften' | 'watch' | undefined {
+    if (this.softened.has(id)) {
+      return 'soften';
+    }
+    return this.watching.has(id) ? 'watch' : undefined;
   }
 
   destroy() {
@@ -287,17 +298,19 @@ export class PlaybackEngine {
     const cards = Array.from(this.cards.values());
     const flashDimming = sample(this.plan.flash, t).level > 0;
     const ducking = this.gain < 1;
+    const volume = this.gain;
     const prev = this.state;
     if (
       prev.flashDimming === flashDimming &&
       prev.ducking === ducking &&
+      prev.volume === volume &&
       prev.audio === this.audio &&
       prev.cards.length === cards.length &&
       prev.cards.every((c, i) => c === cards[i])
     ) {
       return;
     }
-    this.state = { cards, flashDimming, ducking, audio: this.audio };
+    this.state = { cards, flashDimming, ducking, volume, audio: this.audio };
     this.listeners.forEach((cb) => cb(this.state));
   }
 }
