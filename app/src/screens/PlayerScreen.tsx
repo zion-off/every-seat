@@ -14,8 +14,10 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import ComfortBadges from '../components/ComfortBadges';
 import CouchPanel from '../components/CouchPanel';
 import DimOverlay from '../components/DimOverlay';
+import HeadsUpCard from '../components/HeadsUpCard';
 import PlayerControls from '../components/PlayerControls';
 import { PlaybackEngine } from '../engine/PlaybackEngine';
 import { Cue, LensSettings } from '../engine/types';
@@ -70,17 +72,24 @@ const PlayerScreen = ({
     }
   }, []);
 
+  const panelOpenRef = useRef(false);
+  panelOpenRef.current = panelOpen;
+  const exitRef = useRef(onExit);
+  exitRef.current = onExit;
+  const chipRef = useRef<View>(null);
+
+  // Registered once: handlers added later, such as the heads-up card's, run before it.
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
-      if (panelOpen) {
+      if (panelOpenRef.current) {
         closePanel();
       } else {
-        onExit();
+        exitRef.current();
       }
       return true;
     });
     return () => sub.remove();
-  }, [panelOpen, closePanel, onExit]);
+  }, [closePanel]);
 
   useEffect(() => {
     const off = session.addListener((eventName) => {
@@ -138,8 +147,11 @@ const PlayerScreen = ({
         couchLabel={couchLabel}
         durationMs={durationMs}
         locked={panelOpen}
+        chipRef={chipRef}
         onOpenCouch={openPanel}
       />
+      <ComfortBadges engine={engine} />
+      <HeadsUpCard engine={engine} anchors={[chipRef]} />
       {panelOpen && (
         <CouchPanel
           selected={selected}

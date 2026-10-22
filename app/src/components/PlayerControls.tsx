@@ -1,6 +1,6 @@
 import { SeekBar, SeekBarHandle } from '@amazon-devices/kepler-ui-components';
 import { useTVEventHandler } from '@amazon-devices/react-native-kepler';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { formatClock } from '../catalog';
 import { PlaybackEngine } from '../engine/PlaybackEngine';
@@ -29,6 +29,7 @@ type Props = {
   durationMs: number;
   /** While true (a panel is open over the film) the controls stay on screen. */
   locked: boolean;
+  chipRef?: RefObject<View>;
   onOpenCouch: () => void;
 };
 
@@ -50,6 +51,7 @@ const PlayerControls = ({
   couchLabel,
   durationMs,
   locked,
+  chipRef,
   onOpenCouch,
 }: Props) => {
   const seekRef = useRef<SeekBarHandle>(null);
@@ -214,6 +216,7 @@ const PlayerControls = ({
           <Text style={styles.legendText}>{momentsLabel(heatmap.count)}</Text>
         </View>
         <Pressable
+          ref={chipRef}
           accessible
           accessibilityRole="button"
           accessibilityLabel={`On the couch: ${couchLabel}. Change who is on the couch`}
