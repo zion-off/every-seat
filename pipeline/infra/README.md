@@ -46,9 +46,9 @@ analyzer tasks run in the subnets you pass, with a public IP.
     \"Statement\": [{
       \"Sid\": \"TransactionSearchXRayAccess\", \"Effect\": \"Allow\",
       \"Principal\": {\"Service\": \"xray.amazonaws.com\"}, \"Action\": \"logs:PutLogEvents\",
-      \"Resource\": [\"arn:aws:logs:$AWS_REGION:$ACCOUNT_ID:log-group:aws/spans:*\",
-                     \"arn:aws:logs:$AWS_REGION:$ACCOUNT_ID:log-group:/aws/application-signals/data:*\"],
-      \"Condition\": {\"ArnLike\": {\"aws:SourceArn\": \"arn:aws:xray:$AWS_REGION:$ACCOUNT_ID:*\"},
+      \"Resource\": [\"arn:aws:logs:${AWS_REGION}:${ACCOUNT_ID}:log-group:aws/spans:*\",
+                     \"arn:aws:logs:${AWS_REGION}:${ACCOUNT_ID}:log-group:/aws/application-signals/data:*\"],
+      \"Condition\": {\"ArnLike\": {\"aws:SourceArn\": \"arn:aws:xray:${AWS_REGION}:${ACCOUNT_ID}:*\"},
                       \"StringEquals\": {\"aws:SourceAccount\": \"$ACCOUNT_ID\"}}}]}"
   aws xray update-trace-segment-destination --destination CloudWatchLogs
   ```
@@ -62,18 +62,18 @@ CDK="npx --yes aws-cdk@2.1146.1"
 python3.12 -m venv .venv && .venv/bin/pip install -r requirements.txt
 ```
 
-**1. Bootstrap** (once per account and region; creates the `CDKToolkit` stack):
-
-```sh
-$CDK bootstrap
-```
-
-**2. The network.** Use the default VPC and its public subnets (all default subnets are public):
+**1. The network.** Use the default VPC and its public subnets (all default subnets are public):
 
 ```sh
 VPC_ID=$(aws ec2 describe-vpcs --filters Name=isDefault,Values=true --query 'Vpcs[0].VpcId' --output text)
 SUBNET_IDS=$(aws ec2 describe-subnets --filters Name=vpc-id,Values=$VPC_ID Name=default-for-az,Values=true \
   --query 'Subnets[].SubnetId' --output text | tr '\t' ',')
+```
+
+**2. Bootstrap** (once per account and region; creates the `CDKToolkit` stack). The app is synthesized during bootstrap, so it needs the network context too:
+
+```sh
+$CDK bootstrap -c vpc_id=$VPC_ID -c subnet_ids=$SUBNET_IDS
 ```
 
 **3. The stack.** `-c agent_runtime_arn` is left out for now; the runtime does not exist yet.
