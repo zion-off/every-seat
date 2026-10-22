@@ -39,7 +39,7 @@ in seconds from the start of the film. Answer only by calling submit_description
 """
 
 
-class Submission(BaseModel):
+class Draft(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     text: str = Field(default="", max_length=1200)
@@ -135,7 +135,7 @@ class NovaWriter:
                 nothing_to_describe: True when nothing essential is visible in the window.
             """
             try:
-                given = Submission(text=text, nothing_to_describe=nothing_to_describe)
+                given = Draft(text=text, nothing_to_describe=nothing_to_describe)
             except ValidationError as exc:
                 return "error: " + "; ".join(e["msg"] for e in exc.errors())
             if given.nothing_to_describe:
