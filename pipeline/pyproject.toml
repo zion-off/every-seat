@@ -12,6 +12,7 @@ dependencies = [
   "jsonschema>=4.23",
   "numpy>=2.0",
   "pillow>=10.1",
+  "sensevtt>=0.1.0",
   "strands-agents>=1.62",
 ]
 

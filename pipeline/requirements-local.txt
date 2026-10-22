@@ -1,0 +1,4 @@
+# The SenseVTT library, from a sibling checkout. This is the only place the relative path lives;
+# until the package is on PyPI, install it before the pipeline (from this directory):
+#   .venv/bin/pip install -r requirements-local.txt
+-e ../../sensevtt/python
