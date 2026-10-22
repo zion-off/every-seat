@@ -3,7 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "description": "MCP server, relay and preference store for the Every Seat voice companion",
   "engines": {
     "node": ">=22 <23"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "lint": "eslint . && tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/ext-apps": "1.7.5",
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "ws": "^8.18.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.0",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0",
+    "typescript": "^5.9.3"
   }
 }
