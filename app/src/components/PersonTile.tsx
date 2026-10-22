@@ -45,7 +45,7 @@ const PersonTile = ({
         selected && styles.tileSelected,
         focused && styles.tileFocused,
       ]}>
-      <View style={styles.head}>
+      <View style={[styles.head, compact && styles.headCompact]}>
         <View style={[styles.avatar, selected && styles.avatarSelected]}>
           <Text style={[styles.initial, selected && styles.initialSelected]}>
             {person.name.charAt(0)}
@@ -59,7 +59,7 @@ const PersonTile = ({
         </View>
       </View>
       {compact ? (
-        <Text style={styles.detail} numberOfLines={2}>
+        <Text style={[styles.detail, styles.detailCompact]} numberOfLines={2}>
           {summary(person)}
         </Text>
       ) : (
@@ -93,8 +93,9 @@ const styles = StyleSheet.create({
   },
   tileCompact: {
     width: scaleUxToDp(560),
-    height: scaleUxToDp(170),
-    marginBottom: scaleUxToDp(16),
+    height: scaleUxToDp(174),
+    marginBottom: scaleUxToDp(10),
+    paddingVertical: scaleUxToDp(16),
   },
   tileSelected: {
     backgroundColor: COLORS.SURFACE_FOCUSED,
@@ -106,6 +107,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: scaleUxToDp(14),
+  },
+  headCompact: {
+    marginBottom: scaleUxToDp(4),
   },
   avatar: {
     width: scaleUxToDp(64),
@@ -161,6 +165,10 @@ const styles = StyleSheet.create({
     color: COLORS.MUTED,
     fontSize: scaleUxToDp(27),
     lineHeight: scaleUxToDp(36),
+  },
+  detailCompact: {
+    fontSize: scaleUxToDp(24),
+    lineHeight: scaleUxToDp(30),
   },
 });
 
