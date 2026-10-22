@@ -7,10 +7,19 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { BackHandler } from 'react-native';
+import { AccessibilityInfo, BackHandler } from 'react-native';
 import { TitleEntry } from './catalog';
+import { HOUSEHOLD, RELAY_URL } from './config';
+import {
+  HouseholdContext,
+  mergePeople,
+  personId,
+  sameIds,
+  useStableValue,
+} from './lens/household';
 import { combineLens, couchNames } from './lens/lens';
-import { PEOPLE, Person, personById } from './lens/people';
+import { PEOPLE, Person } from './lens/people';
+import { LensMessage, RelayClient } from './relay/RelayClient';
 import CouchScreen from './screens/CouchScreen';
 import NoticeScreen from './screens/NoticeScreen';
 import PlayerScreen from './screens/PlayerScreen';
@@ -25,14 +34,16 @@ const App = () => {
   const theme = useMemo(() => createTheme(), []);
   // Null until the first-run check resolves, so the notice never flashes after the couch screen.
   const [route, setRoute] = useState<Route | null>(null);
+  const [household, setHousehold] = useState<Person[]>(PEOPLE);
   const [couch, setCouch] = useState<string[]>([]);
   const [title, setTitle] = useState<TitleEntry | null>(null);
 
   const people = useMemo(
-    () => couch.map(personById).filter((p): p is Person => p !== undefined),
-    [couch],
+    () => household.filter((p) => couch.includes(p.id)),
+    [household, couch],
   );
-  const lens = useMemo(() => combineLens(people), [people]);
+  // The same object while the settings are the same, so an identical lens from the relay changes nothing.
+  const lens = useStableValue(useMemo(() => combineLens(people), [people]));
 
   useEffect(() => {
     let live = true;
@@ -66,18 +77,46 @@ const App = () => {
     return () => sub.remove();
   }, []);
 
+  // A lens from the companion names tonight's couch: known people take its settings, new names join.
+  const lastLens = useRef('');
+  const applyLens = useCallback((message: LensMessage) => {
+    const incoming = message.people.map((p) => ({
+      id: personId(p.name),
+      name: p.name,
+      settings: p.settings,
+    }));
+    const ids = incoming.map((p) => p.id);
+    setHousehold((prev) => mergePeople(prev, incoming));
+    setCouch((prev) => (sameIds(prev, ids) ? prev : ids));
+    const key = JSON.stringify(incoming);
+    if (key !== lastLens.current) {
+      lastLens.current = key;
+      AccessibilityInfo.announceForAccessibility(
+        `Tonight's couch is now ${couchNames(incoming)}`,
+      );
+    }
+  }, []);
+  const applyLensRef = useRef(applyLens);
+  applyLensRef.current = applyLens;
+  useEffect(() => {
+    const client = new RelayClient({
+      url: RELAY_URL,
+      household: HOUSEHOLD,
+      onLens: (message) => applyLensRef.current(message),
+    });
+    client.start();
+    return () => client.stop();
+  }, []);
+
   const acceptNotice = useCallback(() => {
     markNoticeSeen();
     setRoute('couch');
   }, []);
 
   const toggle = useCallback((id: string) => {
-    setCouch((prev) => {
-      const next = prev.includes(id)
-        ? prev.filter((x) => x !== id)
-        : [...prev, id];
-      return PEOPLE.map((p) => p.id).filter((x) => next.includes(x));
-    });
+    setCouch((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
   }, []);
 
   const pick = useCallback((entry: TitleEntry) => {
@@ -89,7 +128,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <>
+      <HouseholdContext.Provider value={household}>
         {route === 'notice' && (
           <NoticeScreen mode="first-run" onDone={acceptNotice} />
         )}
@@ -107,6 +146,7 @@ const App = () => {
         )}
         {route === 'titles' && (
           <TitleScreen
+            key={JSON.stringify(lens)}
             couchNames={couchNames(people)}
             lens={lens}
             onChangeCouch={() => setRoute('couch')}
@@ -125,7 +165,7 @@ const App = () => {
             onExit={leavePlayer}
           />
         )}
-      </>
+      </HouseholdContext.Provider>
     </ThemeProvider>
   );
 };

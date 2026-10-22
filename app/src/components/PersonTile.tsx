@@ -10,6 +10,8 @@ type Props = {
   selected: boolean;
   onPress: () => void;
   compact?: boolean;
+  /** Smaller tiles for a row, used when the household is too big for one line of full ones. */
+  dense?: boolean;
   autoFocus?: boolean;
 };
 
@@ -23,9 +25,11 @@ const PersonTile = ({
   selected,
   onPress,
   compact,
+  dense,
   autoFocus,
 }: Props) => {
   const [focused, setFocused] = useState(false);
+  const short = compact || dense;
   const lines = describeLens(person.settings);
   return (
     <Pressable
@@ -41,11 +45,12 @@ const PersonTile = ({
       onBlur={() => setFocused(false)}
       style={[
         styles.tile,
-        compact ? styles.tileCompact : styles.tileFull,
+        short ? styles.tileCompact : styles.tileFull,
+        dense && styles.tileDense,
         selected && styles.tileSelected,
         focused && styles.tileFocused,
       ]}>
-      <View style={[styles.head, compact && styles.headCompact]}>
+      <View style={[styles.head, short && styles.headCompact]}>
         <View style={[styles.avatar, selected && styles.avatarSelected]}>
           <Text style={[styles.initial, selected && styles.initialSelected]}>
             {person.name.charAt(0)}
@@ -58,8 +63,10 @@ const PersonTile = ({
           {selected && <View style={styles.tick} />}
         </View>
       </View>
-      {compact ? (
-        <Text style={[styles.detail, styles.detailCompact]} numberOfLines={2}>
+      {short ? (
+        <Text
+          style={[styles.detail, styles.detailCompact]}
+          numberOfLines={dense ? 3 : 2}>
           {summary(person)}
         </Text>
       ) : (
@@ -96,6 +103,11 @@ const styles = StyleSheet.create({
     height: scaleUxToDp(174),
     marginBottom: scaleUxToDp(10),
     paddingVertical: scaleUxToDp(16),
+  },
+  tileDense: {
+    width: scaleUxToDp(430),
+    height: scaleUxToDp(190),
+    marginBottom: 0,
   },
   tileSelected: {
     backgroundColor: COLORS.SURFACE_FOCUSED,
