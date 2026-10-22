@@ -15,7 +15,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$HERE/lib.sh"
 
 usage() {
-  sed -n '2,/^set -/p' "$0" | sed '$d' | sed 's/^# \{0,1\}//'
+  print_usage "${BASH_SOURCE[0]}"
 }
 
 WIDTH=""

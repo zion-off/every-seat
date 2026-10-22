@@ -18,6 +18,11 @@ require_ffmpeg() {
   command -v "$FFPROBE" > /dev/null || die "ffprobe not found (set FFPROBE to its path)"
 }
 
+# print_usage FILE: print the leading comment block of FILE (after the shebang) as help text.
+print_usage() {
+  awk 'NR == 1 { next } /^#/ { sub(/^# ?/, ""); print; next } { exit }' "$1"
+}
+
 # source_fps SRC: print "<integer fps> <measured fps>" for SRC; the integer is one of
 # 24 25 30 48 50 60. The container header can lie (a file can claim 48 fps and be 24), so the rate
 # comes from the number of video packets divided by the video duration. Integer rates matter
