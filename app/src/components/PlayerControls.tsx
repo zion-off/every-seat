@@ -200,7 +200,9 @@ const PlayerControls = ({
         onPlayPause={activate}
         disabledWhenNotFocused
         hasTVPreferredFocus
-        accessibilityLabel="Seek bar"
+        accessibilityLabel={`Seek bar. ${formatClock(
+          shownMs / 1000,
+        )} of ${formatClock(durationMs / 1000)}. Left and right to jump`}
       />
       <View style={styles.row}>
         <View style={styles.legend}>
