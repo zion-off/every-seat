@@ -264,6 +264,15 @@ def render(labels: list[Labels], results: Results) -> str:
         "each cue and event is used once. Start error is the cue start minus the labelled start, "
         "in seconds. Precision needs every event of an excerpt to be labelled, so it is only "
         "computed for label files marked complete; other cues are counted as extra, not as wrong.",
+    ]
+    if hand == 0:
+        lines += [
+            "",
+            "No event is hand-labelled yet: the events come from instrument readings and a "
+            "reference cue file, so this table checks the harness and the timing, not how well "
+            "the cues match a viewer's judgement.",
+        ]
+    lines += [
         "",
         "## Models",
         "",
