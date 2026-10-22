@@ -136,6 +136,12 @@ export class PlaybackEngine {
   /** Replaces the combined lens, for example when the couch changes. */
   setLens(lens: LensSettings) {
     this.lens = lens;
+    console.info(
+      'engine',
+      'lens',
+      JSON.stringify(lens),
+      this.clock.now().toFixed(3),
+    );
     this.replan();
     this.applyAudio();
     this.dimPhase = null;

@@ -193,6 +193,7 @@ export class RelayClient {
     } else if (json?.t === 'lens') {
       const lens = readLensMessage(json);
       if (lens) {
+        console.info('relay', 'lens', lens.people.map((p) => p.name).join(','));
         this.options.onLens(lens);
       } else {
         console.info('relay', 'ignored an invalid lens message');
