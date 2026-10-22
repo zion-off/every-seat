@@ -9,6 +9,7 @@ A `.sensevtt` file is WebVTT whose cues carry one line of JSON. A `NOTE everysea
 | `elephants_dream.sensevtt` | One `flash` cue (6:17.5–6:20.0, `anchor: iris`) |
 | `tears_of_steel.sensevtt` | A `loud` and a `scare` cue sharing one event (7:43.375–7:46.5, `anchor: onset`), with the measured detail in `evidence` |
 | `test_pattern.sensevtt` | One cue of each type (`flash`, `loud`, `scare`, `ad`) for the generated 120 s timecode test stream, at round times |
+| `tears_of_steel.recipe.json` | Comfort-audio recipe for the loud cue (gain-ride window 463.375–466.5 plus a limiter); `tools/media/prepare.sh` renders the comfort track from it |
 
 Check files with the validator:
 

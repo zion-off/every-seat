@@ -1,1 +1,1 @@
-Developer tooling (media preparation, local servers).
+Developer tooling (media preparation, local servers). See `media/README.md`.
