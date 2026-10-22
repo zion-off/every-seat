@@ -5,7 +5,7 @@ to look at, so tiles are scaled down to `tile_width`.
 """
 
 import io
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -22,6 +22,11 @@ def clock(seconds: float) -> str:
     hours, minutes = divmod(minutes, 60)
     head = f"{hours}:{minutes:02d}" if hours else f"{minutes}"
     return f"{head}:{secs:02d}.{tenths}"
+
+
+def plain_seconds(seconds: float) -> str:
+    """`463.2 s`: plain seconds, for readers (a model) that should not parse minutes."""
+    return f"{seconds:.1f} s"
 
 
 def evenly(start: float, end: float, count: int) -> list[float]:
@@ -49,10 +54,12 @@ def contact_sheet(
     tile_width: int = 320,
     columns: int = 4,
     label_offset: float = 0.0,
+    label: Callable[[float], str] = clock,
 ) -> Image.Image:
     """Tile the frames at `times` (seconds in `media`), each labelled with `time + label_offset`.
 
-    `label_offset` is where the media starts on the film's clock, so labels read as film time.
+    `label_offset` is where the media starts on the film's clock, so labels read as film time;
+    `label` formats that time.
     """
     if not times:
         raise ValueError("no times to show")
@@ -66,7 +73,7 @@ def contact_sheet(
         x, y = (index % columns) * width, (index // columns) * height
         sheet.paste(frame.resize((width, height)), (x, y))
         draw = ImageDraw.Draw(sheet)
-        text = clock(time + label_offset)
+        text = label(time + label_offset)
         left, top, right, bottom = draw.textbbox((x + LABEL_PAD, y + LABEL_PAD), text, font=font)
         draw.rectangle((left - 2, top - 2, right + 2, bottom + 2), fill="black")
         draw.text((x + LABEL_PAD, y + LABEL_PAD), text, fill="white", font=font)

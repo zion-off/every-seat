@@ -1,6 +1,6 @@
 """A loudness strip: the level over a stretch of film, with onsets and shot cuts marked."""
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -27,11 +27,12 @@ def loudness_strip(
     onsets: Sequence[float] = (),
     cuts: Sequence[float] = (),
     size: tuple[int, int] = (1280, 200),
+    label: Callable[[float], str] = clock,
 ) -> Image.Image:
     """Plot the dBFS level of [t0, t1] (seconds in the analyzed media).
 
     Onsets are red vertical lines and shot cuts are cyan ticks along the top. The time axis reads
-    film time: `label_offset` is where the media starts on the film's clock.
+    film time: `label_offset` is where the media starts on the film's clock, and `label` formats it.
     """
     if t1 <= t0:
         raise ValueError("t1 must be after t0")
@@ -57,7 +58,7 @@ def loudness_strip(
         draw.line((x_of(tick), bottom, x_of(tick), bottom + 4), fill=(170, 170, 180))
         draw.text(
             (x_of(tick) - 18, bottom + 7),
-            clock(tick + label_offset),
+            label(tick + label_offset),
             fill=(170, 170, 180),
             font=font,
         )
