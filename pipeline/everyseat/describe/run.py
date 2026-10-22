@@ -16,16 +16,17 @@ from sensevtt.writer import Cue
 
 from everyseat import __version__
 from everyseat.analyze import TITLE, file_sha256
-from everyseat.describe import DescribeError, shots, subtitles
+from everyseat.describe import DescribeError, Rejected, shots, subtitles
+from everyseat.describe.review import MIN_WORDS, SIMILARITY_LIMIT, Earlier, Review
 from everyseat.describe.subtitles import Window
 from everyseat.describe.voices import Speech, Voice, write_wav
-from everyseat.describe.writers import MIN_WORDS, Request, Writer
+from everyseat.describe.writers import MAX_ANSWERS, Request, Writer
 from everyseat.detectors import proxy as proxies
 from everyseat.detectors.cuts import find_cuts
 
 MAX_SHORTENS = 3
+NOTHING_TO_DESCRIBE = "nothing to describe"
 FASTER_RATE_PERCENT = 110
-PREVIOUS_KEPT = 4
 PREVIEW_CHARS = 140
 PROXY_WIDTH = 640  # contact sheets only: the descriptions never look at a full-size frame
 
@@ -37,6 +38,20 @@ class Fitted:
     speech: Speech
     rate_percent: int
     attempts: list[dict] = field(default_factory=list)
+    rejected: list[dict] = field(default_factory=list)  # answers the review turned down
+
+
+@dataclass
+class Skipped:
+    window: Window
+    reason: str
+    rejected: list[dict] = field(default_factory=list)
+
+    def log(self) -> dict:
+        entry: dict = {"window": self.window.index, "reason": self.reason}
+        if self.rejected:
+            entry["rejected"] = self.rejected
+        return entry
 
 
 @dataclass(frozen=True)
@@ -65,29 +80,33 @@ def fit(
     *,
     fps: int,
     progress: Callable[[str], None],
-) -> Fitted | None:
+) -> Fitted | Skipped:
     """Write, voice and measure; shorten up to `MAX_SHORTENS` times, then speak faster as the
-    last resort. Returns None when nothing needs saying, and raises when nothing fits.
+    last resort. Skipped when nothing needs saying or the writer cannot give an acceptable
+    description; raises when nothing fits.
     """
     window = request.window
     limit = window.duration - 1 / fps  # the cue ends on a frame at or before the window's end
-    text = writer.write(request)
-    if text is None:
-        return None
-    speech = voice.speak(text)
-    attempts = [{"words": _words(text), "duration_s": round(speech.duration_s, 3), "rate": 100}]
-    shortened = 0
-    while speech.duration_s > limit and shortened < MAX_SHORTENS:
-        target = _target_words(text, speech.duration_s, limit)
-        progress(
-            f"    {speech.duration_s:.1f} s is over {limit:.1f} s: shortening to {target} words"
-        )
-        text = writer.shorten(request, text, target)
+    try:
+        text = writer.write(request)
+        if text is None:
+            return Skipped(window, NOTHING_TO_DESCRIBE)
         speech = voice.speak(text)
-        shortened += 1
-        attempts.append(
-            {"words": _words(text), "duration_s": round(speech.duration_s, 3), "rate": 100}
-        )
+        attempts = [{"words": _words(text), "duration_s": round(speech.duration_s, 3), "rate": 100}]
+        shortened = 0
+        while speech.duration_s > limit and shortened < MAX_SHORTENS:
+            target = _target_words(text, speech.duration_s, limit)
+            progress(
+                f"    {speech.duration_s:.1f} s is over {limit:.1f} s: shortening to {target} words"
+            )
+            text = writer.shorten(request, text, target)
+            speech = voice.speak(text)
+            shortened += 1
+            attempts.append(
+                {"words": _words(text), "duration_s": round(speech.duration_s, 3), "rate": 100}
+            )
+    except Rejected as exc:
+        return Skipped(window, str(exc))
     rate = 100
     if speech.duration_s > limit:
         rate = FASTER_RATE_PERCENT
@@ -174,17 +193,19 @@ def describe(
     sheets_dir = work_dir / "sheets"
     sheets_dir.mkdir(parents=True, exist_ok=True)
     fitted: list[Fitted] = []
-    skipped: list[dict] = []
+    skipped: list[Skipped] = []
     for window in windows:
         picture = shots.window_picture(proxy.path, cuts, window)
         (sheets_dir / f"window-{window.index:02d}.jpg").write_bytes(picture.jpeg)
         before, after = subtitles.around(lines, window)
+        review = Review([Earlier(f.window.start, f.text) for f in fitted], say)
         request = Request(
             window=window,
             picture=picture.jpeg,
             before=before,
             after=after,
-            previous=[f.text for f in fitted[-PREVIOUS_KEPT:]],
+            earlier=review.earlier,
+            check=review.check,
             cast=cast or [],
         )
         say(
@@ -192,9 +213,13 @@ def describe(
             f"({window.duration:.1f} s, {len(picture.times)} frames, up to {request.budget} words)"
         )
         result = fit(request, writer, voice, fps=proxy.fps, progress=say)
-        if result is None:
-            skipped.append({"window": window.index, "reason": "nothing to describe"})
-            say("    nothing essential to describe")
+        result.rejected = [d for d in review.decisions if not d["accepted"]]
+        if isinstance(result, Skipped):
+            skipped.append(result)
+            if result.reason == NOTHING_TO_DESCRIBE:
+                say("    nothing essential to describe")
+            else:
+                say(f"    left without a description: {result.reason}")
             continue
         say(
             f"    {_words(result.text)} words, {result.speech.duration_s:.2f} s "
@@ -225,11 +250,12 @@ def describe(
         clips.append(path)
     cues_path.parent.mkdir(parents=True, exist_ok=True)
     cues_path.write_text(text)
+    skipped_log = [s.log() for s in skipped]
     log_path = cues_path.with_suffix(".run.json")
     log_path.write_text(
         json.dumps(_log(writer, voice, fitted, skipped, cues, dry_run), indent=1) + "\n"
     )
-    return Described(cues_path, log_path, clips, skipped, len(cues))
+    return Described(cues_path, log_path, clips, skipped_log, len(cues))
 
 
 def _analyzer(writer: Writer, voice: Voice, dry_run: bool) -> str:
@@ -242,7 +268,7 @@ def _log(
     writer: Writer,
     voice: Voice,
     fitted: list[Fitted],
-    skipped: list[dict],
+    skipped: list[Skipped],
     cues: list[Cue],
     dry_run: bool,
 ) -> dict:
@@ -260,6 +286,11 @@ def _log(
             "voice_characters": characters,
             "voice_cost_usd": round(characters * voice.usd_per_million_characters / 1e6, 6),
         },
+        "review": {
+            "similarity_limit": SIMILARITY_LIMIT,
+            "max_answers": MAX_ANSWERS,
+            "answers_rejected": sum(len(r.rejected) for r in [*fitted, *skipped]),
+        },
         "windows": [
             {
                 "cue": cue.id,
@@ -268,8 +299,9 @@ def _log(
                 "text": f.text,
                 "rate_percent": f.rate_percent,
                 "attempts": f.attempts,
+                **({"rejected": f.rejected} if f.rejected else {}),
             }
             for cue, f in zip(cues, fitted, strict=True)
         ],
-        "skipped": skipped,
+        "skipped": [s.log() for s in skipped],
     }

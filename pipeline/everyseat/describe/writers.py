@@ -3,10 +3,11 @@
 from dataclasses import dataclass, field
 from typing import Protocol
 
+from everyseat.describe.review import MIN_WORDS, Check, Earlier
 from everyseat.describe.subtitles import Line, Window
 
 WORDS_PER_SECOND = 2.5
-MIN_WORDS = 4
+MAX_ANSWERS = 5  # answers a writer may give for one window, the first and its corrections
 
 
 def word_budget(window: Window) -> int:
@@ -19,7 +20,8 @@ class Request:
     picture: bytes  # JPEG contact sheet, one tile per shot, labelled in seconds
     before: list[Line]
     after: list[Line]
-    previous: list[str]  # earlier descriptions, oldest first
+    earlier: list[Earlier]  # every description kept so far, oldest first
+    check: Check  # every answer goes through it before it can be kept
     cast: list[str] = field(default_factory=list)
 
     @property
@@ -42,11 +44,17 @@ class Writer(Protocol):
     def cost_usd(self) -> float: ...
 
     def write(self, request: Request) -> str | None:
-        """The description for the window, or None when nothing essential is on screen."""
+        """The description for the window, or None when nothing essential is on screen.
+
+        Each answer goes through `request.check`; a rejected one is corrected, up to
+        `MAX_ANSWERS` answers, and `Rejected` is raised when none passes.
+        """
         ...
 
     def shorten(self, request: Request, text: str, target_words: int) -> str:
-        """A shorter version of `text` that keeps the most essential things."""
+        """A shorter version of `text` that keeps the most essential things, checked the same
+        way; `Rejected` when no acceptable one is given.
+        """
         ...
 
 

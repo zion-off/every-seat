@@ -1,19 +1,18 @@
 """The description writer on Amazon Nova Pro: a Strands agent that answers through a tool."""
 
-import re
-
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from strands import Agent, tool
 from strands.agent.conversation_manager import NullConversationManager
 from strands.hooks import BeforeModelCallEvent, HookProvider, HookRegistry
 
 from everyseat.agent import model
-from everyseat.describe import DescribeError
-from everyseat.describe.writers import MIN_WORDS, Request, Usage
+from everyseat.describe import DescribeError, Rejected
+from everyseat.describe.review import Check, Verdict, gave_up
+from everyseat.describe.writers import MAX_ANSWERS, Request, Usage
 from everyseat.detectors import sheet
 
-MAX_MODEL_CALLS = 4  # the first answer plus a few corrections of a rejected one
-MARKUP = re.compile(r"[*_#`<>\[\]{}|]|\n")
+MAX_MODEL_CALLS = MAX_ANSWERS  # one call per answer; a wrap-up call after the last is cut off
+EARLIER_SHOWN = 8  # the model is shown this many of the latest descriptions; the review sees all
 
 SYSTEM_INSTRUCTIONS = """\
 You write audio description for a blind or low-vision viewer of an animated short film. Each
@@ -25,8 +24,14 @@ Rules:
   changes. Describe in the order things happen.
 - Do not interpret. No guesses about thoughts, feelings, motives or what will happen. Say
   "she clenches her jaw", not "she is angry".
-- No spoilers: describe only what the frames in front of you show.
-- No camera or editing words ("the camera pans", "cut to", "we see").
+- No spoilers: describe only what is visible in this window.
+- Say what happens, never how it is filmed. Do not use the words frame, frames, shot,
+  close-up, camera, image, shows or scene cuts, and do not write about the final or first
+  picture of the window ("Final frame shows only white fog"). Write "Sintel climbs a wall", not
+  "A close-up shows Sintel climbing".
+- Never repeat an earlier description, in whole or in part. Every description must add
+  something new. When the window only continues what an earlier description already said,
+  say only what has changed, or set nothing_to_describe. A repeat is rejected.
 - Do not repeat the dialogue and do not describe sounds or music.
 - Use a character's name only once the dialogue or an earlier description has introduced it;
   until then describe the character by appearance. Keep names and wording consistent with the
@@ -35,7 +40,8 @@ Rules:
 - If nothing essential is visible in the window, say so by setting nothing_to_describe.
 
 You are shown one contact sheet: one frame per shot in the window, each labelled with its time
-in seconds from the start of the film. Answer only by calling submit_description once.
+in seconds from the start of the film. Answer only by calling submit_description once. If it
+returns an error, correct the description as the error says and call it again.
 """
 
 
@@ -44,12 +50,6 @@ class Draft(BaseModel):
 
     text: str = Field(default="", max_length=1200)
     nothing_to_describe: bool = False
-
-
-def clean(text: str) -> str:
-    """One line of plain words: no markup, no list marks, no surrounding quotes."""
-    flat = MARKUP.sub(" ", text).strip().strip("\"'“”")
-    return re.sub(r"\s+", " ", flat)
 
 
 class _CallLimit(HookProvider):
@@ -87,9 +87,13 @@ def request_text(request: Request) -> str:
         parts.append("Characters:\n" + "\n".join(f"  {entry}" for entry in request.cast))
     parts.append(_dialogue("Dialogue just before", request.before))
     parts.append(_dialogue("Dialogue just after", request.after))
-    if request.previous:
-        numbered = "\n".join(f"  {i}. {text}" for i, text in enumerate(request.previous, 1))
-        parts.append(f"Earlier descriptions, oldest first:\n{numbered}")
+    if request.earlier:
+        shown = request.earlier[-EARLIER_SHOWN:]
+        listed = "\n".join(f"  {_time(item.start)}: {item.text}" for item in shown)
+        parts.append(
+            "Earlier descriptions, oldest first, with the time each window started. Do not "
+            f"repeat them; say only what is new:\n{listed}"
+        )
     else:
         parts.append("Earlier descriptions: none yet (this is the first).")
     parts.append("The contact sheet follows. Call submit_description with your description.")
@@ -107,7 +111,7 @@ class NovaWriter:
             {"text": request_text(request)},
             {"image": {"format": "jpeg", "source": {"bytes": request.picture}}},
         ]
-        return self._ask(content, request.budget)
+        return self._ask(content, request.budget, request.check, "write")
 
     def shorten(self, request: Request, text: str, target_words: int) -> str:
         w = request.window
@@ -118,13 +122,14 @@ class NovaWriter:
             f"Rewrite it in at most {target_words} words. Keep the most essential things, in the "
             "same order, in the same style. Call submit_description with the shorter version."
         )
-        shorter = self._ask([{"text": message}], target_words)
+        shorter = self._ask([{"text": message}], target_words, request.check, "shorten")
         if shorter is None:
-            raise DescribeError("the model gave up a description it was asked to shorten")
+            raise Rejected("the model dropped a description it was asked to shorten")
         return shorter
 
-    def _ask(self, content: list, limit: int) -> str | None:
+    def _ask(self, content: list, limit: int, check: Check, step: str) -> str | None:
         answers: list[str | None] = []
+        rejected: list[Verdict] = []
 
         @tool
         def submit_description(text: str = "", nothing_to_describe: bool = False) -> str:
@@ -141,12 +146,11 @@ class NovaWriter:
             if given.nothing_to_describe:
                 answers.append(None)
                 return "ok"
-            words = clean(given.text).split()
-            if len(words) < MIN_WORDS:
-                return f"error: write at least {MIN_WORDS} words, or set nothing_to_describe"
-            if len(words) > limit:
-                return f"error: {len(words)} words is over the limit of {limit}; shorten it"
-            answers.append(" ".join(words))
+            verdict = check(given.text, limit, step)
+            if not verdict.ok:
+                rejected.append(verdict)
+                return verdict.feedback
+            answers.append(verdict.text)
             return "ok"
 
         watch = _CallLimit(MAX_MODEL_CALLS)
@@ -164,6 +168,8 @@ class NovaWriter:
         self.usage.output_tokens += int(usage.get("outputTokens", 0))
         self.usage.calls += watch.calls
         if not answers:
+            if rejected:
+                raise gave_up(len(rejected), rejected[-1])
             raise DescribeError("the model did not submit a description")
         return answers[-1]
 
