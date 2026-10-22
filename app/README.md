@@ -31,15 +31,31 @@ the current shell, point `EVERYSEAT_ENV` at a script that exports them.
 
 The media location and the companion's relay address are set in `src/config.ts`.
 
+## Cue files and the SenseVTT library
+
+The cue list parser, the media clock, the dim and volume-duck planner and scheduler, the Vega video
+adapter and the dim overlay come from the `react-native-sensevtt` package. The app reads the
+`NOTE sensevtt-header` cue files the pipeline writes.
+
+The app reaches the package through a local checkout at `../../sensevtt`, which is temporary. The
+relative path is set in two files and both change when the app moves to the published package:
+
+- `metro.config.js`: the `SENSEVTT_LIBRARY` constant, used for the Metro alias and `watchFolders`
+  (Metro 0.76 does not follow symlinked packages).
+- `tsconfig.json`: the `paths` entries for `react-native-sensevtt` and `react-native-sensevtt/react`.
+
+With the published package, add it to `dependencies` and delete the alias, the `watchFolders` entry
+and the `paths` block.
+
 ## Layout
 
-- `src/engine` — the cue list parser, the event-anchored media clock, the dim and volume-duck
-  planner, and the playback engine that applies the lens.
-- `src/media` — Shaka player setup and the media session that owns the video element.
+- `src/engine` — the lens types, the mapping from a lens to the library's preferences and audio
+  rendition, and the hook that owns the library's controller for a film.
+- `src/media` — Shaka player setup and the hook that owns the video element and its Vega adapter.
 - `src/lens` — the people and their comfort settings, the combined couch lens, and the seek bar
   heat segments built from the cue list.
-- `src/components` — the dim overlay, the couch picker and panel, the player controls, the heads-up
-  card, and the comfort badges and volume meter.
+- `src/components` — the couch picker and panel, the player controls, the heads-up card, and the
+  comfort badges and volume meter.
 - `src/screens` — the notice, couch, film picker and player screens.
 - `src/relay` — the companion relay client.
 - `src/deeplink.ts` — `everyseat://lens` links.
@@ -52,9 +68,11 @@ The media location and the companion's relay address are set in `src/config.ts`.
 
 ## Playback engine
 
-- The clock is anchored on `timeupdate`, `playing`, `pause`, `seeking` and `seeked`, extrapolated
-  with a monotonic timer, frozen from `play` until `playing`, and ignores unexplained jumps of over
-  a second for two seconds.
+- The library's controller runs these rules on a 50 ms tick against the media clock. The clock is
+  anchored on `timeupdate`, `playing`, `pause`, `seeking` and `seeked`, extrapolated with a
+  monotonic timer, frozen from `play` until `playing`, and ignores unexplained jumps of over a
+  second for two seconds. The Vega profile compensates for the render path: the picture is sampled
+  0.06 s ahead and the volume duck is scheduled 0.35 s early.
 - Flash cues dim the picture by 50% with a native-driven overlay: a ramp in 1.5 s before the cue, a
   hold, and a ramp out 1.0 s after it. Nearby cues merge into one run. Seeking into a run snaps to
   the right level and finishes a partial ramp.
@@ -88,7 +106,7 @@ The media location and the companion's relay address are set in `src/config.ts`.
   dead or silent link is dropped and reopened with a backoff of 1 s up to 10 s.
 - A `lens` message names tonight's couch with each person's settings. People already on the screen
   take the new settings, new names are added, and the couch becomes exactly those people, on any
-  screen. The engine applies the change at once: the seek-bar markers, the couch chip and the film
+  screen. The player applies the change at once: the seek-bar markers, the couch chip and the film
   picker counts repaint together, and the player brings its controls up so the change is seen.
 - An open heads-up card follows the new lens. If the lens no longer warns about that moment, the
   card closes without softening it and focus goes back to where it was. If a warning is added
