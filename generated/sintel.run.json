@@ -3,109 +3,129 @@
  "dry_run": false,
  "writer": "us.amazon.nova-pro-v1:0",
  "voice": "polly neural Joanna",
+ "plot_chars": 841,
  "usage": {
-  "input_tokens": 175817,
-  "output_tokens": 4544,
-  "model_calls": 69,
-  "model_cost_usd": 0.155194,
-  "voice_characters": 2299,
-  "voice_cost_usd": 0.036784
+  "input_tokens": 256095,
+  "output_tokens": 6326,
+  "model_calls": 86,
+  "model_cost_usd": 0.225119,
+  "voice_characters": 2111,
+  "voice_cost_usd": 0.033776
+ },
+ "review": {
+  "similarity_limit": 0.7,
+  "max_answers": 5,
+  "answers_rejected": 15
  },
  "windows": [
   {
    "cue": "sintel-ad-1",
    "start": 27.042,
    "end": 53.625,
-   "text": "Sintel fights soldiers with a sword. She is knocked down, gets up, and continues fighting.",
+   "text": "Sintel and an old man fight in the snow. They swing weapons, fall, and grapple.",
    "rate_percent": 100,
    "attempts": [
     {
      "words": 15,
-     "duration_s": 5.505,
+     "duration_s": 5.43,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-2",
-   "start": 53.625,
-   "end": 80.167,
-   "text": "Sintel fights soldiers with a sword. She knocks one down, gets up, and continues fighting.",
+   "start": 80.167,
+   "end": 106.75,
+   "text": "Sintel lies on the ground with a spear. A snowy landscape. Spear with intricate designs. A silhouette of a mountain range. Sintel stands near a fire pit. Fire pit with a burning object.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 15,
-     "duration_s": 5.605,
+     "words": 33,
+     "duration_s": 12.863,
      "rate": 100
+    }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "text": "Sintel lies on the ground with a spear. A snowy landscape. A close-up of a spear with intricate designs. A silhouette of a mountain range. Sintel stands near a fire pit. A close-up of a fire pit with a burning object.",
+     "problems": [
+      {
+       "kind": "banned",
+       "detail": "close-up"
+      }
+     ]
     }
    ]
   },
   {
    "cue": "sintel-ad-3",
-   "start": 80.167,
-   "end": 106.75,
-   "text": "Close-up of a sword with intricate designs. Snowy landscape with distant lights. Campfire in a cave with Sintel sitting nearby.",
+   "start": 156.375,
+   "end": 181.542,
+   "text": "Sintel climbs a wall. She moves across rooftops in a ruined town.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 20,
-     "duration_s": 8.098,
+     "words": 12,
+     "duration_s": 4.33,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-4",
-   "start": 156.375,
-   "end": 181.542,
-   "text": "Sintel climbs a building. She hangs from a ledge.",
+   "start": 181.542,
+   "end": 206.75,
+   "text": "Sintel and the reptilian creature continue their intense fight.",
    "rate_percent": 100,
    "attempts": [
     {
      "words": 9,
-     "duration_s": 3.355,
+     "duration_s": 3.438,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-5",
-   "start": 181.542,
-   "end": 206.75,
-   "text": "Sintel holds food. She gives it to Scales, who eats it.",
+   "start": 214.0,
+   "end": 227.75,
+   "text": "Sintel and Scales move through a dark cave.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 11,
-     "duration_s": 4.155,
+     "words": 8,
+     "duration_s": 2.538,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-6",
-   "start": 214.0,
-   "end": 227.75,
-   "text": "Sintel holds Scales close. They are in a dark, sheltered place.",
+   "start": 232.75,
+   "end": 249.833,
+   "text": "Sintel and Scales move through a dark, debris-filled space.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 11,
-     "duration_s": 4.53,
+     "words": 9,
+     "duration_s": 3.525,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-7",
-   "start": 232.75,
-   "end": 249.833,
-   "text": "Sintel holds Scales. They move through a dark, cluttered space.",
+   "start": 254.375,
+   "end": 264.75,
+   "text": "Sintel fights a reptilian creature in a busy marketplace.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 10,
-     "duration_s": 4.405,
+     "words": 9,
+     "duration_s": 3.35,
      "rate": 100
     }
    ]
@@ -114,264 +134,318 @@
    "cue": "sintel-ad-8",
    "start": 268.75,
    "end": 286.125,
-   "text": "Sintel runs across rooftops. Scales flies above her.",
+   "text": "Sintel stands on a rooftop. Scales flies above her. Sintel runs across rooftops. Scales flies alongside her.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 8,
-     "duration_s": 3.868,
+     "words": 17,
+     "duration_s": 8.277,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-9",
-   "start": 286.125,
-   "end": 303.5,
-   "text": "Sintel runs and jumps across rooftops. Scales flies above her.",
+   "start": 308.0,
+   "end": 323.125,
+   "text": "Sintel looks up at the sky. A large dragon flies above.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 10,
-     "duration_s": 4.367,
+     "words": 11,
+     "duration_s": 3.855,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-10",
-   "start": 308.0,
-   "end": 323.125,
-   "text": "Sintel looks up at the sky. A dragon flies above her.",
+   "start": 323.125,
+   "end": 338.25,
+   "text": "Sintel runs and jumps, reaching for the flying dragon. The dragon flies away over a ruined city at sunset.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 11,
-     "duration_s": 3.655,
+     "words": 19,
+     "duration_s": 6.53,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-11",
-   "start": 323.125,
-   "end": 338.25,
-   "text": "Sintel runs and jumps. Scales flies above her. They move through a ruined cityscape.",
+   "start": 342.5,
+   "end": 368.167,
+   "text": "Sintel stands before a ruined structure. She runs across a desert landscape.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 14,
-     "duration_s": 5.747,
+     "words": 12,
+     "duration_s": 4.955,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-12",
-   "start": 342.5,
-   "end": 368.167,
-   "text": "Sintel stands near a ruined structure, looking around. She runs across a sandy landscape.",
+   "start": 368.167,
+   "end": 393.875,
+   "text": "Sintel runs through a desert. She enters a bamboo forest. Sintel stands on a hill with a spear.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 14,
-     "duration_s": 5.768,
+     "words": 18,
+     "duration_s": 6.46,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-13",
-   "start": 368.167,
-   "end": 393.875,
-   "text": "Sintel runs through a desert. She enters a bamboo forest and continues running. She stops on a hill with a spear.",
+   "start": 393.875,
+   "end": 419.583,
+   "text": "Sintel stands on a snowy mountain, holding a spear. She raises the spear above her head.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 21,
-     "duration_s": 7.298,
+     "words": 16,
+     "duration_s": 5.78,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-14",
-   "start": 393.875,
-   "end": 419.583,
-   "text": "Sintel holds Scales, looking up. Final frame shows only white fog.",
+   "start": 419.583,
+   "end": 445.333,
+   "text": "Sintel fights a large creature with a spear. She falls to the ground. She stands up, holding the spear, and looks around.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 11,
-     "duration_s": 4.905,
+     "words": 22,
+     "duration_s": 7.897,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-15",
-   "start": 419.583,
-   "end": 445.333,
-   "text": "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks.",
+   "start": 464.5,
+   "end": 487.625,
+   "text": "Sintel navigates through a dark cave with glowing crystals.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 17,
-     "duration_s": 5.893,
+     "words": 9,
+     "duration_s": 3.2,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-16",
-   "start": 464.5,
-   "end": 487.625,
-   "text": "Sintel holds a torch, walking through a dark cave. Glowing crystals and a large tree are visible.",
+   "start": 487.625,
+   "end": 510.75,
+   "text": "Sintel stands in a dark cave lit by glowing crystals. A large, defeated creature lies on the ground.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 17,
-     "duration_s": 6.093,
+     "words": 18,
+     "duration_s": 6.367,
      "rate": 100
+    }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "text": "Sintel fights a large creature with a spear. She falls to the ground. She stands up, holding the spear, and looks around.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 419.6 s"
+      }
+     ]
     }
    ]
   },
   {
    "cue": "sintel-ad-17",
-   "start": 487.625,
-   "end": 510.75,
-   "text": "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks.",
+   "start": 533.917,
+   "end": 557.083,
+   "text": "Sintel fights a large creature in a dark cave. The creature falls to the ground. Sintel looks around, then calls out 'Scales!",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 17,
-     "duration_s": 5.893,
+     "words": 22,
+     "duration_s": 7.973,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-18",
-   "start": 510.75,
-   "end": 533.917,
-   "text": "Sintel stands in a dark cave, holding a spear. She looks around, then stands on a rock with the spear.",
+   "start": 560.0,
+   "end": 580.333,
+   "text": "Sintel and the creature continue their intense battle in an icy environment.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 20,
-     "duration_s": 6.468,
+     "words": 12,
+     "duration_s": 4.088,
      "rate": 100
+    }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "text": "Sintel fights a large creature with her spear in an icy environment.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "71% already said at 419.6 s"
+      }
+     ]
     }
    ]
   },
   {
    "cue": "sintel-ad-19",
-   "start": 560.0,
-   "end": 580.333,
-   "text": "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks.",
+   "start": 580.333,
+   "end": 600.708,
+   "text": "Sintel and the creature's battle intensifies in the dark cave.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 17,
-     "duration_s": 5.893,
+     "words": 10,
+     "duration_s": 3.475,
      "rate": 100
+    }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "text": "Sintel fights a large creature with a spear in a dark cave.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "86% already said at 533.9 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 3,
+     "accepted": false,
+     "text": "Sintel continues her intense battle with the creature in the dark cave.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "71% already said at 560.0 s"
+      }
+     ]
     }
    ]
   },
   {
    "cue": "sintel-ad-20",
-   "start": 580.333,
-   "end": 600.708,
-   "text": "Sintel fights a large, armored creature with a spear.",
+   "start": 600.708,
+   "end": 621.083,
+   "text": "The creature lunges at Sintel, who parries with her spear.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 9,
-     "duration_s": 3.038,
+     "words": 10,
+     "duration_s": 3.362,
      "rate": 100
+    }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "text": "Sintel and the creature continue their intense battle in a dark cave.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "71% already said at 580.3 s"
+      }
+     ]
     }
    ]
   },
   {
    "cue": "sintel-ad-21",
-   "start": 600.708,
-   "end": 621.083,
-   "text": "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks.",
+   "start": 630.333,
+   "end": 658.875,
+   "text": "Sintel stands in a dark cave with glowing crystals. She holds a spear and looks around, her hand raised in shock.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 17,
-     "duration_s": 5.893,
+     "words": 21,
+     "duration_s": 6.78,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-22",
-   "start": 630.333,
-   "end": 658.875,
-   "text": "Sintel moves through a dark cave, her expression changing as she searches. She stops, looks around, and continues moving.",
+   "start": 658.875,
+   "end": 687.458,
+   "text": "Sintel battles the large creature, defending herself with her spear.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 19,
-     "duration_s": 7.555,
+     "words": 10,
+     "duration_s": 3.75,
      "rate": 100
+    }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "text": "Sintel fights a large creature in a dark cave with glowing crystals.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "88% already said at 487.6 s"
+      }
+     ]
     }
    ]
   },
   {
    "cue": "sintel-ad-23",
-   "start": 658.875,
-   "end": 687.458,
-   "text": "Sintel calls out for Scales. She looks around, searching for the baby dragon.",
+   "start": 687.458,
+   "end": 716.042,
+   "text": "Sintel stands on a cliff, looking out at the landscape. She then walks through a rocky area. Finally, she stands in front of a large tree with glowing roots.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 13,
-     "duration_s": 5.168,
+     "words": 29,
+     "duration_s": 9.685,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-24",
-   "start": 687.458,
-   "end": 716.042,
-   "text": "Sintel sits on a cliff, looking out at the landscape. She stands and walks through a rocky area. She stops near a plant with white flowers.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 26,
-     "duration_s": 8.748,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-25",
    "start": 716.042,
    "end": 744.625,
-   "text": "Sintel walks through a rocky landscape. She stops and looks around. Scales lies injured on the ground.",
+   "text": "Sintel walks through a rocky landscape with large white flowers. She moves towards the right.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 17,
-     "duration_s": 6.723,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-26",
-   "start": 830.333,
-   "end": 858.917,
-   "text": "Sintel moves through a dark cave, her expression changing as she searches. She stops, looks around, and continues moving. Scales lies injured on the ground.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 25,
-     "duration_s": 9.947,
+     "words": 15,
+     "duration_s": 5.655,
      "rate": 100
     }
    ]
@@ -383,12 +457,106 @@
    "reason": "nothing to describe"
   },
   {
-   "window": 9,
-   "reason": "nothing to describe"
+   "window": 3,
+   "reason": "nothing to describe",
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "text": "Sintel and the old man continue their fight in the snow. They swing weapons and grapple.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "89% already said at 27.0 s"
+      }
+     ]
+    }
+   ]
   },
   {
-   "window": 21,
-   "reason": "nothing to describe"
+   "window": 11,
+   "reason": "nothing to describe",
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "text": "Sintel runs across rooftops. Scales flies above her.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 268.8 s"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "window": 20,
+   "reason": "no acceptable description after 5 answers (last: similar: 83% already said at 487.6 s)",
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "text": "Sintel stands in a dark cave with a large creature lying on the ground. She holds a spear and looks at the creature.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "73% already said at 419.6 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 2,
+     "accepted": false,
+     "text": "Sintel stands with her spear, facing the creature lying on the ground.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "71% already said at 419.6 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 3,
+     "accepted": false,
+     "text": "Sintel stands with her spear, facing the creature.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "80% already said at 419.6 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 4,
+     "accepted": false,
+     "text": "The creature lies on the ground. Sintel stands with her spear, looking tense.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "75% already said at 419.6 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 5,
+     "accepted": false,
+     "text": "The creature lies on the ground. Sintel stands with her spear.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "83% already said at 487.6 s"
+      }
+     ]
+    }
+   ]
   },
   {
    "window": 29,
@@ -401,6 +569,24 @@
   {
    "window": 31,
    "reason": "nothing to describe"
+  },
+  {
+   "window": 32,
+   "reason": "nothing to describe",
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "text": "Sintel walks through a dark forest with large trees and glowing roots.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "78% already said at 687.5 s"
+      }
+     ]
+    }
+   ]
   },
   {
    "window": 33,
