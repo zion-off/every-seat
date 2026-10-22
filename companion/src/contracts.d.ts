@@ -102,20 +102,20 @@ export interface ClockMessage {
   t: "clock";
   /** Media position in seconds. */
   mediaTime: number;
-  /** Sender wall clock, integer milliseconds since the Unix epoch. */
+  /** Sender time in the relay's clock (see `sync?`), integer milliseconds since the Unix epoch. */
   wallClock: number;
   /** Playback rate. */
   rate: number;
   title: string;
 }
 
-/** Phone to relay: clock offset probe. `c` is an integer millisecond timestamp. */
+/** Phone or TV to relay: clock offset probe. `c` is an integer millisecond timestamp. */
 export interface SyncRequestMessage {
   t: "sync?";
   c: number;
 }
 
-/** Relay to phone: echoes `c` and adds the relay's integer millisecond timestamp `s`. */
+/** Relay to phone or TV: echoes `c` and adds the relay's integer millisecond timestamp `s`. */
 export interface SyncReplyMessage {
   t: "sync!";
   c: number;

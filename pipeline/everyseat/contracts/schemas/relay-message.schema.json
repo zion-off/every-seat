@@ -99,7 +99,7 @@
           "type": "number"
         },
         "wallClock": {
-          "description": "Sender wall clock in milliseconds since the Unix epoch.",
+          "description": "Sender time in the relay's clock (see sync?), in milliseconds since the Unix epoch.",
           "type": "integer"
         },
         "rate": {
@@ -113,7 +113,7 @@
       }
     },
     "syncRequest": {
-      "description": "Phone to relay: clock offset probe.",
+      "description": "Phone or TV to relay: clock offset probe.",
       "type": "object",
       "additionalProperties": false,
       "required": ["t", "c"],
@@ -126,7 +126,7 @@
       }
     },
     "syncReply": {
-      "description": "Relay to phone: echoes the probe time with the relay's time.",
+      "description": "Relay to phone or TV: echoes the probe time with the relay's time.",
       "type": "object",
       "additionalProperties": false,
       "required": ["t", "c", "s"],

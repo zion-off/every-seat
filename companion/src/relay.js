@@ -80,8 +80,8 @@ export class LineFramer {
 
 /**
  * Routes newline-delimited JSON messages between a household's TV, phones and companion.
- * Companion lens messages go to the TVs, TV clock messages go to the phones, and a phone's
- * `sync?` is answered with the relay's own clock.
+ * Companion lens messages go to the TVs, TV clock messages go to the phones, and a phone's or
+ * TV's `sync?` is answered with the relay's own clock, which both sides stamp their times with.
  */
 export class Relay {
   /** @param {RelayOptions} [options] */
@@ -195,7 +195,7 @@ export class Relay {
       this.sendLens(from.household, message);
     } else if (message.t === "clock" && from.role === "tv") {
       this.broadcast(from.household, "phone", message);
-    } else if (message.t === "sync?" && from.role === "phone") {
+    } else if (message.t === "sync?" && (from.role === "phone" || from.role === "tv")) {
       this.send(from, { t: "sync!", c: message.c, s: Date.now() });
     } else {
       this.log(`relay: ignoring ${message.t} from a ${from.role}`);
