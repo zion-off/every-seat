@@ -1,7 +1,9 @@
 import { timingSafeEqual } from "node:crypto";
+import { existsSync } from "node:fs";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import cors from "cors";
 import express from "express";
+import { converseRequestSchema, createConverse, hasAwsCredentials } from "./converse.js";
 import { createMcpServer } from "./mcp.js";
 
 /** @typedef {import("./config.js").Config} Config */
@@ -125,6 +127,42 @@ export function createApp({ config, catalog, store, relay }) {
     res.json({ ok: true, titles: catalog.titles.length, relay: relay.stats() });
   });
 
+  // What the page needs to know before it connects.
+  app.get("/api/config", (_req, res) => {
+    res.json({
+      household: config.household,
+      sandboxPort: config.sandboxPort,
+      keyRequired: config.apiKey !== undefined,
+    });
+  });
+
+  const converse = createConverse({ config, catalog, store, relay });
+  let converseInFlight = 0;
+  app.post("/converse", requireKey, express.json({ limit: "64kb" }), async (req, res) => {
+    if (!hasAwsCredentials(process.env)) {
+      res.status(503).json({ error: "The conversation model has no AWS credentials. Start the server with AWS_PROFILE set." });
+      return;
+    }
+    const parsed = converseRequestSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: "Send { message, history? } with message up to 1000 characters." });
+      return;
+    }
+    if (converseInFlight >= 4) {
+      res.status(429).json({ error: "Busy, try again in a moment." });
+      return;
+    }
+    converseInFlight += 1;
+    try {
+      res.json(await converse(parsed.data));
+    } catch (error) {
+      console.error("converse failed", error);
+      res.status(502).json({ error: "The assistant couldn't be reached. Try again." });
+    } finally {
+      converseInFlight -= 1;
+    }
+  });
+
   // Stateless: each request gets its own server and transport, and a JSON reply, not a stream.
   app.post("/mcp", requireKey, express.json({ limit: "1mb" }), async (req, res) => {
     const server = createMcpServer({ catalog, store, relay, household: config.household });
@@ -163,6 +201,8 @@ export function createApp({ config, catalog, store, relay }) {
         });
     });
   }
+
+  if (existsSync(config.webDir)) app.use(express.static(config.webDir));
 
   app.use(
     /** @type {express.ErrorRequestHandler} */ (
