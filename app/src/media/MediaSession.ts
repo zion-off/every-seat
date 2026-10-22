@@ -77,7 +77,8 @@ export class MediaSession {
     }
   }
 
-  async load(url: string): Promise<void> {
+  /** `audioLabel` picks the audio rendition from the first buffered second, so nothing switches later. */
+  async load(url: string, audioLabel?: string): Promise<void> {
     const video = new VideoPlayer();
     await video.initialize();
     if (this.destroyed) {
@@ -91,6 +92,9 @@ export class MediaSession {
       video.setSurfaceHandle(this.surface);
     }
     this.shaka = createShakaPlayer(video, (e) => this.onError(e));
+    if (audioLabel) {
+      this.shaka.configure({ preferredAudioLabel: audioLabel });
+    }
     await this.shaka.load(url);
   }
 
@@ -146,9 +150,23 @@ export class MediaSession {
     }));
   }
 
-  /** Switches the audio rendition without flushing the buffer, so playback continues seamlessly. */
-  selectRendition(r: AudioRendition) {
-    this.shaka?.selectVariantTrack(r.raw, false);
+  activeAudioLabel(): string | null {
+    return this.audioRenditions().find((r) => r.active)?.label ?? null;
+  }
+
+  /**
+   * Switches the audio rendition without flushing the buffer, so playback continues seamlessly.
+   * The change takes effect after about one buffer length.
+   */
+  selectAudio(label: string): boolean {
+    const target = this.audioRenditions().find((r) => r.label === label);
+    if (!target || !this.shaka) {
+      return false;
+    }
+    if (!target.active) {
+      this.shaka.selectVariantTrack(target.raw, false);
+    }
+    return true;
   }
 
   destroy() {
