@@ -30,3 +30,9 @@ def nearest(cuts: list[float], time: float, within: float) -> float | None:
 
 def count_between(cuts: list[float], start: float, end: float) -> int:
     return bisect_right(cuts, end) - bisect_left(cuts, start)
+
+
+def first_after(cuts: list[float], time: float, within: float) -> float | None:
+    """Seconds from `time` to the first cut after it, when that cut is within `within` seconds."""
+    i = bisect_right(cuts, time)
+    return round(cuts[i] - time, 2) if i < len(cuts) and cuts[i] - time <= within else None

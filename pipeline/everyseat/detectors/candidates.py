@@ -17,6 +17,7 @@ SEVERITY = {"warning": 1, "extended_fail": 2, "flash_fail": 3}
 FLASH_SCORE = {"warning": 20.0, "extended_fail": 90.0, "flash_fail": 100.0}
 CUT_NEAR_S = 0.6  # a cut this close to an onset makes it a likely jump-scare
 CUT_BURST_S = 2.0  # rapid editing after an onset
+NEXT_CUT_S = 3.0  # the picture usually trails a loud onset: look this far ahead for its cut
 
 
 @dataclass
@@ -171,6 +172,7 @@ def _loud_candidates(
                     "rise_db": onset.rise_db,
                     "cut_offset_s": None if near is None else round(near - onset.time, 2),
                     "cuts_next_2s": burst,
+                    "next_cut_s": cutlib.first_after(cuts, onset.time, NEXT_CUT_S),
                 },
             )
         )
