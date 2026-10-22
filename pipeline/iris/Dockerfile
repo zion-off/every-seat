@@ -16,6 +16,8 @@
 #    frame rate proxy at native resolution. Frame resizing is disabled in the default settings
 #    because a 50% resize turned a six-transition warning into a failure.
 #  * IRIS rotates and appends framedata*.csv, so never reuse a results directory.
+#  * On Fargate the task definition runs `iris-task GET_URL PUT_URL` instead of the default
+#    entrypoint (see iris-task.sh).
 FROM ubuntu:24.04
 
 ARG IRIS_VERSION=1.1.0
@@ -28,13 +30,17 @@ RUN apt-get update \
  && echo "${IRIS_SHA256}  /tmp/iris.tgz" | sha256sum -c - \
  && mkdir -p /opt/iris && tar -xzf /tmp/iris.tgz -C /opt/iris && rm /tmp/iris.tgz \
  && sed -i '1a\  "ResultsPath": "./",' /opt/iris/appsettings.json \
- && apt-get purge -y curl && apt-get autoremove -y && rm -rf /var/lib/apt/lists/* \
+ && rm -rf /var/lib/apt/lists/* \
  && printf '%s\n' '#!/bin/sh' 'set -eu' \
       ': "${IRIS_OUT:=/out}"' 'mkdir -p "$IRIS_OUT" && cd "$IRIS_OUT"' \
       'cp /opt/iris/appsettings.json ./appsettings.json' \
       'exec /opt/iris/IrisApp -j 1 -v "$@"' > /usr/local/bin/iris-run \
  && chmod 755 /usr/local/bin/iris-run /opt/iris/IrisApp \
  && useradd --system --uid 10001 iris && mkdir -p /out && chown iris /out
+
+# The cloud task (an ECS task that overrides the entrypoint) moves its input and output through
+# presigned URLs; curl stays in the image for that.
+COPY --chmod=755 iris-task.sh /usr/local/bin/iris-task
 
 USER iris
 ENV IRIS_OUT=/out
