@@ -13,6 +13,8 @@ Shaka Player (MSE) on `@amazon-devices/react-native-w3cmedia`.
 - Java 21 and Node 20.x on `PATH`.
 - The media server from `tools/media` running on the host (the Virtual Device reaches the host at
   `10.0.2.2`), serving the HLS output.
+- Optional: the companion from `companion/` running on the host, to change the couch live from a
+  phone or an assistant. The app works without it.
 
 ## Build and run
 
@@ -27,7 +29,7 @@ scripts/deploy.sh      # Release build, then installs and launches on the runnin
 `scripts/deploy.sh` checks the toolchain. To load Java, Node and the Vega SDK from a file instead of
 the current shell, point `EVERYSEAT_ENV` at a script that exports them.
 
-The media location is set in `src/config.ts`.
+The media location and the companion's relay address are set in `src/config.ts`.
 
 ## Layout
 
@@ -39,6 +41,8 @@ The media location is set in `src/config.ts`.
 - `src/components` — the dim overlay, the couch picker and panel, the player controls, the heads-up
   card, and the comfort badges and volume meter.
 - `src/screens` — the notice, couch, film picker and player screens.
+- `src/relay` — the companion relay client.
+- `src/deeplink.ts` — `everyseat://lens` links.
 - `src/notice.ts`, `src/storage.ts` — the notice text and the first-run flag.
 - `src/catalog.ts` — the films on offer.
 - `src/styles` — colors and the UI theme.
@@ -64,8 +68,9 @@ The media location is set in `src/config.ts`.
 ## Couch, films and seek bar
 
 - The first screen asks who is on the couch. People and their comfort settings are a local seed
-  list in `src/lens/people.ts`. The most protective setting of each kind across the couch applies to
-  everyone.
+  list in `src/lens/people.ts` (the companion's default household). The most protective setting of
+  each kind across the couch applies to everyone. People the companion names that the TV does not
+  know yet are added to the screen, which then uses smaller tiles and wraps.
 - The film picker is a Kepler UI carousel. Each film shows how many moments are marked for the
   current couch.
 - The seek bar draws a marker for every moment the couch lens covers. Pressing Left or Right moves a
@@ -74,6 +79,36 @@ The media location is set in `src/config.ts`.
   the markers repaint right away.
 - Back closes the panel, then leaves the film for the picker, then returns to the couch screen, then
   exits the app.
+
+## Live lens from the companion
+
+- On start the app opens a WebSocket to the companion's relay (`ws://10.0.2.2:8787/relay`),
+  introduces itself as the TV for the `demo` household, and answers the relay's pings. Messages are
+  newline-delimited JSON; long ones can arrive in pieces, so the client buffers until a newline. A
+  dead or silent link is dropped and reopened with a backoff of 1 s up to 10 s.
+- A `lens` message names tonight's couch with each person's settings. People already on the screen
+  take the new settings, new names are added, and the couch becomes exactly those people, on any
+  screen. The engine applies the change at once: the seek-bar markers, the couch chip and the film
+  picker counts repaint together, and the player brings its controls up so the change is seen.
+- An open heads-up card follows the new lens. If the lens no longer warns about that moment, the
+  card closes without softening it and focus goes back to where it was. If a warning is added
+  after the card's window has started the card shows for the time that is left; if it is added
+  after the deadline the moment is softened straight away. If the warning stays on, the card, its
+  focus and its countdown are not touched.
+
+## Deep links
+
+`everyseat://lens/<person>` opens the app with that person alone on the couch. Add a film after
+the person to start it: `everyseat://lens/<person>/<film>`, where the film is a folder name such as
+`elephants-dream`. The one-parameter form `everyseat://lens?person=<person>` is for shells, where an
+`&` would cut the link short. A link that arrives before the first-run notice is accepted waits for
+it, and a name the TV does not know is ignored.
+
+```sh
+vega exec vda shell 'vmsgr send "everyseat://lens/mom"'
+```
+
+The links need the `everyseat://lens` message target and message entries in `manifest.toml`.
 
 ## Heads-up cards, badges and notice
 
