@@ -107,6 +107,21 @@ AWS_PROFILE=personal AWS_REGION=us-east-1 \
 found, extra cues, cost) and compares models. The label format, the run script and the committed
 results are in `eval/`.
 
+## Cloud
+
+`infra/` deploys the pipeline to AWS: a film uploaded to a bucket starts a job in an AgentCore
+Runtime, the flash analyzer runs as a one-off Fargate task, and the cue file and a `status.json`
+land in a results bucket. `infra/README.md` has the deploy, verify and teardown steps and the
+billable resources. The runtime container is built from `agent.Dockerfile`.
+
+Two switches select the cloud behaviour; the images set them and local runs leave them unset:
+
+- `EVERYSEAT_IRIS_BACKEND=fargate` runs the flash analyzer as a Fargate task instead of a local
+  container (cluster, task definition, subnets, security groups and a staging bucket come from
+  `EVERYSEAT_IRIS_*` variables).
+- `EVERYSEAT_AWS_SESSION=role` makes Bedrock calls with the credentials of the attached role
+  instead of a named profile.
+
 ## Lint
 
 ```sh
