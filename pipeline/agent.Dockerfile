@@ -1,7 +1,8 @@
 # AgentCore Runtime container for the analysis pipeline (linux/arm64).
 #
-# The build context is the pipeline directory:
-#   docker buildx build --platform linux/arm64 -f infra/agentcore/app/analyzer/Dockerfile .
+# The build context is the pipeline directory, and this file sits at its root so that the
+# context upload needs no directory re-included beside the ignored ones:
+#   docker buildx build --platform linux/arm64 -f agent.Dockerfile .
 #
 # The runtime contract is HTTP on port 8080 (POST /invocations, GET /ping). An invocation starts
 # the analysis in a background thread and returns at once; see everyseat/cloud/app.py.

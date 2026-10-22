@@ -1,0 +1,48 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadFilms",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": "arn:aws:s3:::everyseat-media-*/*"
+    },
+    {
+      "Sid": "WriteResults",
+      "Effect": "Allow",
+      "Action": ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"],
+      "Resource": "arn:aws:s3:::everyseat-results-*/*"
+    },
+    {
+      "Sid": "RunFlashAnalyzerTask",
+      "Effect": "Allow",
+      "Action": ["ecs:RunTask"],
+      "Resource": "arn:aws:ecs:us-east-1:*:task-definition/everyseat-iris:*",
+      "Condition": {
+        "ArnEquals": {
+          "ecs:cluster": "arn:aws:ecs:us-east-1:*:cluster/everyseat"
+        }
+      }
+    },
+    {
+      "Sid": "WatchFlashAnalyzerTask",
+      "Effect": "Allow",
+      "Action": ["ecs:DescribeTasks", "ecs:StopTask"],
+      "Resource": "arn:aws:ecs:us-east-1:*:task/everyseat/*"
+    },
+    {
+      "Sid": "HandRolesToFlashAnalyzerTask",
+      "Effect": "Allow",
+      "Action": ["iam:PassRole"],
+      "Resource": [
+        "arn:aws:iam::*:role/everyseat-iris-task",
+        "arn:aws:iam::*:role/everyseat-iris-execution"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": "ecs-tasks.amazonaws.com"
+        }
+      }
+    }
+  ]
+}

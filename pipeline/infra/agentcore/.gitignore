@@ -1,0 +1,8 @@
+# Written by the CLI on first deploy: it holds the account id and region
+agentcore/aws-targets.json
+agentcore/.cli/
+agentcore/.env.local
+
+agentcore/cdk/node_modules/
+agentcore/cdk/dist/
+agentcore/cdk/cdk.out/

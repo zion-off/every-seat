@@ -1,0 +1,38 @@
+{
+  "name": "everyseat",
+  "version": 2,
+  "managedBy": "CDK",
+  "runtimes": [
+    {
+      "name": "analyzer",
+      "description": "Analyzes a film for flashes, sudden loud moments and scares",
+      "build": "Container",
+      "entrypoint": "main.py",
+      "codeLocation": "app/analyzer",
+      "dockerfile": "agent.Dockerfile",
+      "buildContextPath": "../..",
+      "protocol": "HTTP",
+      "networkMode": "PUBLIC",
+      "instrumentation": {
+        "enableOtel": true
+      },
+      "lifecycleConfiguration": {
+        "idleRuntimeSessionTimeout": 60,
+        "maxLifetime": 28800
+      },
+      "additionalPolicies": ["policy.json"],
+      "tags": {
+        "project": "everyseat"
+      }
+    }
+  ],
+  "memories": [],
+  "knowledgeBases": [],
+  "credentials": [],
+  "evaluators": [],
+  "onlineEvalConfigs": [],
+  "agentCoreGateways": [],
+  "policyEngines": [],
+  "configBundles": [],
+  "harnesses": []
+}
