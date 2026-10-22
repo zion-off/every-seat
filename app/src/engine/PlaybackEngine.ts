@@ -89,6 +89,11 @@ export class PlaybackEngine {
     return this.state;
   }
 
+  /** The cues of the open title, for drawing the seek bar. */
+  get cueList(): Cue[] {
+    return this.cues;
+  }
+
   subscribe(cb: Listener) {
     this.listeners.add(cb);
     return () => {
