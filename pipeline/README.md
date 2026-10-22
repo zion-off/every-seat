@@ -81,28 +81,51 @@ audio clips:
 ```sh
 AWS_PROFILE=personal AWS_REGION=us-east-1 \
   everyseat describe film.mkv --subtitles film_en.srt --title my-film \
-  --cast "Name=who they are" --clips-dir build/ad
+  --plot plot.txt --cast "Name=who they are" --clips-dir build/ad
 ```
 
 - **Windows:** the gaps of at least `--min-gap` (10 s) between subtitle lines, trimmed by 0.5 s at
   each end and cut into equal windows of at most `--max-window` (30 s), all on the frame grid. The
   quiet stretch before the first line and after the last counts too.
-- **What the writer sees:** a contact sheet with one frame per shot in the window (labelled in
-  plain seconds), the dialogue just before and after, the earlier descriptions and the `--cast`
-  notes, so names stay consistent. It writes to a budget of about 2.5 words a second, in the
-  present tense, only what is visible and essential, without interpretation or spoilers, and may
-  decline a window where nothing essential is on screen.
+- **What the writer sees:** a contact sheet with one still per cut in the window (labelled in
+  plain seconds), the dialogue just before and after, the latest earlier descriptions, the
+  `--cast` notes, so names stay consistent, and the `--plot` file: a short plain-text synopsis
+  (up to 2000 characters, see `fixtures/sintel.plot.txt`) used only to recognise characters and
+  places. It writes to a budget of about 2.5 words a second, in the present tense, only what is
+  visible and essential, without interpretation or spoilers, and may decline a window where
+  nothing essential is on screen.
+- **Review:** the model does not reliably follow rules, so every answer, including each rewrite
+  to shorten, goes through checks in code before it is kept, and a rejected answer goes back to
+  the model with the reason:
+  - camera and editing words (frame, shot, close-up, camera, image, shows, scene cuts) are
+    rejected with a request to say what happens instead;
+  - a description is rejected when 70% or more of its content words (compared by word stem,
+    without common words) already appear in a single earlier description anywhere in the film;
+    the earlier text is quoted and the model is asked for what is new, or for nothing;
+  - more words than the budget, or fewer than 4, are rejected.
+
+  The writer gets 5 answers per window. A window where none passes is left without a
+  description and the reason is logged, rather than ending the run. Each decision is printed.
 - **Fitting:** Polly neural renders 16 kHz mono PCM, so the clip length is exactly bytes divided by
   32000. A clip longer than its window goes back to the writer to be shortened (up to 3 times);
   the last resort is SSML prosody at 110%. A window that still does not fit stops the run.
 - **Outputs:** one `<title>-ad-<n>.wav` per window in `<clips-dir>/<title>/`, the cue file
   (`generated/<title>.sensevtt`; each cue starts at its window start and carries
   `audio_ref {uri, duration_s}`, a one-line `preview` and the full text in `evidence`) and
-  `<title>.run.json` beside it with every attempt, token usage and the estimated cost. Clip
-  addresses are relative (`ad/<title>/<id>.wav`) so the companion can serve them.
+  `<title>.run.json` beside it with every attempt, the answers the review rejected (and why), the
+  skipped windows, token usage and the estimated cost. Clip addresses are relative
+  (`ad/<title>/<id>.wav`) so the companion can serve them.
 - **`--dry-run`:** placeholder text and silent clips of the length a voice would take, written next
   to the clips as `<title>.dry-run.sensevtt`. Nothing touches AWS (no session is created, so no
   credentials are read), which makes it the way to check the whole flow offline.
+- **`--script FILE`** (with `--dry-run`): scripted answers per window, in place of the model's, that
+  go through the same review. `fixtures/describe_script.json` exercises each rejection path on
+  Sintel, and every decision is printed:
+
+  ```sh
+  everyseat describe film.mkv --subtitles film_en.srt --dry-run \
+    --script fixtures/describe_script.json --plot fixtures/sintel.plot.txt
+  ```
 - **Cost:** about 33 Nova Pro calls for Sintel (one contact sheet each) plus rewrites, a few cents;
   Polly neural is $16 per million characters.
 
