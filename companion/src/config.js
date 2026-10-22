@@ -50,6 +50,15 @@ export function loadConfig(env = process.env) {
     heartbeatMs: Number(env.EVERYSEAT_HEARTBEAT_MS ?? 20_000),
     /** Send the last lens to a TV when it connects. */
     replayLens: env.EVERYSEAT_REPLAY_LENS === "1",
+    /** The model behind `/converse`, which turns a sentence into tool calls. */
+    converse: {
+      modelId: env.EVERYSEAT_CONVERSE_MODEL ?? "us.amazon.nova-2-lite-v1:0",
+      region: env.AWS_REGION ?? "us-east-1",
+    },
+    /** The sandbox for cards runs on its own port so it is a different origin from the page. */
+    sandboxPort: Number(env.EVERYSEAT_SANDBOX_PORT ?? 8788),
+    /** The built page (`npm run build` in `web/`), served at `/` when it exists. */
+    webDir: env.EVERYSEAT_WEB_DIR ?? path.join(companionRoot, "web", "dist"),
   };
 }
 

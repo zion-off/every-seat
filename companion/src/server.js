@@ -3,6 +3,7 @@ import { createApp, isAuthorized } from "./app.js";
 import { loadCatalog } from "./catalog.js";
 import { loadConfig } from "./config.js";
 import { Relay } from "./relay.js";
+import { startSandbox } from "./sandbox.js";
 import { createStore } from "./store/index.js";
 
 const config = loadConfig();
@@ -18,17 +19,21 @@ const relay = new Relay({
 
 const server = http.createServer(createApp({ config, catalog, store, relay }));
 relay.attach(server);
+const sandbox = await startSandbox({ port: config.sandboxPort, host: config.host });
 
 server.listen(config.port, config.host, () => {
   const titles = catalog.titles.map((title) => title.id).join(", ");
   console.info(`companion listening on http://${config.host}:${config.port} (mcp at /mcp, relay at /relay)`);
+  console.info(`card sandbox on http://${config.host}:${config.sandboxPort}`);
   console.info(`titles: ${titles || "none"}`);
 });
 
 for (const signal of ["SIGINT", "SIGTERM"]) {
   process.on(signal, () => {
     relay.close();
+    sandbox.close();
     server.close(() => process.exit(0));
     server.closeAllConnections();
+    sandbox.closeAllConnections();
   });
 }
