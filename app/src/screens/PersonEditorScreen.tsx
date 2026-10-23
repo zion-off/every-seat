@@ -167,7 +167,7 @@ const Confirm = ({
         They leave the household and their comfort settings are forgotten. You
         can add them again any time.
       </Text>
-      <View style={styles.actions}>
+      <View style={[styles.actions, styles.actionsConfirm]}>
         <Button
           ref={keepRef}
           label="Keep"
@@ -448,6 +448,9 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  actionsConfirm: {
+    marginTop: space.lg,
   },
   actionsTop: {
     marginTop: space.sm,
