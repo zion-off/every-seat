@@ -7,21 +7,25 @@ type Props = {
   /** Filled amber, as for someone who is on the couch. */
   selected?: boolean;
   small?: boolean;
+  /** Slate with muted text, for places where amber is reserved for focus. */
+  muted?: boolean;
 };
 
 /** A person's initial in a circle; decorative, since the name is always spoken beside it. */
-const Avatar = ({ name, selected, small }: Props) => (
+const Avatar = ({ name, selected, small, muted }: Props) => (
   <View
     accessible={false}
     style={[
       styles.circle,
       small ? styles.small : styles.regular,
       selected && styles.selected,
+      muted && styles.muted,
     ]}>
     <Text
       style={[
         small ? styles.initialSmall : styles.initial,
         selected && styles.initialSelected,
+        muted && styles.initialMuted,
       ]}>
       {name.charAt(0)}
     </Text>
@@ -45,6 +49,12 @@ const styles = StyleSheet.create({
   },
   selected: {
     backgroundColor: colors.accent,
+  },
+  muted: {
+    backgroundColor: colors.line,
+  },
+  initialMuted: {
+    color: colors.textMuted,
   },
   initial: {
     ...type.title,

@@ -78,7 +78,7 @@ Every focusable element is a `Focusable` (or a themed `Button`, which wraps the 
 - Back from a film returns to the same tile.
 
 **Player.**
-- Controls: a bar in the lower part of the screen inside the safe area, on `scrimStrong`, appearing for six seconds after any key. Film name and time on one line, the heat seek bar, then a legend and, at the right, who is on the couch as a row of initials (no pill, no fill at rest; it takes focus and opens the couch panel).
+- Controls: a bar in the lower part of the screen inside the safe area, on `scrimStrong`, appearing for six seconds after any key. Film name and time on one line, the heat seek bar, then a legend and, at the right, who is on the couch as a row of initials (small slate circles with muted initials, no pill or fill; amber is kept for focus and primary actions; it takes focus and opens the couch panel).
 - The seek bar is the signature visual: a 12 px track with the moments the couch cares about drawn on it in heat colours, at least 1.2% wide so none disappears. The thumb is amber. Left/Right step ten seconds.
 - Comfort cards (heads-up) are at most 1040 px wide, sit at the left of the lower third, never in the middle of the picture and never over the centre of the frame where faces are. They are quiet, `surfaceRaised` with an amber top edge, three buttons in a row: **Soften**, **Watch**, **Tell me**. The card takes no focus on its own; Select on the remote opens it.
 - Badges (flash softened, sound lowered meter) are small `pill` shapes at the top left inside the safe area. The meter is 12 bars, 8 px wide, amber, calm and static except for the level.

@@ -92,7 +92,7 @@ export const size = {
   border: dp(2),
   accentEdge: dp(4),
   avatar: dp(64),
-  avatarSm: dp(40),
+  avatarSm: dp(32),
   check: dp(40),
   buttonMd: dp(64),
   buttonLg: dp(80),

@@ -252,7 +252,7 @@ const PlayerControls = ({
             </Text>
             {people.map((person) => (
               <View key={person.id} style={styles.person}>
-                <Avatar name={person.name} selected small />
+                <Avatar name={person.name} muted small />
               </View>
             ))}
           </Focusable>
