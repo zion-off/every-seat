@@ -1,4 +1,4 @@
-import type { Preferences } from 'react-native-sensevtt';
+import type { Preferences } from 'sensevtt';
 import { LensSettings } from './types';
 
 export const MAIN_AUDIO = 'main';

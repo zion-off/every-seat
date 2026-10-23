@@ -7,8 +7,8 @@ import React, {
   useState,
 } from 'react';
 import { BackHandler, StyleSheet, Text, View } from 'react-native';
-import { Cue, loadSenseVtt, VegaVideoSurface } from 'react-native-sensevtt';
-import { DimOverlay } from 'react-native-sensevtt/react';
+import { Cue, loadSenseVtt, VegaVideoSurface } from 'sensevtt';
+import { DimOverlay } from 'sensevtt/react';
 import ComfortBadges from '../components/ComfortBadges';
 import CouchPanel from '../components/CouchPanel';
 import HeadsUpCard from '../components/HeadsUpCard';

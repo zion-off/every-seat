@@ -14,7 +14,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { Cue, SenseController } from 'react-native-sensevtt';
+import { Cue, SenseController } from 'sensevtt';
 import { useControllerState } from '../engine/useController';
 import {
   colors,

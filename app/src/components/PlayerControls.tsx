@@ -2,7 +2,7 @@ import { SeekBar, SeekBarHandle } from '@amazon-devices/kepler-ui-components';
 import { useTVEventHandler } from '@amazon-devices/react-native-kepler';
 import React, { RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
-import { Cue, SenseController, VegaAdapter } from 'react-native-sensevtt';
+import { Cue, SenseController, VegaAdapter } from 'sensevtt';
 import { formatClock } from '../catalog';
 import { LensSettings } from '../engine/types';
 import { buildHeatmap } from '../lens/heatmap';

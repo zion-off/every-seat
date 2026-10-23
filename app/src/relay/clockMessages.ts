@@ -1,8 +1,4 @@
-import {
-  MediaEventName,
-  SenseController,
-  VegaAdapter,
-} from 'react-native-sensevtt';
+import { MediaEventName, SenseController, VegaAdapter } from 'sensevtt';
 import { RelayClient } from './RelayClient';
 
 /** Phones treat a clock that has been quiet for 6 s as lost, so it is repeated well within that. */

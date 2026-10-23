@@ -39,13 +39,13 @@
     /* Module Resolution Options */
     "moduleResolution": "node" /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */,
     "baseUrl": "." /* Base directory to resolve non-absolute module names. */,
-    /* Temporary local link to the react-native-sensevtt sources (see metro.config.js). */
+    /* Temporary local link to the sensevtt sources (see metro.config.js). */
     "paths": {
-      "react-native-sensevtt": [
-        "../../sensevtt/packages/react-native-sensevtt/src/index.ts"
+      "sensevtt": [
+        "../../sensevtt/packages/sensevtt/src/index.ts"
       ],
-      "react-native-sensevtt/react": [
-        "../../sensevtt/packages/react-native-sensevtt/src/react/index.ts"
+      "sensevtt/react": [
+        "../../sensevtt/packages/sensevtt/src/react/index.ts"
       ],
       "*": ["node_modules/*", "node_modules/@types/*"]
     },

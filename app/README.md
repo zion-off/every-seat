@@ -34,7 +34,7 @@ The media location and the companion's relay address are set in `src/config.ts`.
 ## Cue files and the SenseVTT library
 
 The cue list parser, the media clock, the dim and volume-duck planner and scheduler, the Vega video
-adapter and the dim overlay come from the `react-native-sensevtt` package. The app reads the
+adapter and the dim overlay come from the `sensevtt` package. The app reads the
 `NOTE sensevtt-header` cue files the pipeline writes.
 
 The app reaches the package through a local checkout at `../../sensevtt`, which is temporary. The
@@ -42,7 +42,7 @@ relative path is set in two files and both change when the app moves to the publ
 
 - `metro.config.js`: the `SENSEVTT_LIBRARY` constant, used for the Metro alias and `watchFolders`
   (Metro 0.76 does not follow symlinked packages).
-- `tsconfig.json`: the `paths` entries for `react-native-sensevtt` and `react-native-sensevtt/react`.
+- `tsconfig.json`: the `paths` entries for `sensevtt` and `sensevtt/react`.
 
 With the published package, add it to `dependencies` and delete the alias, the `watchFolders` entry
 and the `paths` block.

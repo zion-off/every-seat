@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Cue, loadSenseVtt } from 'react-native-sensevtt';
+import { Cue, loadSenseVtt } from 'sensevtt';
 import { formatClock, TitleEntry, TITLES } from '../catalog';
 import Backdrop from '../components/Backdrop';
 import FilmTile from '../components/FilmTile';

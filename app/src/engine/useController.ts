@@ -1,9 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import {
-  ControllerState,
-  MediaAdapter,
-  SenseController,
-} from 'react-native-sensevtt';
+import { ControllerState, MediaAdapter, SenseController } from 'sensevtt';
 import { preferencesFor } from './comfort';
 import { LensSettings } from './types';
 

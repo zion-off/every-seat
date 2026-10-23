@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { AccessibilityInfo, StyleSheet, Text, View } from 'react-native';
-import { SenseController } from 'react-native-sensevtt';
+import { SenseController } from 'sensevtt';
 import { useControllerState } from '../engine/useController';
 import {
   colors,

@@ -1,4 +1,4 @@
-import { Cue } from 'react-native-sensevtt';
+import { Cue } from 'sensevtt';
 import { LensSettings, NO_LENS } from '../engine/types';
 import { Person } from './people';
 

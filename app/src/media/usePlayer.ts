@@ -1,6 +1,6 @@
 import { VideoPlayer } from '@amazon-devices/react-native-w3cmedia';
 import { useEffect, useRef, useState } from 'react';
-import { createVegaAdapter, VegaAdapter } from 'react-native-sensevtt';
+import { createVegaAdapter, VegaAdapter } from 'sensevtt';
 import { createShakaPlayer } from './shaka';
 
 export type PlayerState = {
