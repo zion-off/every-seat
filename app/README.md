@@ -20,7 +20,7 @@ Shaka Player (MSE) on `@amazon-devices/react-native-w3cmedia`.
 
 ```sh
 cd app
-npm install            # also builds the patched Shaka Player bundle (needs network, Java 21, Python)
+npm ci                 # also builds the patched Shaka Player bundle (needs network, Java 21, Python)
 npm run typecheck
 npm run lint
 scripts/deploy.sh      # Release build, then installs and launches on the running virtual device
@@ -37,15 +37,9 @@ The cue list parser, the media clock, the dim and volume-duck planner and schedu
 adapter and the dim overlay come from the `sensevtt` package. The app reads the
 `NOTE sensevtt-header` cue files the pipeline writes.
 
-The app reaches the package through a local checkout at `../../sensevtt`, which is temporary. The
-relative path is set in two files and both change when the app moves to the published package:
-
-- `metro.config.js`: the `SENSEVTT_LIBRARY` constant, used for the Metro alias and `watchFolders`
-  (Metro 0.76 does not follow symlinked packages).
-- `tsconfig.json`: the `paths` entries for `sensevtt` and `sensevtt/react`.
-
-With the published package, add it to `dependencies` and delete the alias, the `watchFolders` entry
-and the `paths` block.
+The package is a normal npm dependency, pinned to an exact version in `package.json`. It ships a
+`vega.kepler` platform file, which Metro picks when building for Vega, so no Metro or TypeScript
+configuration is needed. `sensevtt/react` imports resolve from the package's `react/` folder.
 
 ## Layout
 

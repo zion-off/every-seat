@@ -1,21 +1,5 @@
 const path = require('path');
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
-const exclusionList = require('metro-config/src/defaults/exclusionList');
-
-// Temporary local link to the sensevtt sources in the sibling checkout. Metro does
-// not follow symlinked packages, so the package is aliased to this path. Replace this block and
-// the `paths` entries in tsconfig.json with the published package.
-const SENSEVTT_LIBRARY = path.resolve(
-  __dirname,
-  '../../sensevtt/packages/sensevtt',
-);
-
-// The library's own dependencies resolve to this app's copies, so the bundle has one React and
-// one React Native.
-const appModules = new Proxy(
-  {},
-  { get: (_, name) => path.join(__dirname, 'node_modules', String(name)) },
-);
 
 /**
  * Metro configuration
@@ -27,20 +11,7 @@ const appModules = new Proxy(
 const FIXTURES = path.resolve(__dirname, '../fixtures');
 
 const config = {
-  watchFolders: [SENSEVTT_LIBRARY, FIXTURES],
-  resolver: {
-    blockList: exclusionList([new RegExp(`${SENSEVTT_LIBRARY}/node_modules/.*`)]),
-    extraNodeModules: new Proxy(
-      {
-        'sensevtt': SENSEVTT_LIBRARY,
-        'sensevtt/react': path.join(SENSEVTT_LIBRARY, 'react'),
-      },
-      {
-        get: (target, name) =>
-          name in target ? target[name] : appModules[name],
-      },
-    ),
-  },
+  watchFolders: [FIXTURES],
 };
 
 module.exports = mergeConfig(getDefaultConfig(__dirname), config);

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "clean": "rm -rf build bundle kepler-build node_modules package-lock.json generated shaka-setup/shaka-player",
+    "clean": "rm -rf build bundle kepler-build node_modules generated shaka-setup/shaka-player",
     "postinstall": "cd shaka-setup && ./build.sh && ./copyOutputs.sh",
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -22,6 +22,7 @@
     "base-64": "1.0.0",
     "react": "18.2.0",
     "react-native": "0.72.0",
+    "sensevtt": "0.1.0",
     "xmldom": "~0.6.0"
   },
   "devDependencies": {
