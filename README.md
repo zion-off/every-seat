@@ -67,13 +67,14 @@ Region: `us-east-1`.
 
 ## Run it locally (no AWS needed)
 
-The demo runs entirely on one Mac. The films, comfort audio, cue files and descriptions are built
+The demo runs entirely on one computer. The films, comfort audio, cue files and descriptions are built
 from the committed recipes and files; nothing needs a cloud account. (The voice page is the one
 piece that calls Bedrock, and it is optional.)
 
 ### Prerequisites
 
-- macOS on Apple Silicon
+- macOS on Apple Silicon or Ubuntu x86_64 (the hosts the Vega SDK supports; tested on an Apple
+  Silicon Mac)
 - Vega SDK and a Vega Virtual Device (VVD)
 - Java 21
 - Node 20.12 for the app build, Node 22 for the companion
