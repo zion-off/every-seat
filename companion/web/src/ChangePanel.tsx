@@ -60,9 +60,18 @@ export function ChangePanel({ call }: { call: ToolCall }) {
     return (
       <section className="panel" aria-label="Tonight's couch">
         <p className="eyebrow">Tonight's couch</p>
-        <h2>{output.people.map((person) => person.name).join(", ")}</h2>
+        <ul className="people">
+          {output.people.map((person) => (
+            <li key={person.name}>
+              <span className="avatar" aria-hidden="true">
+                {person.name.slice(0, 1).toUpperCase()}
+              </span>
+              {person.name}
+            </li>
+          ))}
+        </ul>
         <p className="status" data-connected={output.tvConnected ? "yes" : "no"}>
-          {output.tvConnected ? "TV updated" : "TV not connected"}
+          {output.tvConnected ? "✓ TV updated" : "TV not connected"}
         </p>
         <p className="eyebrow">Applied on the TV</p>
         <Chips settings={output.settings} />
@@ -74,7 +83,14 @@ export function ChangePanel({ call }: { call: ToolCall }) {
     return (
       <section className="panel" aria-label="Saved settings">
         <p className="eyebrow">Saved for every night</p>
-        <h2>{output.name}</h2>
+        <ul className="people">
+          <li>
+            <span className="avatar" aria-hidden="true">
+              {output.name.slice(0, 1).toUpperCase()}
+            </span>
+            {output.name}
+          </li>
+        </ul>
         <Chips settings={output.settings} />
       </section>
     );

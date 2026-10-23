@@ -139,19 +139,43 @@ export function App() {
   const cardCall = calls.find(hasCard);
   const changes = calls.filter(hasPanel);
 
+  const suggestions = [
+    "Mom's joining Leo on the couch tonight.",
+    "Is Tears of Steel okay for the couch tonight?",
+    "Add a person called Sam who wants flashes softened.",
+  ];
+
   return (
     <div className="screen">
       <header className="top">
+        <span className="brand">
+          <svg className="mark" viewBox="0 0 60 12" aria-hidden="true" focusable="false">
+            <rect x="0" y="2" width="9" height="10" rx="3" />
+            <rect x="12.75" y="2" width="9" height="10" rx="3" />
+            <rect x="25.5" y="2" width="9" height="10" rx="3" />
+            <rect className="lit" x="38.25" y="2" width="9" height="10" rx="3" />
+            <rect x="51" y="2" width="9" height="10" rx="3" />
+          </svg>
+          Every Seat
+        </span>
         <span className="badge">Simulated Alexa+ add-on</span>
-        <span className="household">{config ? `Household: ${config.household}` : ""}</span>
       </header>
 
       <main className="body">
         <section className="talk" aria-label="Conversation">
-          {entries.length === 0 && !setup && (
-            <p className="hint">
-              Try “Add a person called Sam who wants flashes softened” or “Is Tears of Steel okay for the couch tonight?” or “Heads-ups, but don't skip anything.”
-            </p>
+          {entries.length === 0 && !setup && !busy && (
+            <div className="welcome">
+              <p className="eyebrow">Try saying</p>
+              <ul className="suggestions">
+                {suggestions.map((text) => (
+                  <li key={text}>
+                    <button type="button" disabled={!client} onClick={() => void send(text)}>
+                      “{text}”
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
           {setup && <p className="error">{setup}</p>}
           <ol ref={transcript} className="transcript">
@@ -161,7 +185,16 @@ export function App() {
               </li>
             ))}
             {talk.heard && <li className="line user live">{talk.heard}</li>}
-            {busy && <li className="line assistant thinking">Working on it…</li>}
+            {busy && (
+              <li className="line assistant thinking" aria-label="Working on it">
+                <span className="dots" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                Working on it
+              </li>
+            )}
           </ol>
           {(failure ?? talk.problem) && <p className="error">{failure ?? talk.problem}</p>}
         </section>
@@ -171,7 +204,13 @@ export function App() {
           {changes.map((call, index) => (
             <ChangePanel key={`${latest?.id}-${index}`} call={call} />
           ))}
-          {!cardCall && changes.length === 0 && <p className="idle">Ask about a film, or tell me who's on the couch tonight.</p>}
+          {!cardCall && changes.length === 0 && (
+            <div className="idle">
+              <p className="idle-title">Who's on the couch tonight?</p>
+              <p className="idle-sub">Ask about a film, or tell me who's watching. The TV follows along.</p>
+              {config && <p className="household">Household: {config.household}</p>}
+            </div>
+          )}
         </section>
       </main>
 
