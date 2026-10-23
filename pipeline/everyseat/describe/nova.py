@@ -7,19 +7,28 @@ from strands.hooks import BeforeModelCallEvent, HookProvider, HookRegistry
 
 from everyseat.agent import model
 from everyseat.describe import DescribeError, Rejected
+from everyseat.describe.anchor import Item
 from everyseat.describe.review import Check, Verdict, gave_up
 from everyseat.describe.writers import MAX_ANSWERS, Request, Usage
 from everyseat.detectors import sheet
 
 MAX_MODEL_CALLS = MAX_ANSWERS  # one call per answer; a wrap-up call after the last is cut off
+MAX_ITEMS = 8  # items one answer may have
 EARLIER_SHOWN = 8  # the model is shown this many of the latest descriptions; the review sees all
 
 SYSTEM_INSTRUCTIONS = """\
 You write audio description for a blind or low-vision viewer of an animated short film. Each
 description is spoken aloud in a quiet stretch between lines of dialogue, so it must be short.
+A stretch can last up to 30 seconds and cover several shots, and each sentence is spoken when its
+shot begins, so you answer with a list of items, each tied to the frame it describes.
 
 Rules:
-- Present tense, plain words, one or two short sentences at a time.
+- Each item is {at_s, text}: at_s is the time label of the contact-sheet frame the text is about,
+  and text is one short sentence (about 8 to 15 words) that says only what is visible in that
+  frame's shot. Never describe in an item what happens in a later shot. Use one item per shot
+  that matters, in time order, with different at_s values; skip shots where nothing essential
+  happens. A window with a single shot has a single item.
+- Present tense, plain words.
 - Say what is visible and essential to follow the story: who is where, what they do, what
   changes. Describe in the order things happen.
 - Do not interpret. No guesses about thoughts, feelings, motives or what will happen. Say
@@ -36,7 +45,8 @@ Rules:
 - Use a character's name only once the dialogue or an earlier description has introduced it;
   until then describe the character by appearance. Keep names and wording consistent with the
   earlier descriptions.
-- Stay within the word limit. Fewer words are fine when little happens.
+- Stay within the word limit, which is shared by all the items. Fewer words are fine when little
+  happens.
 - If nothing essential is visible in the window, say so by setting nothing_to_describe.
 
 You are shown a contact sheet of stills from the window, one for each cut, each labelled with
@@ -45,10 +55,17 @@ If it returns an error, correct the description as the error says and call it ag
 """
 
 
+class DraftItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    at_s: float = Field(ge=0)
+    text: str = Field(max_length=400)
+
+
 class Draft(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    text: str = Field(default="", max_length=1200)
+    items: list[DraftItem] = Field(default_factory=list, max_length=MAX_ITEMS)
     nothing_to_describe: bool = False
 
 
@@ -81,7 +98,10 @@ def request_text(request: Request) -> str:
     w = request.window
     parts = [
         f"Quiet window: {_time(w.start)} to {_time(w.end)} ({w.duration:.1f} s).",
-        f"Word limit: at most {request.budget} words.",
+        f"Word limit: at most {request.budget} words in all, shared by the items.",
+        "Frame labels on the contact sheet (use these as at_s): "
+        + ", ".join(_time(t) for t in request.times)
+        + ".",
     ]
     if request.plot:
         parts.append(
@@ -102,7 +122,7 @@ def request_text(request: Request) -> str:
         )
     else:
         parts.append("Earlier descriptions: none yet (this is the first).")
-    parts.append("The contact sheet follows. Call submit_description with your description.")
+    parts.append("The contact sheet follows. Call submit_description with your items.")
     return "\n\n".join(parts)
 
 
@@ -112,51 +132,67 @@ class NovaWriter:
         self.usage = Usage()
         self._model = model.bedrock_model(choice, max_tokens=700, temperature=0.3)
 
-    def write(self, request: Request) -> str | None:
+    def write(self, request: Request) -> list[Item] | None:
         content = [
             {"text": request_text(request)},
             {"image": {"format": "jpeg", "source": {"bytes": request.picture}}},
         ]
         return self._ask(content, request.budget, request.check, "write")
 
-    def shorten(self, request: Request, text: str, target_words: int) -> str:
-        w = request.window
+    def shorten(
+        self, request: Request, text: str, target_words: int, start_s: float, slot_s: float
+    ) -> str:
         message = (
-            f"The description below was too long to be spoken in the quiet window "
-            f"({_time(w.start)} to {_time(w.end)}, {w.duration:.1f} s).\n\n"
+            f"The description below is spoken from {_time(start_s)} s and has {slot_s:.1f} s, "
+            "and it is too long for that.\n\n"
             f'Description: "{text}"\n\n'
             f"Rewrite it in at most {target_words} words. Keep the most essential things, in the "
-            "same order, in the same style. Call submit_description with the shorter version."
+            "same order, in the same style. Call submit_description with one item whose at_s is "
+            f"{_time(start_s)} and whose text is the shorter version."
         )
         shorter = self._ask([{"text": message}], target_words, request.check, "shorten")
-        if shorter is None:
+        if not shorter:
             raise Rejected("the model dropped a description it was asked to shorten")
-        return shorter
+        return " ".join(item.text for item in shorter)
 
-    def _ask(self, content: list, limit: int, check: Check, step: str) -> str | None:
-        answers: list[str | None] = []
+    def _ask(self, content: list, limit: int, check: Check, step: str) -> list[Item] | None:
+        answers: list[list[Item] | None] = []
         rejected: list[Verdict] = []
 
         @tool
-        def submit_description(text: str = "", nothing_to_describe: bool = False) -> str:
-            """Submit the description for the window.
+        def submit_description(
+            items: list[dict] | None = None, nothing_to_describe: bool = False
+        ) -> str:
+            """Submit the description of the window as a list of items.
 
             Args:
-                text: The description to be spoken, plain sentences only.
+                items: Items in time order. Each is an object {"at_s": number, "text": string}:
+                    at_s is the time label of the contact-sheet frame it describes (seconds)
+                    and text is one short plain sentence.
                 nothing_to_describe: True when nothing essential is visible in the window.
             """
             try:
-                given = Draft(text=text, nothing_to_describe=nothing_to_describe)
+                given = Draft.model_validate(
+                    {
+                        "items": items or [],
+                        "nothing_to_describe": nothing_to_describe,
+                    }
+                )
             except ValidationError as exc:
-                return "error: " + "; ".join(e["msg"] for e in exc.errors())
+                return "error: " + "; ".join(
+                    f"{'.'.join(str(p) for p in e['loc'])}: {e['msg']}" for e in exc.errors()
+                )
             if given.nothing_to_describe:
                 answers.append(None)
                 return "ok"
-            verdict = check(given.text, limit, step)
-            if not verdict.ok:
-                rejected.append(verdict)
-                return verdict.feedback
-            answers.append(verdict.text)
+            if not given.items:
+                return "error: give at least one item, or set nothing_to_describe."
+            checked = [(item, check(item.text, limit, step)) for item in given.items]
+            bad = [(n, v) for n, (_, v) in enumerate(checked, 1) if not v.ok]
+            if bad:
+                rejected.append(bad[-1][1])
+                return "error: " + " ".join(f"item {n}: {v.feedback[7:]}" for n, v in bad)
+            answers.append([Item(item.at_s, v.text) for item, v in checked])
             return "ok"
 
         watch = _CallLimit(MAX_MODEL_CALLS)

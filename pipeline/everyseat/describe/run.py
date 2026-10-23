@@ -16,8 +16,14 @@ from sensevtt.writer import Cue
 
 from everyseat import __version__
 from everyseat.analyze import TITLE, file_sha256
-from everyseat.describe import DescribeError, Rejected, shots, subtitles
-from everyseat.describe.review import MIN_WORDS, SIMILARITY_LIMIT, Earlier, Review
+from everyseat.describe import DescribeError, Rejected, anchor, shots, subtitles
+from everyseat.describe.review import (
+    MIN_WORDS,
+    SIMILARITY_LIMIT,
+    Earlier,
+    Review,
+    excerpt,
+)
 from everyseat.describe.subtitles import Window
 from everyseat.describe.voices import Speech, Voice, write_wav
 from everyseat.describe.writers import MAX_ANSWERS, Request, Writer
@@ -34,10 +40,15 @@ PROXY_WIDTH = 640  # contact sheets only: the descriptions never look at a full-
 
 @dataclass
 class Fitted:
+    """One spoken item: its text, where it starts and the measured clip."""
+
     window: Window
+    start: float
     text: str
     speech: Speech
     rate_percent: int
+    limit_s: float
+    at_s: tuple[float, ...]
     attempts: list[dict] = field(default_factory=list)
     rejected: list[dict] = field(default_factory=list)  # answers the review turned down
 
@@ -92,38 +103,36 @@ def _target_words(text: str, spoken_s: float, limit_s: float) -> int:
 
 def fit(
     request: Request,
+    placed: anchor.Placed,
+    limit: float,
     writer: Writer,
     voice: Voice,
     *,
-    fps: int,
     progress: Callable[[str], None],
-) -> Fitted | Skipped:
-    """Write, voice and measure; shorten up to `MAX_SHORTENS` times, then speak faster as the
-    last resort. Skipped when nothing needs saying or the writer cannot give an acceptable
-    description; raises when nothing fits.
+) -> Fitted | str:
+    """Voice and measure one item against the time it has (`limit` seconds); shorten up to
+    `MAX_SHORTENS` times, then speak faster as the last resort. The reason is returned when the
+    item cannot be made to fit or the writer cannot shorten it acceptably.
     """
-    window = request.window
-    limit = window.duration - 1 / fps  # the cue ends on a frame at or before the window's end
+    text = placed.text
     try:
-        text = writer.write(request)
-        if text is None:
-            return Skipped(window, NOTHING_TO_DESCRIBE)
         speech = voice.speak(text)
         attempts = [{"words": _words(text), "duration_s": round(speech.duration_s, 3), "rate": 100}]
         shortened = 0
         while speech.duration_s > limit and shortened < MAX_SHORTENS:
             target = _target_words(text, speech.duration_s, limit)
             progress(
-                f"    {speech.duration_s:.1f} s is over {limit:.1f} s: shortening to {target} words"
+                f"      {speech.duration_s:.1f} s is over {limit:.1f} s: shortening to "
+                f"{target} words"
             )
-            text = writer.shorten(request, text, target)
+            text = writer.shorten(request, text, target, placed.start, limit)
             speech = voice.speak(text)
             shortened += 1
             attempts.append(
                 {"words": _words(text), "duration_s": round(speech.duration_s, 3), "rate": 100}
             )
     except Rejected as exc:
-        return Skipped(window, str(exc))
+        return str(exc)
     rate = 100
     if speech.duration_s > limit:
         rate = FASTER_RATE_PERCENT
@@ -132,11 +141,74 @@ def fit(
             {"words": _words(text), "duration_s": round(speech.duration_s, 3), "rate": rate}
         )
         if speech.duration_s > limit:
-            raise DescribeError(
-                f"window {window.index}: {speech.duration_s:.1f} s of speech does not fit "
-                f"{limit:.1f} s even at {rate}% after {shortened} rewrites"
+            return (
+                f"{speech.duration_s:.1f} s of speech does not fit {limit:.1f} s even at "
+                f"{rate}% after {shortened} rewrites"
             )
-    return Fitted(window, text, speech, rate, attempts)
+    return Fitted(request.window, placed.start, text, speech, rate, limit, placed.at_s, attempts)
+
+
+def fit_window(
+    request: Request,
+    writer: Writer,
+    voice: Voice,
+    review: Review,
+    *,
+    fps: int,
+    progress: Callable[[str], None],
+) -> tuple[list[Fitted], Skipped | None, list[dict]]:
+    """Write the window's items, anchor them to their shots and fit each into its own slot.
+
+    Items are fitted from the last to the first, so an item that has to go frees its slot for the
+    one before it. Skipped when nothing needs saying, the writer gives no acceptable answer or
+    no item is left.
+    """
+    window = request.window
+    try:
+        items = writer.write(request)
+    except Rejected as exc:
+        return [], Skipped(window, str(exc)), []
+    if items is None:
+        return [], Skipped(window, NOTHING_TO_DESCRIBE), []
+    placed, decisions = anchor.place(items, window, request.cuts, fps)
+    for d in decisions:
+        progress(f"    {_describe_decision(d)}")
+    kept: list[Fitted] = []
+    next_start: float | None = None
+    for item in reversed(placed):
+        limit = anchor.slot_limit_s(item.start, next_start, window, fps)
+        words = anchor.slot_words(limit)
+        progress(
+            f"    item at {item.start:g} s: slot {limit:.1f} s, up to {words} words "
+            f'(wrote {_words(item.text)}): "{excerpt(item.text)}"'
+        )
+        result = anchor.fits_any(limit) or f"slot of {limit:.1f} s holds {words} words"
+        if result is True:
+            result = fit(request, item, limit, writer, voice, progress=progress)
+        if isinstance(result, str):
+            decisions.append(
+                {"kind": "dropped", "start": item.start, "text": item.text, "reason": result}
+            )
+            progress(f"    {_describe_decision(decisions[-1])}")
+            continue
+        kept.insert(0, result)
+        next_start = item.start
+    if not kept:
+        return [], Skipped(window, "no item fits its slot"), decisions
+    return kept, None, decisions
+
+
+def _describe_decision(d: dict) -> str:
+    kind = d["kind"]
+    if kind == "snapped":
+        return f"snapped {d['at_s']:g} s to the shot start {d['to']:g} s"
+    if kind == "clamped":
+        return f"clamped {d['at_s']:g} s to {d['to']:g} s: {d['reason']}"
+    if kind == "merged":
+        return f"merged the item at {d['at_s']:g} s into the one at {d['into']:g} s ({d['reason']})"
+    if kind == "rejected":
+        return f"rejected the item at {d['at_s']:g} s: {d['reason']}"
+    return f"dropped the item at {d['start']:g} s: {d['reason']}"
 
 
 def preview(text: str) -> str:
@@ -147,7 +219,7 @@ def preview(text: str) -> str:
 
 def _cue(title: str, number: int, fitted: Fitted, fps: int, voice: Voice) -> Cue:
     cue_id = f"{title}-ad-{number}"
-    start = fitted.window.start
+    start = fitted.start
     frames = math.ceil(fitted.speech.duration_s * fps - 1e-6)
     # Counted in frames so the end lies exactly on the grid; adding to a rounded start can drift.
     end = round((round(start * fps) + frames) / fps, 3)
@@ -167,6 +239,7 @@ def _cue(title: str, number: int, fitted: Fitted, fps: int, voice: Voice) -> Cue
             "words": _words(fitted.text),
             "voice": voice.name,
             "rate_percent": fitted.rate_percent,
+            "window": fitted.window.index,
             "window_end": fitted.window.end,
         },
         id=cue_id,
@@ -212,11 +285,12 @@ def describe(
     sheets_dir.mkdir(parents=True, exist_ok=True)
     fitted: list[Fitted] = []
     skipped: list[Skipped] = []
+    item_decisions: list[dict] = []
     for window in windows:
         picture = shots.window_picture(proxy.path, cuts, window)
         (sheets_dir / f"window-{window.index:02d}.jpg").write_bytes(picture.jpeg)
         before, after = subtitles.around(lines, window)
-        review = Review([Earlier(f.window.start, f.text) for f in fitted], say)
+        review = Review([Earlier(f.start, f.text) for f in fitted], say)
         request = Request(
             window=window,
             picture=picture.jpeg,
@@ -226,25 +300,34 @@ def describe(
             check=review.check,
             cast=cast or [],
             plot=plot,
+            times=picture.times,
+            cuts=cuts,
         )
         say(
             f"window {window.index}/{len(windows)}: {window.start:g}-{window.end:g} s "
             f"({window.duration:.1f} s, {len(picture.times)} frames, up to {request.budget} words)"
         )
-        result = fit(request, writer, voice, fps=proxy.fps, progress=say)
-        result.rejected = [d for d in review.decisions if not d["accepted"]]
-        if isinstance(result, Skipped):
-            skipped.append(result)
-            if result.reason == NOTHING_TO_DESCRIBE:
+        kept, skip, decisions = fit_window(
+            request, writer, voice, review, fps=proxy.fps, progress=say
+        )
+        rejected = [d for d in review.decisions if not d["accepted"]]
+        item_decisions.extend({"window": window.index, **d} for d in decisions)
+        if skip:
+            skip.rejected = rejected
+            skipped.append(skip)
+            if skip.reason == NOTHING_TO_DESCRIBE:
                 say("    nothing essential to describe")
             else:
-                say(f"    left without a description: {result.reason}")
+                say(f"    left without a description: {skip.reason}")
             continue
-        say(
-            f"    {_words(result.text)} words, {result.speech.duration_s:.2f} s "
-            f"(rate {result.rate_percent}%)"
-        )
-        fitted.append(result)
+        kept[0].rejected = rejected
+        for item in kept:
+            say(
+                f"    kept at {item.start:g} s: {_words(item.text)} words, "
+                f"{item.speech.duration_s:.2f} s of {item.limit_s:.1f} s "
+                f"(rate {item.rate_percent}%)"
+            )
+        fitted.extend(kept)
 
     cues = [_cue(title, n, f, proxy.fps, voice) for n, f in enumerate(fitted, 1)]
     head = cue_writer.header(
@@ -272,7 +355,10 @@ def describe(
     skipped_log = [s.log() for s in skipped]
     log_path = cues_path.with_suffix(".run.json")
     log_path.write_text(
-        json.dumps(_log(writer, voice, fitted, skipped, cues, dry_run, plot), indent=1) + "\n"
+        json.dumps(
+            _log(writer, voice, fitted, skipped, cues, dry_run, plot, item_decisions), indent=1
+        )
+        + "\n"
     )
     return Described(cues_path, log_path, clips, skipped_log, len(cues))
 
@@ -291,6 +377,7 @@ def _log(
     cues: list[Cue],
     dry_run: bool,
     plot: str,
+    item_decisions: list[dict],
 ) -> dict:
     characters = sum(f.speech.characters for f in fitted)
     return {
@@ -315,8 +402,13 @@ def _log(
         "windows": [
             {
                 "cue": cue.id,
-                "start": f.window.start,
-                "end": f.window.end,
+                "window": f.window.index,
+                "window_start": f.window.start,
+                "window_end": f.window.end,
+                "start": f.start,
+                "at_s": list(f.at_s),
+                "slot_s": f.limit_s,
+                "duration_s": round(f.speech.duration_s, 3),
                 "text": f.text,
                 "rate_percent": f.rate_percent,
                 "attempts": f.attempts,
@@ -324,5 +416,6 @@ def _log(
             }
             for cue, f in zip(cues, fitted, strict=True)
         ],
+        "item_decisions": item_decisions,
         "skipped": [s.log() for s in skipped],
     }
