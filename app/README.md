@@ -142,11 +142,14 @@ configuration is needed. `sensevtt/react` imports resolve from the package's `re
 
 ## Deep links
 
-`everyseat://lens/<person>` opens the app with that person alone on the couch. Add a film after
-the person to start it: `everyseat://lens/<person>/<film>`, where the film is a folder name such as
-`elephants-dream`. The one-parameter form `everyseat://lens?person=<person>` is for shells, where an
-`&` would cut the link short. A link that arrives before the first-run notice is accepted waits for
-it, and a name the TV does not know is ignored.
+`everyseat://lens/<person>` opens the app with that person alone on the couch; several people can
+be joined with commas, as in `everyseat://lens/mom,grandpa`. Add a film after the people to start
+it: `everyseat://lens/<person>/<film>`, where the film is a folder name such as `elephants-dream`.
+Add a time after the film to start there, in seconds or `m:ss`: `everyseat://lens/leo/tears-of-steel/7:25`.
+A link with a time also seeks a film that is already playing. The one-parameter form
+`everyseat://lens?person=<person>` is for shells, where an `&` would cut the link short. A link that
+arrives before the first-run notice is accepted waits for it, and names the TV does not know are
+ignored.
 
 ```sh
 vega exec vda shell 'vmsgr send "everyseat://lens/mom"'

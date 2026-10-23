@@ -3,14 +3,32 @@ import { TitleEntry, TITLES } from './catalog';
 import { personId } from './lens/household';
 
 export interface LensLink {
-  /** Id of the person whose settings become tonight's couch. */
-  person: string;
+  /** Ids of the people whose settings become tonight's couch. */
+  people: string[];
   /** The film to open straight away, when the link names one. */
   title: TitleEntry | null;
+  /** Where to start the film, in seconds, when the link names a time. */
+  at: number | null;
 }
 
 const LINK =
-  /^everyseat:\/\/lens(?:\/([^/?#]+)(?:\/([^/?#]+))?)?\/?(?:\?([^#]*))?(?:#.*)?$/i;
+  /^everyseat:\/\/lens(?:\/([^/?#]+)(?:\/([^/?#]+)(?:\/([^/?#]+))?)?)?\/?(?:\?([^#]*))?(?:#.*)?$/i;
+
+/** Reads `445`, `7:25` or `1:07:25` as seconds. */
+const parseTime = (part: string | undefined): number | null => {
+  if (!part || !/^\d+(?::\d{1,2}){0,2}(?:\.\d+)?$/.test(part)) {
+    return null;
+  }
+  return part
+    .split(':')
+    .reduce((total, piece) => total * 60 + parseFloat(piece), 0);
+};
+
+const parsePeople = (part: string): string[] =>
+  decode(part)
+    .split(',')
+    .map((p) => personId(p))
+    .filter((p) => p.length > 0);
 
 const decode = (part: string): string => {
   try {
@@ -30,10 +48,12 @@ const findTitle = (slug: string): TitleEntry | null => {
 };
 
 /**
- * Reads `everyseat://lens/<person>` or `everyseat://lens/<person>/<film>`. The person can also come
- * as the one query parameter `everyseat://lens?person=<person>`, which is the safe form for a
- * shell, where an `&` would cut the link short. Returns null for anything else. RN 0.72's `URL`
- * is incomplete, so this does not use it.
+ * Reads `everyseat://lens/<people>`, `everyseat://lens/<people>/<film>` or
+ * `everyseat://lens/<people>/<film>/<time>`, where `<people>` is one id or several joined by
+ * commas and `<time>` is seconds or `m:ss`. The person can also come as the one query parameter
+ * `everyseat://lens?person=<people>`, which is the safe form for a shell, where an `&` would cut
+ * the link short. Returns null for anything else. RN 0.72's `URL` is incomplete, so this does not
+ * use it.
  */
 export const parseLensLink = (
   url: string | null | undefined,
@@ -42,20 +62,26 @@ export const parseLensLink = (
   if (!match) {
     return null;
   }
-  const [, pathPerson, pathTitle, query] = match;
-  let person = pathPerson ? personId(decode(pathPerson)) : '';
+  const [, pathPeople, pathTitle, pathTime, query] = match;
+  let people = pathPeople ? parsePeople(pathPeople) : [];
   let slug = pathTitle;
-  if (!person && query) {
+  let time = pathTime;
+  if (people.length === 0 && query) {
     for (const pair of query.split('&')) {
       const [key, value = ''] = pair.split('=');
       if (key === 'person') {
-        person = personId(decode(value));
+        people = parsePeople(value);
       } else if (key === 'title') {
         slug = value;
+      } else if (key === 'at') {
+        time = decode(value);
       }
     }
   }
-  return person ? { person, title: slug ? findTitle(slug) : null } : null;
+  const title = slug ? findTitle(slug) : null;
+  return people.length > 0
+    ? { people, title, at: title ? parseTime(time) : null }
+    : null;
 };
 
 type Listener = (link: LensLink) => void;
@@ -72,7 +98,13 @@ export const watchLensLinks = (listener: Listener): (() => void) => {
       return;
     }
     if (link) {
-      console.info('link', 'lens', link.person, link.title?.folder ?? '');
+      console.info(
+        'link',
+        'lens',
+        link.people.join(','),
+        link.title?.folder ?? '',
+        link.at ?? '',
+      );
     } else if (url) {
       console.info('link', 'ignored a link that is not a lens link');
     }

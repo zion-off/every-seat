@@ -40,6 +40,8 @@ type Props = {
   couchLabel: string;
   onToggle: (id: string) => void;
   onExit: () => void;
+  /** Where a link asked the film to start, in seconds. A new object seeks again. */
+  startAt?: { s: number; n: number } | null;
 };
 
 const PlayerScreen = ({
@@ -50,6 +52,7 @@ const PlayerScreen = ({
   couchLabel,
   onToggle,
   onExit,
+  startAt,
 }: Props) => {
   const { adapter, loaded, surfaceOn, durationMs, error } = usePlayer(
     manifestUrl(title),
@@ -105,6 +108,21 @@ const PlayerScreen = ({
     console.info('cues', title, `${cues.length} cues`);
     adapter.play();
   }, [adapter, controller, loaded, cues, title]);
+
+  // A link with a time seeks there, at the start or while the film is already open.
+  const startAtSeen = useRef<{ s: number; n: number } | null>(null);
+  useEffect(() => {
+    if (!startAt || startAt === startAtSeen.current) {
+      return;
+    }
+    if (!adapter || !controller || !loaded || !cues) {
+      return;
+    }
+    startAtSeen.current = startAt;
+    console.info('link', 'start at', startAt.s);
+    controller.seek(startAt.s);
+    adapter.play();
+  }, [startAt, adapter, controller, loaded, cues]);
 
   const openPanel = useCallback(() => {
     focusBeforePanel.current = FocusManager.getFocused();

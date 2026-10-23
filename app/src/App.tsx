@@ -241,6 +241,8 @@ const App = () => {
 
   // A link waits here until the first-run notice is out of the way, so it never skips that screen.
   const [pendingLink, setPendingLink] = useState<LensLink | null>(null);
+  // A start time from a link; the count tells a repeated link to the same time apart.
+  const [startAt, setStartAt] = useState<{ s: number; n: number } | null>(null);
   useEffect(() => watchLensLinks(setPendingLink), []);
   useEffect(() => {
     if (
@@ -252,19 +254,23 @@ const App = () => {
       return;
     }
     setPendingLink(null);
-    const person = householdRef.current.people.find(
-      (p) => p.id === pendingLink.person,
+    const found = householdRef.current.people.filter((p) =>
+      pendingLink.people.includes(p.id),
     );
-    if (!person) {
-      console.info('link', 'no such person', pendingLink.person);
+    if (found.length === 0) {
+      console.info('link', 'no such person', pendingLink.people.join(','));
       return;
     }
-    setCouch([person.id]);
+    setCouch(found.map((p) => p.id));
     lastLens.current = '';
     AccessibilityInfo.announceForAccessibility(
-      `Tonight's couch is now ${person.name}`,
+      `Tonight's couch is now ${found.map((p) => p.name).join(', ')}`,
     );
     if (pendingLink.title) {
+      const at = pendingLink.at;
+      setStartAt((prev) =>
+        at === null ? null : { s: at, n: (prev?.n ?? 0) + 1 },
+      );
       setTitle(pendingLink.title);
       setRoute('player');
     } else if (route !== 'player') {
@@ -386,6 +392,7 @@ const App = () => {
               couchLabel={couchNames(people)}
               onToggle={toggle}
               onExit={leavePlayer}
+              startAt={startAt}
             />
           )}
         </HouseholdContext.Provider>
