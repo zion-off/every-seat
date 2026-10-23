@@ -119,17 +119,12 @@ const TitleScreen = ({
             <Mark size={size.mark} />
             <Text style={styles.brandName}>Every Seat</Text>
           </View>
-          <View style={styles.couch}>
-            <Pill
-              style={styles.couchPill}
-              label={`On the couch: ${couchNames}`}
-            />
-            <PillButton
-              label="Change couch"
-              accessibilityLabel="Change who is on the couch"
-              onPress={onChangeCouch}
-            />
-          </View>
+          <PillButton
+            style={styles.couchPill}
+            label={`On the couch: ${couchNames}`}
+            accessibilityLabel={`On the couch: ${couchNames}. Press to change.`}
+            onPress={onChangeCouch}
+          />
         </View>
 
         <View style={styles.hero}>
@@ -213,13 +208,8 @@ const styles = StyleSheet.create({
     fontWeight: weight.bold,
     marginLeft: space.sm,
   },
-  couch: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   couchPill: {
     maxWidth: size.couchPill,
-    marginRight: space.md,
   },
   hero: {
     flex: 1,

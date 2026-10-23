@@ -27,6 +27,7 @@ type ButtonProps = {
   label: string;
   accessibilityLabel: string;
   onPress: () => void;
+  style?: StyleProp<ViewStyle>;
 };
 
 /** A pill that can be pressed: the same height, padding, radius and type size as `Pill`. */
@@ -34,6 +35,7 @@ export const PillButton = ({
   label,
   accessibilityLabel,
   onPress,
+  style,
 }: ButtonProps) => (
   <Focusable
     accessible
@@ -41,6 +43,7 @@ export const PillButton = ({
     accessibilityLabel={accessibilityLabel}
     onPress={onPress}
     radius={radius.pill}
+    style={style}
     contentStyle={(focused) => [styles.pill, focused && styles.pillFocused]}>
     <Text style={styles.label} numberOfLines={1}>
       {label}

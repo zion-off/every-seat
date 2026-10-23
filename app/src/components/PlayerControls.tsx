@@ -239,7 +239,7 @@ const PlayerControls = ({
             ref={chipRef}
             accessible
             accessibilityRole="button"
-            accessibilityLabel={`On the couch: ${couchLabel}. Change couch`}
+            accessibilityLabel={`On the couch: ${couchLabel}. Press to change.`}
             onPress={onOpenCouch}
             radius={radius.md}
             style={styles.chip}
