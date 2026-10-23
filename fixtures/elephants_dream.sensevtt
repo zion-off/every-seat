@@ -6,3 +6,7 @@ NOTE sensevtt-header
 ed-flash-1
 00:06:17.500 --> 00:06:20.000
 {"id":"ed-flash-1","type":"flash","start":377.5,"end":380.0,"anchor":"iris","intensity":4,"pre_s":1.5,"post_s":1.0,"preview":"Rapid bright flashing for a few seconds."}
+
+ed-flash-2
+00:06:25.250 --> 00:06:25.792
+{"id":"ed-flash-2","type":"flash","start":385.25,"end":385.792,"anchor":"cut","intensity":3,"pre_s":1.5,"post_s":1.0,"preview":"A sudden bright white flash."}
