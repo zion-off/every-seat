@@ -1,10 +1,14 @@
 [
   {
-    "near_s": 560.2,
-    "text": "Sintel charges at the huge dragon as it rears up."
+    "near_s": 6.6,
+    "text": "Snowy mountain peaks drift past under a pale sky."
   },
   {
-    "near_s": 647.7,
-    "text": "Sintel raises her hand toward the dragon."
+    "near_s": 24.2,
+    "drop": true
+  },
+  {
+    "near_s": 27.2,
+    "text": "High in the snow, Sintel fights an old man."
   }
 ]
