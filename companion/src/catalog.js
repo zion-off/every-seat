@@ -1,3 +1,4 @@
+import { readFileSync, statSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
@@ -16,6 +17,8 @@ import { parseSenseVtt } from "./sensevtt.js";
  * @property {IrisSummary} iris
  * @property {CuePayload[]} cues Sorted by start time.
  * @property {string} file The cue file's name, without its directory.
+ * @property {string} path The cue file's full path, read again when its modification time changes.
+ * @property {number} mtimeMs The cue file's modification time when it was last read.
  */
 
 const metadataSchema = z.record(
@@ -27,15 +30,73 @@ const metadataSchema = z.record(
   }),
 );
 
+/** @typedef {z.infer<typeof metadataSchema>} Metadata */
+
+/**
+ * Builds a title from a cue file's text; throws when the file is not a cue file.
+ * @param {string} file
+ * @param {string} text
+ * @param {number} mtimeMs
+ * @param {Metadata} metadata
+ * @returns {Title}
+ */
+function readTitle(file, text, mtimeMs, metadata) {
+  const { header, cues, problems } = parseSenseVtt(text);
+  for (const problem of problems) console.warn(`${path.basename(file)}: ${problem}`);
+  const known = metadata[header.title];
+  const lastEnd = Math.max(0, ...cues.map((cue) => cue.end));
+  return {
+    id: header.title,
+    name: known?.name ?? titleCase(header.title),
+    aliases: known?.aliases ?? [],
+    durationS: known?.durationS ?? Math.ceil(lastEnd + 30),
+    fps: header.fps,
+    iris: header.iris,
+    cues: cues.sort((a, b) => a.start - b.start),
+    file: path.basename(file),
+    path: file,
+    mtimeMs,
+  };
+}
+
 export class Catalog {
-  /** @param {Title[]} titles */
-  constructor(titles) {
+  /**
+   * @param {Title[]} titles
+   * @param {Metadata} [metadata] Names and aliases, used when a cue file is read again.
+   */
+  constructor(titles, metadata = {}) {
     this.titles = titles;
+    this.metadata = metadata;
+  }
+
+  /**
+   * Re-reads a title's cue file when its modification time has changed, so what is served never
+   * lags the file. The title object is updated in place; a file that no longer parses is ignored.
+   * @param {Title} title
+   */
+  refresh(title) {
+    let mtimeMs;
+    try {
+      mtimeMs = statSync(title.path).mtimeMs;
+    } catch {
+      return title;
+    }
+    if (mtimeMs === title.mtimeMs) return title;
+    try {
+      const fresh = readTitle(title.path, readFileSync(title.path, "utf8"), mtimeMs, this.metadata);
+      if (fresh && fresh.id === title.id) Object.assign(title, fresh);
+      else title.mtimeMs = mtimeMs;
+    } catch (error) {
+      console.warn(`${title.file}: kept the earlier cues: ${error instanceof Error ? error.message : error}`);
+      title.mtimeMs = mtimeMs;
+    }
+    return title;
   }
 
   /** @param {string} id */
   get(id) {
-    return this.titles.find((title) => title.id === id);
+    const title = this.titles.find((candidate) => candidate.id === id);
+    return title && this.refresh(title);
   }
 
   /**
@@ -49,6 +110,7 @@ export class Catalog {
     let best;
     let bestScore = 0;
     for (const title of this.titles) {
+      this.refresh(title);
       const score = Math.max(
         ...[title.id, title.name, ...title.aliases].map((name) => similarity(wanted, normalize(name))),
       );
@@ -132,29 +194,15 @@ export async function loadCatalog({ cueDirs, titlesFile }) {
 
   for (const dir of cueDirs) {
     for (const file of await findCueFiles(dir)) {
-      let parsed;
+      let title;
       try {
-        parsed = parseSenseVtt(await readFile(file, "utf8"));
+        title = readTitle(file, await readFile(file, "utf8"), statSync(file).mtimeMs, metadata);
       } catch (error) {
         console.warn(`skipping ${path.basename(file)}: ${error instanceof Error ? error.message : error}`);
         continue;
       }
-      const { header, cues, problems } = parsed;
-      for (const problem of problems) console.warn(`${path.basename(file)}: ${problem}`);
-
-      const known = metadata[header.title];
-      const lastEnd = Math.max(0, ...cues.map((cue) => cue.end));
-      byId.set(header.title, {
-        id: header.title,
-        name: known?.name ?? titleCase(header.title),
-        aliases: known?.aliases ?? [],
-        durationS: known?.durationS ?? Math.ceil(lastEnd + 30),
-        fps: header.fps,
-        iris: header.iris,
-        cues: cues.sort((a, b) => a.start - b.start),
-        file: path.basename(file),
-      });
+      if (title) byId.set(title.id, title);
     }
   }
-  return new Catalog([...byId.values()]);
+  return new Catalog([...byId.values()], metadata);
 }
