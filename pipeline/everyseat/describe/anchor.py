@@ -1,8 +1,9 @@
 """Anchoring spoken items to the shots they describe.
 
 The writer says which contact-sheet frame each sentence is about; this module, not the writer,
-decides when the sentence is spoken: at the start of the shot that contains that frame, kept
-inside the window, with the clips kept apart.
+decides when the sentence is spoken: at that frame's time, pulled back to the start of its shot
+only when the shot began just before it (a long shot is not narrated before its action), after a
+small lag so the speech follows the picture, kept inside the window, with the clips kept apart.
 """
 
 from bisect import bisect_right
@@ -14,6 +15,8 @@ from everyseat.describe.subtitles import Window
 CLIP_GAP_S = 0.3  # a clip ends at least this long before the next one starts
 WORDS_PER_SECOND = 2.5
 SAME_TIME_S = 0.0005
+SNAP_BACK_S = 0.5  # an item is pulled back to its shot's start only when it began this close
+LAG_S = 0.2  # speech starts this long after the picture it describes
 MIN_SLOT_S = 2.5  # an item with less time than this is dropped, not squeezed
 MAX_CLIP_S = 8.0  # one item never runs longer, however much quiet follows it
 SECONDS_PER_ITEM = 5.0  # pace: at most one item per this much window
@@ -34,11 +37,31 @@ class Placed:
     at_s: tuple[float, ...]  # the times the writer gave, one per merged item
 
 
-def shot_start(cuts: list[float], time: float, window: Window, fps: int) -> float:
+def on_grid(seconds: float, fps: int) -> float:
+    return round(round(seconds * fps) / fps, 3)
+
+
+def shot_start(cuts: list[float], time: float, window: Window) -> float:
     """The start of the shot that contains `time`, no earlier than the window's start."""
     i = bisect_right(cuts, time + 1e-6)
-    cut = cuts[i - 1] if i else window.start
-    return max(window.start, round(round(cut * fps) / fps, 3))
+    return max(window.start, cuts[i - 1] if i else window.start)
+
+
+def anchor_time(
+    cuts: list[float], time: float, window: Window, fps: int
+) -> tuple[float, float, str]:
+    """When an item about the frame at `time` starts, the anchor before the lag and the reason.
+
+    The anchor is `time`, or its shot's start when that is within `SNAP_BACK_S` before it; the
+    item never moves earlier than that. The start is on the frame grid, after `LAG_S`, and inside
+    the window.
+    """
+    shot = shot_start(cuts, time, window)
+    if time - shot <= SNAP_BACK_S:
+        anchor, reason = shot, f"snapped to its shot start, {time - shot:.2f} s before"
+    else:
+        anchor, reason = time, f"kept at its frame: its shot began {time - shot:.1f} s earlier"
+    return max(window.start, on_grid(anchor + LAG_S, fps)), anchor, reason
 
 
 def place(
@@ -72,9 +95,12 @@ def place(
                 }
             )
             time = window.start
-        start = shot_start(cuts, time, window, fps)
-        if abs(start - item.at_s) > SAME_TIME_S and time == item.at_s:
-            decisions.append({"kind": "snapped", "at_s": item.at_s, "to": start, "text": item.text})
+        start, anchor, reason = anchor_time(cuts, time, window, fps)
+        if time == item.at_s:
+            kind = "snapped" if anchor != time else "kept"
+            decisions.append(
+                {"kind": kind, "at_s": item.at_s, "to": start, "reason": reason, "text": item.text}
+            )
         if placed and abs(placed[-1].start - start) <= SAME_TIME_S:
             last = placed[-1]
             placed[-1] = Placed(start, f"{last.text} {item.text}", (*last.at_s, item.at_s))

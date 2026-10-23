@@ -207,8 +207,8 @@ def fit_window(
 
 def _describe_decision(d: dict) -> str:
     kind = d["kind"]
-    if kind == "snapped":
-        return f"snapped {d['at_s']:g} s to the shot start {d['to']:g} s"
+    if kind in ("snapped", "kept"):
+        return f"{d['at_s']:g} s starts at {d['to']:g} s ({d['reason']}; lag {anchor.LAG_S:g} s)"
     if kind == "clamped":
         return f"clamped {d['at_s']:g} s to {d['to']:g} s: {d['reason']}"
     if kind == "merged":
