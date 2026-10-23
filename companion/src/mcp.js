@@ -252,7 +252,12 @@ export function createMcpServer({ catalog, store, relay, household }) {
         settings: applyPatch(person.settings, settings),
       }));
       /** @type {LensMessage} */
-      const lens = { t: "lens", people, settings: combineLens(people.map((p) => p.settings)) };
+      const lens = {
+        t: "lens",
+        people,
+        settings: combineLens(people.map((p) => p.settings)),
+        updatedAt: Date.now(),
+      };
       await store.saveTonight(household, lens);
       const delivered = relay.sendLens(household, lens);
 

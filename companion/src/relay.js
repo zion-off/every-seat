@@ -22,7 +22,12 @@ export const relayMessageSchema = z.discriminatedUnion("t", [
   }),
   z.strictObject({ t: z.literal("ping") }),
   z.strictObject({ t: z.literal("pong") }),
-  z.strictObject({ t: z.literal("lens"), people: z.array(person), settings: settingsSchema }),
+  z.strictObject({
+    t: z.literal("lens"),
+    people: z.array(person),
+    settings: settingsSchema,
+    updatedAt: z.number().int().min(0).optional(),
+  }),
   z.strictObject({
     t: z.literal("household"),
     people: z.array(person).max(MAX_PEOPLE),
@@ -82,15 +87,17 @@ export class LineFramer {
  * @property {boolean} [replayLens] Send the latest household and lens to a TV when it connects.
  * @property {(household: string, message: HouseholdMessage) => void} [onHousehold]
  *   Called when a TV or companion client sends a household that is newer than the latest one.
+ * @property {(household: string, message: LensMessage) => void} [onLens]
+ *   Called when a TV or companion client sends a lens that is newer than the latest one.
  * @property {(request: import("node:http").IncomingMessage, url: URL) => boolean} [authorize]
  * @property {(message: string) => void} [log]
  */
 
 /**
  * Routes newline-delimited JSON messages between a household's TV, phones and companion.
- * Companion lens messages go to the TVs, a household from a TV or companion client goes to the
- * others when it is newer than the latest one (last writer wins; an older one is answered with the
- * latest), TV clock messages go to the phones, and a phone's or
+ * A lens or a household from a TV or companion client goes to the others when it is newer than
+ * the latest one (last writer wins; an older one is answered with the latest), TV clock messages
+ * go to the phones, and a phone's or
  * TV's `sync?` is answered with the relay's own clock, which both sides stamp their times with.
  */
 export class Relay {
@@ -100,6 +107,7 @@ export class Relay {
     this.idleMs = options.idleMs ?? this.heartbeatMs * 3;
     this.replayLens = options.replayLens ?? true;
     this.onHousehold = options.onHousehold ?? (() => {});
+    this.onLens = options.onLens ?? (() => {});
     this.authorize = options.authorize ?? (() => true);
     this.log = options.log ?? (() => {});
     /** @type {Set<Connection>} */
@@ -208,8 +216,8 @@ export class Relay {
       return;
     }
 
-    if (message.t === "lens" && from.role === "companion") {
-      this.sendLens(from.household, message);
+    if (message.t === "lens" && (from.role === "tv" || from.role === "companion")) {
+      this.receiveLens(from, message);
     } else if (message.t === "household" && (from.role === "tv" || from.role === "companion")) {
       this.receiveHousehold(from, message);
     } else if (message.t === "clock" && from.role === "tv") {
@@ -258,14 +266,41 @@ export class Relay {
   }
 
   /**
-   * Delivers a lens to every TV in the household.
+   * Keeps a lens that is newer than the latest and passes it on to every other TV and companion
+   * client; an older or equal one is dropped, and an older one is answered with the latest so the
+   * sender catches up. A lens without a time is stamped with the relay's clock as it arrives.
+   * @param {Connection} from
+   * @param {LensMessage} message
+   */
+  receiveLens(from, message) {
+    const household = /** @type {string} */ (from.household);
+    const at = message.updatedAt ?? Date.now();
+    const lens = { ...message, updatedAt: at };
+    const latest = this.lastLens.get(household);
+    if (latest?.updatedAt !== undefined && at <= latest.updatedAt) {
+      if (at < latest.updatedAt) this.send(from, latest);
+      return;
+    }
+    this.onLens(household, lens);
+    this.sendLens(household, lens, from);
+  }
+
+  /**
+   * Makes a lens the latest and delivers it to every TV and companion client but `except`.
    * @param {string} household
    * @param {LensMessage} lens
+   * @param {Connection} [except]
    * @returns {number} How many TVs it went to.
    */
-  sendLens(household, lens) {
+  sendLens(household, lens, except) {
     this.lastLens.set(household, lens);
-    return this.broadcast(household, "tv", lens);
+    let tvs = 0;
+    for (const connection of this.connections) {
+      if (connection === except || connection.household !== household) continue;
+      if (connection.role !== "tv" && connection.role !== "companion") continue;
+      if (this.send(connection, lens) && connection.role === "tv") tvs += 1;
+    }
+    return tvs;
   }
 
   /**

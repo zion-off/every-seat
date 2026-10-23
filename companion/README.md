@@ -3,7 +3,7 @@
 The companion is a small Node server that sits next to the TV app. It does five jobs:
 
 - **MCP server** at `/mcp` (Streamable HTTP, protocol 2025-11-25). Voice assistants and other MCP hosts use it to ask whether a film is comfortable for the people on the couch and to change what the TV does tonight.
-- **WebSocket relay** at `/relay`. It carries the combined comfort lens from the companion to the TV, and the playback clock from the TV to phones.
+- **WebSocket relay** at `/relay`. It carries tonight's couch and its combined comfort lens between the companion and the TV, and the playback clock from the TV to phones.
 - **Preference store.** Each household's people and comfort settings live in a local JSON file, or optionally in DynamoDB. A household starts empty; the TV's household editor and `remember_preference` fill it.
 - **Voice page.** A voice-assistant style web page at `/`, backed by `/converse`, which turns a spoken or typed sentence into tool calls with Amazon Nova 2 Lite. See [Voice page](#voice-page).
 - **Phone page.** A page at `/phone/` that plays a film's audio description from the phone, in step with the TV. See [Phone page](#phone-page).
@@ -100,7 +100,7 @@ Routes: `GET /phone/` (the page), `GET /api/ad/:title` (the clips of a title: id
 Messages are JSON objects, one per line (`\n`-terminated), so one message can span several WebSocket frames and several messages can share one. A line over 1 MB closes the connection.
 
 1. The client connects to `/relay` and sends `{"t":"hello","role":"tv"|"phone"|"companion","household":"<id>"}` within 10 s.
-2. `companion` → `tv`: `lens` (people on the couch and the combined settings).
+2. `tv` ↔ `companion`: `lens` (`{"t":"lens","people":[{name,settings}],"settings":{...},"updatedAt":<ms>}`: people on the couch and the combined settings). Last writer wins by `updatedAt` on the relay's clock; a lens without it is stamped when it arrives. The relay keeps the latest, hands it to every other TV and companion client, saves a TV's couch as tonight's in the preference store, and answers an older one with the latest. The MCP tool `set_tonight_lens` sends a lens to the TVs, and `check_title_comfort` without viewers answers for the couch the TV last set.
 3. `tv` ↔ `companion`: `household` (`{"t":"household","people":[{name,settings}],"updatedAt":<ms>}`, at most 7 people). Last writer wins by `updatedAt`: the relay keeps the latest, hands it to every other TV and companion client, saves a TV's household in the preference store, and answers an older one with the latest. A TV sends its household when it connects; one that connects to a relay holding a household gets that first, then the current lens. The MCP tool `remember_preference` pushes the household to the TVs.
 4. `tv` → `phone`: `clock` (media time, wall clock in the relay's time, rate, title), on every play, pause, seek and stall and every 2 s.
 5. `tv` or `phone` → relay: `{"t":"sync?","c":<ms>}`; the relay answers `{"t":"sync!","c":<ms>,"s":<ms>}` with its own time. The sender keeps the probe with the shortest round trip to learn its offset from the relay's clock.

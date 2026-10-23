@@ -36,6 +36,11 @@ const relay = new Relay({
       console.error("could not save the household", error);
     });
   },
+  onLens: (household, message) => {
+    store.saveTonight(household, message).catch((error) => {
+      console.error("could not save tonight's couch", error);
+    });
+  },
   authorize: (request, url) => isAuthorized(config, request, url),
   log: (message) => console.info(message),
 });
