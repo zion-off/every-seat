@@ -11,6 +11,9 @@ export const settingsSchema = z.object({
   ad: z.enum(["on", "off"]),
 });
 
+/** The most people a household holds; the TV shows them on two rows. */
+export const MAX_PEOPLE = 7;
+
 export const settingsPatchSchema = settingsSchema.partial();
 
 /** @type {Readonly<LensSettings>} */

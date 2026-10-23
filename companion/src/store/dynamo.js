@@ -1,12 +1,12 @@
 import { personKey } from "../lens.js";
-import { loadSeed, personSchema } from "./seed.js";
+import { personSchema } from "./seed.js";
 
 /** @typedef {import("../contracts.d.ts").LensPerson} LensPerson */
 /** @typedef {import("../contracts.d.ts").LensMessage} LensMessage */
 /** @typedef {import("./index.js").PreferenceStore} PreferenceStore */
-/** @typedef {import("./seed.js").Seed} Seed */
 
 const TONIGHT = "tonight";
+const META = "meta";
 
 /** @param {string} key */
 const personItem = (key) => `person#${key}`;
@@ -14,8 +14,8 @@ const personItem = (key) => `person#${key}`;
 /**
  * Keeps saved settings in one DynamoDB table with the household as the partition key
  * (`household`, string) and the item as the sort key (`item`, string): `person#<name>`
- * holds a person's settings, `tonight` holds the last lens. The seed file supplies the
- * people a household starts with; saved items win over it. The table must already exist.
+ * holds a person's settings, `tonight` holds the last lens and `meta` holds when the list
+ * last changed. A household starts empty. The table must already exist.
  *
  * @implements {PreferenceStore}
  */
@@ -24,20 +24,18 @@ export class DynamoStore {
    * @param {import("@aws-sdk/lib-dynamodb").DynamoDBDocumentClient} client
    * @param {typeof import("@aws-sdk/lib-dynamodb")} sdk
    * @param {string} table
-   * @param {Seed} seed
    */
-  constructor(client, sdk, table, seed) {
+  constructor(client, sdk, table) {
     this.client = client;
     this.sdk = sdk;
     this.table = table;
-    this.seed = seed;
   }
 
   /**
    * The AWS SDK is an optional dependency, so it is only loaded when this store is chosen.
-   * @param {{ table: string, region: string, endpoint?: string, seedFile: string }} options
+   * @param {{ table: string, region: string, endpoint?: string }} options
    */
-  static async create({ table, region, endpoint, seedFile }) {
+  static async create({ table, region, endpoint }) {
     /** @type {[typeof import("@aws-sdk/client-dynamodb"), typeof import("@aws-sdk/lib-dynamodb")]} */
     let sdks;
     try {
@@ -55,14 +53,13 @@ export class DynamoStore {
     const client = lib.DynamoDBDocumentClient.from(base, {
       marshallOptions: { removeUndefinedValues: true },
     });
-    return new DynamoStore(client, lib, table, await loadSeed(seedFile));
+    return new DynamoStore(client, lib, table);
   }
 
   /** @param {string} household */
   async listPeople(household) {
     /** @type {Map<string, LensPerson>} */
     const people = new Map();
-    for (const person of this.seed[household]?.people ?? []) people.set(personKey(person.name), person);
 
     /** @type {Record<string, unknown> | undefined} */
     let startKey;
@@ -86,6 +83,44 @@ export class DynamoStore {
     return [...people.values()];
   }
 
+  /** @param {string} household */
+  async getHousehold(household) {
+    const { Item } = await this.client.send(
+      new this.sdk.GetCommand({ TableName: this.table, Key: { household, item: META } }),
+    );
+    return { people: await this.listPeople(household), updatedAt: Number(Item?.updatedAt ?? 0) };
+  }
+
+  /**
+   * @param {string} household
+   * @param {LensPerson[]} people
+   * @param {number} updatedAt
+   */
+  async setHousehold(household, people, updatedAt) {
+    const keep = new Set(people.map((person) => personKey(person.name)));
+    for (const existing of await this.listPeople(household)) {
+      if (keep.has(personKey(existing.name))) continue;
+      await this.client.send(
+        new this.sdk.DeleteCommand({
+          TableName: this.table,
+          Key: { household, item: personItem(personKey(existing.name)) },
+        }),
+      );
+    }
+    for (const person of people) await this.putPerson(household, person);
+    await this.touch(household, updatedAt);
+  }
+
+  /**
+   * @param {string} household
+   * @param {number} updatedAt
+   */
+  async touch(household, updatedAt) {
+    await this.client.send(
+      new this.sdk.PutCommand({ TableName: this.table, Item: { household, item: META, updatedAt } }),
+    );
+  }
+
   /**
    * @param {string} household
    * @param {string} name
@@ -96,7 +131,7 @@ export class DynamoStore {
       new this.sdk.GetCommand({ TableName: this.table, Key: { household, item: personItem(key) } }),
     );
     if (Item) return personSchema.parse({ name: Item.name, settings: Item.settings });
-    return this.seed[household]?.people.find((person) => personKey(person.name) === key);
+    return undefined;
   }
 
   /**
@@ -104,6 +139,16 @@ export class DynamoStore {
    * @param {LensPerson} person
    */
   async savePerson(household, person) {
+    await this.putPerson(household, person);
+    const { updatedAt } = await this.getHousehold(household);
+    await this.touch(household, Math.max(Date.now(), updatedAt + 1));
+  }
+
+  /**
+   * @param {string} household
+   * @param {LensPerson} person
+   */
+  async putPerson(household, person) {
     await this.client.send(
       new this.sdk.PutCommand({
         TableName: this.table,

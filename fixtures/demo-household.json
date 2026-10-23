@@ -1,0 +1,8 @@
+{
+  "people": [
+    { "name": "Leo", "settings": { "flashes": "off", "loud": "cap", "scares": "off", "ad": "off" } },
+    { "name": "Mom", "settings": { "flashes": "soften", "loud": "off", "scares": "off", "ad": "off" } },
+    { "name": "Grandpa", "settings": { "flashes": "off", "loud": "off", "scares": "off", "ad": "on" } },
+    { "name": "Dad", "settings": { "flashes": "off", "loud": "off", "scares": "off", "ad": "off" } }
+  ]
+}

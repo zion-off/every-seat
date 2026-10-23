@@ -36,20 +36,21 @@ export function loadConfig(env = process.env) {
           table: env.EVERYSEAT_DYNAMODB_TABLE,
           region: env.AWS_REGION ?? "us-east-1",
           endpoint: env.EVERYSEAT_DYNAMODB_ENDPOINT || undefined,
-          seedFile: path.join(companionRoot, "data", "household.json"),
         }
       : {
           kind: /** @type {const} */ ("json"),
           file:
             env.EVERYSEAT_STORE_FILE ??
             path.join(companionRoot, "node_modules", ".cache", "everyseat", "preferences.json"),
-          seedFile: path.join(companionRoot, "data", "household.json"),
         },
     /** Browser origins allowed besides the local ones. */
     allowedOrigins: list(env.EVERYSEAT_ALLOWED_ORIGINS),
     heartbeatMs: Number(env.EVERYSEAT_HEARTBEAT_MS ?? 20_000),
-    /** Send the last lens to a TV when it connects. */
-    replayLens: env.EVERYSEAT_REPLAY_LENS === "1",
+    /** Send the latest household and lens to a TV when it connects. */
+    replayLens: env.EVERYSEAT_REPLAY_LENS !== "0",
+    /** Start an empty household with the demo people from `demoHouseholdFile`. */
+    demoHousehold: env.EVERYSEAT_DEMO_HOUSEHOLD === "1",
+    demoHouseholdFile: path.join(repoRoot, "fixtures", "demo-household.json"),
     /** The model behind `/converse`, which turns a sentence into tool calls. */
     converse: {
       modelId: env.EVERYSEAT_CONVERSE_MODEL ?? "us.amazon.nova-2-lite-v1:0",

@@ -1,18 +1,16 @@
 import { readFile } from "node:fs/promises";
 import { z } from "zod";
-import { settingsSchema } from "../lens.js";
+import { MAX_PEOPLE, settingsSchema } from "../lens.js";
 
 export const personSchema = z.object({ name: z.string().min(1), settings: settingsSchema });
 
-const seedSchema = z.record(z.string(), z.object({ people: z.array(personSchema) }));
-
-/** @typedef {z.infer<typeof seedSchema>} Seed */
+const demoSchema = z.object({ people: z.array(personSchema).max(MAX_PEOPLE) });
 
 /**
- * The people each household starts with. Saved settings are layered on top by the store.
- * @param {string} seedFile
- * @returns {Promise<Seed>}
+ * The demo household: a file of people to start a household with. It is only read when the
+ * server is started with `EVERYSEAT_DEMO_HOUSEHOLD=1`.
+ * @param {string} file
  */
-export async function loadSeed(seedFile) {
-  return seedSchema.parse(JSON.parse(await readFile(seedFile, "utf8")));
+export async function loadDemoHousehold(file) {
+  return demoSchema.parse(JSON.parse(await readFile(file, "utf8"))).people;
 }

@@ -2,18 +2,18 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
 import { personKey } from "../lens.js";
-import { loadSeed, personSchema } from "./seed.js";
+import { personSchema } from "./seed.js";
 
 /** @typedef {import("../contracts.d.ts").LensPerson} LensPerson */
 /** @typedef {import("../contracts.d.ts").LensMessage} LensMessage */
 /** @typedef {import("./index.js").PreferenceStore} PreferenceStore */
-/** @typedef {import("./seed.js").Seed} Seed */
 
 const stateSchema = z.object({
   households: z.record(
     z.string(),
     z.object({
       people: z.record(z.string(), personSchema).default({}),
+      updatedAt: z.number().int().min(0).default(0),
       tonight: z.custom((value) => typeof value === "object" && value !== null).optional(),
     }),
   ),
@@ -22,29 +22,24 @@ const stateSchema = z.object({
 /** @typedef {z.infer<typeof stateSchema>} State */
 
 /**
- * Keeps saved settings in one JSON file. A seed file supplies the people each household
- * starts with; anything saved afterwards is written to the state file and wins over the seed.
- * Reads are served from memory.
+ * Keeps saved settings in one JSON file. A household starts empty. Reads are served from memory.
  *
  * @implements {PreferenceStore}
  */
 export class JsonStore {
   /**
    * @param {string} file
-   * @param {Seed} seed
    * @param {State} state
    */
-  constructor(file, seed, state) {
+  constructor(file, state) {
     this.file = file;
-    this.seed = seed;
     this.state = state;
     /** @type {Promise<void>} */
     this.writing = Promise.resolve();
   }
 
-  /** @param {{ file: string, seedFile: string }} options */
-  static async create({ file, seedFile }) {
-    const seed = await loadSeed(seedFile);
+  /** @param {{ file: string }} options */
+  static async create({ file }) {
     /** @type {State} */
     let state = { households: {} };
     try {
@@ -54,23 +49,34 @@ export class JsonStore {
         throw new Error(`cannot read the preference file ${file}`, { cause: error });
       }
     }
-    return new JsonStore(file, seed, state);
+    return new JsonStore(file, state);
   }
 
   /** @param {string} household */
   household(household) {
-    return (this.state.households[household] ??= { people: {} });
+    return (this.state.households[household] ??= { people: {}, updatedAt: 0 });
   }
 
   /** @param {string} household */
   async listPeople(household) {
-    /** @type {Map<string, LensPerson>} */
-    const people = new Map();
-    for (const person of this.seed[household]?.people ?? []) people.set(personKey(person.name), person);
-    for (const [key, person] of Object.entries(this.state.households[household]?.people ?? {})) {
-      people.set(key, person);
-    }
-    return structuredClone([...people.values()]);
+    return structuredClone(Object.values(this.state.households[household]?.people ?? {}));
+  }
+
+  /** @param {string} household */
+  async getHousehold(household) {
+    return { people: await this.listPeople(household), updatedAt: this.state.households[household]?.updatedAt ?? 0 };
+  }
+
+  /**
+   * @param {string} household
+   * @param {LensPerson[]} people
+   * @param {number} updatedAt
+   */
+  async setHousehold(household, people, updatedAt) {
+    const entry = this.household(household);
+    entry.people = Object.fromEntries(people.map((person) => [personKey(person.name), structuredClone(person)]));
+    entry.updatedAt = updatedAt;
+    await this.persist();
   }
 
   /**
@@ -87,7 +93,9 @@ export class JsonStore {
    * @param {LensPerson} person
    */
   async savePerson(household, person) {
-    this.household(household).people[personKey(person.name)] = structuredClone(person);
+    const entry = this.household(household);
+    entry.people[personKey(person.name)] = structuredClone(person);
+    entry.updatedAt = Math.max(Date.now(), entry.updatedAt + 1);
     await this.persist();
   }
 

@@ -13,7 +13,11 @@ import { JsonStore } from "./json.js";
  * @property {(household: string, name: string) => Promise<LensPerson | undefined>} getPerson
  *   One person by name, ignoring case; undefined if unknown.
  * @property {(household: string, person: LensPerson) => Promise<void>} savePerson
- *   Creates or replaces a person's saved settings.
+ *   Creates or replaces a person's saved settings and stamps the household as changed.
+ * @property {(household: string) => Promise<{ people: LensPerson[], updatedAt: number }>} getHousehold
+ *   The people and when the list last changed (ms since the epoch; 0 if it never has).
+ * @property {(household: string, people: LensPerson[], updatedAt: number) => Promise<void>} setHousehold
+ *   Replaces the whole list, so removals stick.
  * @property {(household: string) => Promise<LensMessage | undefined>} getTonight
  *   The lens last set for tonight's couch.
  * @property {(household: string, lens: LensMessage) => Promise<void>} saveTonight
@@ -21,8 +25,8 @@ import { JsonStore } from "./json.js";
  */
 
 /**
- * @typedef {{ kind: "json", file: string, seedFile: string }
- *   | { kind: "dynamodb", table: string, region: string, endpoint?: string, seedFile: string }} StoreOptions
+ * @typedef {{ kind: "json", file: string }
+ *   | { kind: "dynamodb", table: string, region: string, endpoint?: string }} StoreOptions
  */
 
 /**
