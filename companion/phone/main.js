@@ -43,6 +43,8 @@ const state = {
   /** @type {import("./player.js").Clip[]} */
   clips: [],
   clipsLoaded: false,
+  /** True when the last clip list request failed, so it is asked for again. */
+  clipsFailed: false,
   /** @type {AudioContext | undefined} */
   ctx: undefined,
   /** @type {AdPlayer | undefined} */
@@ -95,6 +97,8 @@ async function loadTitle(id) {
   state.title = id;
   state.clips = [];
   state.clipsLoaded = false;
+  state.clipsFailed = false;
+  state.player?.setClips([]);
   try {
     const response = await fetch(`/api/ad/${encodeURIComponent(id)}`, { headers });
     if (!response.ok) throw new Error(String(response.status));
@@ -105,6 +109,7 @@ async function loadTitle(id) {
   } catch {
     if (state.title !== id) return;
     state.name = undefined;
+    state.clipsFailed = true;
   }
   state.clipsLoaded = true;
   state.player?.setClips(state.clips);
@@ -121,6 +126,7 @@ function onMessage(message) {
     const reason = tv.update(clock);
     state.skewMs = relayTime.ready ? clock.wallClock - relayTime.now() : undefined;
     if (clock.title !== state.title) void loadTitle(clock.title);
+    else if (state.clipsFailed && state.clipsLoaded) void loadTitle(clock.title);
     state.player?.clockChanged(reason);
   }
   render();
@@ -190,7 +196,7 @@ async function holdScreen() {
   }
 }
 
-async function start() {
+function start() {
   if (state.ctx) return;
   const nav = /** @type {Navigator & { audioSession?: { type: string } }} */ (navigator);
   if (nav.audioSession) nav.audioSession.type = "playback";
@@ -202,12 +208,14 @@ async function start() {
   const ctx = new Context({ latencyHint: "interactive" });
   state.ctx = ctx;
   ctx.addEventListener("statechange", render);
-  await ctx.resume().catch(() => {});
-  // A silent sound inside the tap is what unlocks Safari's audio.
+  // Inside the tap: a silent sound is what unlocks Safari's audio. The player is made at once,
+  // because on iOS resume() can stay pending until the audio session is free, and the page
+  // must keep following the TV meanwhile.
   const unlock = ctx.createBufferSource();
   unlock.buffer = ctx.createBuffer(1, 1, ctx.sampleRate);
   unlock.connect(ctx.destination);
   unlock.start();
+  void ctx.resume().catch(() => {});
 
   state.player = new AdPlayer({
     ctx,
@@ -217,6 +225,7 @@ async function start() {
     headers,
     onReport,
   });
+  // Clips may still be loading or not named yet; loadTitle hands them over when they arrive.
   state.player.setClips(state.clips);
   window.setInterval(() => state.player?.tick(), TICK_MS);
   void holdScreen();
@@ -307,7 +316,7 @@ function connect() {
     });
 }
 
-ui.start.addEventListener("click", () => void start());
+ui.start.addEventListener("click", start);
 ui.offset.addEventListener("input", () => setOffset(Number(ui.offset.value)));
 el("resume").addEventListener("click", resumeAudio);
 el("earlier").addEventListener("click", () => setOffset(state.userOffsetMs - 10));
