@@ -74,9 +74,9 @@ AWS_PROFILE=personal AWS_REGION=us-east-1 \
 
 ## Audio description
 
-`everyseat describe` finds the dialogue-free stretches of a film, has Nova Pro write a short
-description of the picture for each, voices it with Polly, and writes `ad` cues that point at the
-audio clips:
+`everyseat describe` finds the dialogue-free stretches of a film, has Nova Pro write short
+descriptions of the picture for each, anchors each one to the shot it describes, voices them with
+Polly, and writes `ad` cues that point at the audio clips:
 
 ```sh
 AWS_PROFILE=personal AWS_REGION=us-east-1 \
@@ -94,6 +94,17 @@ AWS_PROFILE=personal AWS_REGION=us-east-1 \
   places. It writes to a budget of about 2.5 words a second, in the present tense, only what is
   visible and essential, without interpretation or spoilers, and may decline a window where
   nothing essential is on screen.
+- **Anchoring:** a window can last 30 s and span several shots, so the writer answers with a list
+  of items `{at_s, text}` through the submit tool (validated with Pydantic): `at_s` is the label
+  of the contact-sheet frame the sentence describes. Code, not the model, decides when each is
+  spoken: `at_s` snaps to the start of the shot that contains it (the shot cuts are already
+  computed), is clamped to the window start (an item after the window end is rejected), items are
+  sorted, and items that land on the same shot are merged. Each item gets a slot, from its start
+  to 0.3 s before the next item (or a frame before the window ends), and a word budget of 2.5
+  words a second of slot. Items are fitted from the last to the first; one whose measured clip
+  does not fit gets the shorten loop, and one that still does not fit (or whose slot holds fewer
+  than 4 words) is dropped, which gives its time to the item before it. Every snap, clamp, merge
+  and drop is printed and written to `item_decisions` in the run log.
 - **Review:** the model does not reliably follow rules, so every answer, including each rewrite
   to shorten, goes through checks in code before it is kept, and a rejected answer goes back to
   the model with the reason:
@@ -104,23 +115,28 @@ AWS_PROFILE=personal AWS_REGION=us-east-1 \
     the earlier text is quoted and the model is asked for what is new, or for nothing;
   - more words than the budget, or fewer than 4, are rejected.
 
-  The writer gets 5 answers per window. A window where none passes is left without a
-  description and the reason is logged, rather than ending the run. Each decision is printed.
+  The writer gets 5 answers per window. The review applies to each item. A window where none
+  passes is left without a description and the reason is logged, rather than ending the run. Each
+  decision is printed.
 - **Fitting:** Polly neural renders 16 kHz mono PCM, so the clip length is exactly bytes divided by
-  32000. A clip longer than its window goes back to the writer to be shortened (up to 3 times);
-  the last resort is SSML prosody at 110%. A window that still does not fit stops the run.
-- **Outputs:** one `<title>-ad-<n>.wav` per window in `<clips-dir>/<title>/`, the cue file
-  (`generated/<title>.sensevtt`; each cue starts at its window start and carries
-  `audio_ref {uri, duration_s}`, a one-line `preview` and the full text in `evidence`) and
+  32000. A clip longer than its slot goes back to the writer to be shortened (up to 3 times); the
+  last resort is SSML prosody at 110%. An item that still does not fit is dropped and the reason
+  logged; the run goes on.
+- **Outputs:** one `<title>-ad-<n>.wav` per kept item in `<clips-dir>/<title>/`, the cue file
+  (`generated/<title>.sensevtt`; each cue starts at the shot start its item was snapped to and
+  carries `audio_ref {uri, duration_s}`, a one-line `preview` and the full text in `evidence`) and
   `<title>.run.json` beside it with every attempt, the answers the review rejected (and why), the
-  skipped windows, token usage and the estimated cost. Clip addresses are relative
+  anchoring decisions, the skipped windows, token usage and the estimated cost. Clip addresses are relative
   (`ad/<title>/<id>.wav`) so the companion can serve them.
 - **`--dry-run`:** placeholder text and silent clips of the length a voice would take, written next
   to the clips as `<title>.dry-run.sensevtt`. Nothing touches AWS (no session is created, so no
   credentials are read), which makes it the way to check the whole flow offline.
 - **`--script FILE`** (with `--dry-run`): scripted answers per window, in place of the model's, that
-  go through the same review. `fixtures/describe_script.json` exercises each rejection path on
-  Sintel, and every decision is printed:
+  go through the same review. An answer is a list of items `{"at_s": seconds, "text": "..."}`, a
+  plain text (one item at the window start) or null; without a script the stand-in writes up to
+  three placeholder items per window, one per shot. `fixtures/describe_script.json` exercises each
+  rejection path on Sintel plus snapping, merging, clamping, rejecting and dropping items
+  (windows 8, 12, 14 and 15), and every decision is printed:
 
   ```sh
   everyseat describe film.mkv --subtitles film_en.srt --dry-run \
