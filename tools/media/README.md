@@ -45,6 +45,7 @@ The limiter caps the peaks of the whole track, not just the windows, so the comf
 | `hls_package.sh` | Package video plus main and comfort audio as HLS |
 | `comfort_render.py` | Render the comfort track from a recipe (`--print-filter` shows the ffmpeg filter) |
 | `test_pattern.py` | Generate the timecode test stream (440 Hz main, 880 Hz comfort) |
+| `export_ad.py` | Convert a title's audio description WAVs (`build/ad/<title>/`) to mono AAC `.m4a` files in `generated/ad/<title>/` and point the cue file at them |
 | `serve_media.py` | Plain-HTTP server for `build/media`, bound to 127.0.0.1 |
 | `lib.sh` | Shared shell helpers |
 
