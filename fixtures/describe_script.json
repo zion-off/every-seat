@@ -176,6 +176,23 @@
       }
     ]
   },
+  "21": {
+    "write": [
+      {
+        "model_error": "MaxTokensReachedException: output limit reached"
+      },
+      [
+        {
+          "at_s": 537.0,
+          "text": "Sintel wades through knee-deep water."
+        },
+        {
+          "at_s": 544.0,
+          "text": "A rope bridge sways above her."
+        }
+      ]
+    ]
+  },
   "22": {
     "write": [
       "Close-up of Sintel fighting a large, armored creature with a spear. The creature moves and reacts to her attacks.",
@@ -190,6 +207,19 @@
       "The camera follows Sintel as she fights a large, armored creature with a spear.",
       "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks.",
       "Sintel fights a large, armored creature with a spear. The creature reacts to her attacks."
+    ]
+  },
+  "24": {
+    "write": [
+      {
+        "model_error": "MaxTokensReachedException: output limit reached"
+      },
+      {
+        "model_error": "MaxTokensReachedException: output limit reached"
+      },
+      {
+        "model_error": "MaxTokensReachedException: output limit reached"
+      }
     ]
   },
   "25": {
