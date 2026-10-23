@@ -17,7 +17,9 @@
     ]
   },
   "6": {
-    "write": ["Sintel holds food. She gives it to Scales, who eats it."]
+    "write": [
+      "Sintel holds food. She gives it to Scales, who eats it."
+    ]
   },
   "7": {
     "write": [
@@ -30,11 +32,98 @@
       "Sintel crouches in a dark hollow, holding Scales to her chest. She strokes his small pale head as snow blows past."
     ]
   },
+  "8": {
+    "write": [
+      [
+        {
+          "at_s": 233.0,
+          "text": "Sintel climbs a rocky slope in rising wind."
+        },
+        {
+          "at_s": 248.5,
+          "text": "Sintel reaches the cave mouth and stops."
+        }
+      ]
+    ]
+  },
   "10": {
-    "write": ["Sintel runs across rooftops. Scales flies above her."]
+    "write": [
+      "Sintel runs across rooftops. Scales flies above her."
+    ]
   },
   "11": {
-    "write": ["Sintel runs and jumps across rooftops. Scales flies above her.", null]
+    "write": [
+      "Sintel runs and jumps across rooftops. Scales flies above her.",
+      null
+    ]
+  },
+  "12": {
+    "write": [
+      [
+        {
+          "at_s": 308.5,
+          "text": "Sintel limps through tall grass."
+        },
+        {
+          "at_s": 312.0,
+          "text": "The camera follows Scales over a stone wall."
+        }
+      ],
+      [
+        {
+          "at_s": 308.5,
+          "text": "Sintel limps through tall grass."
+        },
+        {
+          "at_s": 312.0,
+          "text": "Scales climbs over a stone wall."
+        }
+      ]
+    ]
+  },
+  "14": {
+    "write": [
+      [
+        {
+          "at_s": 343.0,
+          "text": "Sintel kneels beside a frozen stream."
+        },
+        {
+          "at_s": 351.6,
+          "text": "She breaks the ice with her fist."
+        },
+        {
+          "at_s": 353.4,
+          "text": "Scales drinks from the broken ice."
+        }
+      ]
+    ]
+  },
+  "15": {
+    "write": [
+      [
+        {
+          "at_s": 366.0,
+          "text": "Sintel runs through a desert."
+        },
+        {
+          "at_s": 380.7,
+          "text": "She enters a bamboo forest."
+        },
+        {
+          "at_s": 381.9,
+          "text": "Tall bamboo sways around her as she slows."
+        },
+        {
+          "at_s": 383.2,
+          "text": "Sintel stands on a hill with a spear."
+        },
+        {
+          "at_s": 400.0,
+          "text": "A dust cloud rises behind her."
+        }
+      ]
+    ]
   },
   "16": {
     "write": [
@@ -76,7 +165,9 @@
     ]
   },
   "26": {
-    "write": ["Sintel calls out for Scales. She looks around, searching for the baby dragon."]
+    "write": [
+      "Sintel calls out for Scales. She looks around, searching for the baby dragon."
+    ]
   },
   "28": {
     "write": [
