@@ -8,7 +8,7 @@ from strands.agent.conversation_manager import NullConversationManager
 from strands.hooks import BeforeModelCallEvent, HookProvider, HookRegistry
 
 from everyseat.agent import model
-from everyseat.describe import Rejected
+from everyseat.describe import Rejected, anchor
 from everyseat.describe.anchor import Item
 from everyseat.describe.review import Check, Verdict, gave_up
 from everyseat.describe.writers import (
@@ -35,18 +35,25 @@ shot begins, so you answer with a list of items, each tied to the frame it descr
 
 Rules:
 - Each item is {at_s, text}: at_s is the time label of the contact-sheet frame the text is about,
-  and text is one short sentence (about 8 to 15 words) that says only what is visible in that
-  frame's shot. Never describe in an item what happens in a later shot. Use one item per shot
-  that matters, in time order, with different at_s values; skip shots where nothing essential
-  happens. A window with a single shot has a single item.
-- Present tense, plain words.
+  and text is one complete sentence (5 to 20 words, never more than 8 seconds when spoken) that
+  says only what is visible in that frame's shot. Never describe in an item what happens in a
+  later shot.
+- Be sparse. Pick the 1 to 3 most important moments of the window, not every shot, and let the
+  film breathe between them. Never more than one item per 5 seconds of window. Skip shots
+  where nothing essential happens, and skip fights between the same characters that only
+  continue. A window with a single moment has a single item.
+- Every item is a complete, natural sentence with a subject, a verb and articles ("Sintel jumps
+  onto a ledge"), never a fragment ("Sintel jumps new location", "Sintel and dragon battle").
+  Fewer moments in good sentences beat many in broken ones.
+- Present tense, plain words. No filler about looks or feelings ("her gaze intensifies").
 - Say what is visible and essential to follow the story: who is where, what they do, what
   changes. Describe in the order things happen.
 - Do not interpret. No guesses about thoughts, feelings, motives or what will happen. Say
   "she clenches her jaw", not "she is angry".
 - No spoilers: describe only what is visible in this window.
 - Say what happens, never how it is filmed. Do not use the words frame, frames, shot,
-  close-up, camera, image, shows or scene cuts, and do not write about the final or first
+  close-up, camera, image, shows, scene, transitions, visible, lens or cut to, and do not
+  write about the final or first
   picture of the window ("Final frame shows only white fog"). Write "Sintel climbs a wall", not
   "A close-up shows Sintel climbing".
 - Never repeat an earlier description, in whole or in part. Every description must add
@@ -141,7 +148,8 @@ def request_text(request: Request) -> str:
     w = request.window
     parts = [
         f"Quiet window: {_time(w.start)} to {_time(w.end)} ({w.duration:.1f} s).",
-        f"Word limit: at most {request.budget} words in all, shared by the items.",
+        f"Word limit: at most {request.budget} words in all, shared by the items. Give 1 to "
+        f"{min(3, anchor.max_items(w))} items, at least 5 words each.",
         "Frame labels on the contact sheet (use these as at_s): "
         + ", ".join(_time(t) for t in request.times)
         + ".",

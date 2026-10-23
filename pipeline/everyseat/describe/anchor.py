@@ -14,6 +14,9 @@ from everyseat.describe.subtitles import Window
 CLIP_GAP_S = 0.3  # a clip ends at least this long before the next one starts
 WORDS_PER_SECOND = 2.5
 SAME_TIME_S = 0.0005
+MIN_SLOT_S = 2.5  # an item with less time than this is dropped, not squeezed
+MAX_CLIP_S = 8.0  # one item never runs longer, however much quiet follows it
+SECONDS_PER_ITEM = 5.0  # pace: at most one item per this much window
 
 
 @dataclass(frozen=True)
@@ -80,7 +83,54 @@ def place(
             )
         else:
             placed.append(Placed(start, item.text, (item.at_s,)))
+    placed = _pace(placed, window, fps, decisions)
     return placed, decisions
+
+
+def max_items(window: Window) -> int:
+    return max(1, int(window.duration / SECONDS_PER_ITEM))
+
+
+def _drop(placed: list[Placed], index: int, reason: str, decisions: list[dict]) -> None:
+    item = placed.pop(index)
+    decisions.append({"kind": "dropped", "start": item.start, "text": item.text, "reason": reason})
+
+
+def _minor(placed: list[Placed], a: int, b: int) -> int:
+    """Which of two items says less: the one with fewer words, the later one on a tie."""
+    return a if len(placed[a].text.split()) < len(placed[b].text.split()) else b
+
+
+def _pace(placed: list[Placed], window: Window, fps: int, decisions: list[dict]) -> list[Placed]:
+    """Let the film breathe: drop the minor one of two items too close for a slot of
+    `MIN_SLOT_S`, an item too near the window's end, and the minor items beyond `max_items`.
+    """
+    placed = list(placed)
+    need = MIN_SLOT_S + CLIP_GAP_S + 1 / fps
+    while True:
+        close = [i for i in range(len(placed) - 1) if placed[i + 1].start - placed[i].start < need]
+        if close:
+            i = close[0]
+            _drop(
+                placed,
+                _minor(placed, i, i + 1),
+                f"less than {need:.1f} s to the next item",
+                decisions,
+            )
+        elif placed and window.end - placed[-1].start < MIN_SLOT_S + 1 / fps:
+            _drop(placed, len(placed) - 1, "too close to the window's end", decisions)
+        else:
+            break
+    cap = max_items(window)
+    while len(placed) > cap:
+        minor = min(range(len(placed)), key=lambda i: (len(placed[i].text.split()), -i))
+        _drop(
+            placed,
+            minor,
+            f"pace: at most {cap} items in a {window.duration:.0f} s window",
+            decisions,
+        )
+    return placed
 
 
 def slot_limit_s(start: float, next_start: float | None, window: Window, fps: int) -> float:
@@ -88,7 +138,7 @@ def slot_limit_s(start: float, next_start: float | None, window: Window, fps: in
     clip starts, or a frame before the window ends, which leaves room for the frame rounding.
     """
     end = window.end if next_start is None else next_start - CLIP_GAP_S
-    return round(end - start - 1 / fps, 3)
+    return round(min(end - start, MAX_CLIP_S) - 1 / fps, 3)
 
 
 def slot_words(limit_s: float) -> int:
@@ -96,5 +146,5 @@ def slot_words(limit_s: float) -> int:
 
 
 def fits_any(limit_s: float) -> bool:
-    """Whether a slot can hold the shortest acceptable description at all."""
-    return slot_words(limit_s) >= MIN_WORDS
+    """Whether a slot is long enough for a natural sentence at all."""
+    return limit_s >= MIN_SLOT_S - 1e-6 and slot_words(limit_s) >= MIN_WORDS

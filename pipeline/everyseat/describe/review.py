@@ -11,7 +11,7 @@ from typing import Protocol
 
 from everyseat.describe import Rejected
 
-MIN_WORDS = 4
+MIN_WORDS = 5  # a shorter text is a fragment, not a sentence
 # Share of a description's content words that one earlier description already has. On Sintel the
 # repeated descriptions scored 0.75 to 1.0 and the distinct ones 0.60 or less.
 SIMILARITY_LIMIT = 0.7
@@ -21,7 +21,7 @@ MARKUP = re.compile(r"[*_#`<>\[\]{}|]|\n")
 # Words that talk about the film as a film instead of saying what happens in it.
 BANNED = re.compile(
     r"\b(?:frames?|shots?|close[- ]?ups?|cameras?|images?|shows|showing|shown"
-    r"|scene cuts?|cut to)\b",
+    r"|scenes?|transitions?|transitioning|visible|lens(?:es)?|cut to)\b",
     re.IGNORECASE,
 )
 WORD = re.compile(r"[a-z0-9]+")
@@ -30,6 +30,78 @@ STOPWORDS = frozenset(
     "her his she he they them their this that then there some one into onto over near while "
     "who which what when where up out off".split()
 )
+
+
+# Words that may follow a verb without an article: a determiner, a preposition or particle, a
+# pronoun, a conjunction. Anything else right after "<Name> <verb>s" is a bare noun phrase.
+OK_AFTER_VERB = frozenset(
+    "a an the to at in on of into onto across through toward towards from with without by for "
+    "over under behind beside near past along around inside outside against between among "
+    "above below beyond ahead up down out off away back forward again closer apart "
+    "together alone aside open "
+    "her his their its him them herself himself itself themselves it she he they that this "
+    "these those each every another "
+    "some one two three four five six seven eight nine ten no all both and but then as while "
+    "when until before after not never still just only slowly quickly".split()
+)
+MAX_FRAGMENT_WORDS = 6  # a longer sentence without a known verb is let through
+PREPOSITIONS_NEEDING_ARTICLE = frozenset({"with", "using"})
+AUXILIARIES = frozenset(
+    "is are was were has have had does do did goes go will can must be been being".split()
+)
+BASE_VERBS = frozenset(
+    "run walk fight climb jump fall look turn stand sit move rise fly swing hold pull push "
+    "race chase strike swim crawl kneel stare watch wait flee escape enter leave meet "
+    "stumble lunge reach fire drop lift grab stop gather rush charge circle".split()
+)
+SUBJECT_VERB = re.compile(r"^(?:[A-Z][\w']*|She|He|They|It)\s+(\w+s)\s+(\w[\w']*)")
+WORD_ANY = re.compile(r"[A-Za-z0-9']+")
+NOT_VERBS = frozenset("this its his us yes".split())
+
+
+def _looks_like_verb(word: str) -> bool:
+    lower = word.lower()
+    if lower in AUXILIARIES or lower in BASE_VERBS:
+        return True
+    if lower in NOT_VERBS or len(lower) < 4:
+        return False
+    return lower.endswith(("ed", "ing")) or (lower.endswith("s") and not lower.endswith("ss"))
+
+
+def grammar_problem(text: str) -> str | None:
+    """A simple check for the telegraphic text a squeezed rewrite produces: a sentence with no
+    verb ("Sintel and dragon battle."), a bare noun phrase after the verb ("Sintel jumps new
+    location.") or after "with" ("with weapon"). Heuristic only: it catches the common shapes
+    and lets anything unusual through.
+    """
+    for sentence in re.split(r"(?<=[.!?])\s+", text.strip()):
+        words = WORD_ANY.findall(sentence)
+        if not words:
+            continue
+        if len(words) <= MAX_FRAGMENT_WORDS and not any(_looks_like_verb(w) for w in words[1:]):
+            return f'no verb in "{excerpt(sentence)}"'
+        match = SUBJECT_VERB.match(sentence)
+        if match and _looks_like_verb(match.group(1)):
+            after = match.group(2)
+            if (
+                after.lower() not in OK_AFTER_VERB
+                and not _looks_like_verb(after)  # "Two soldiers run": the first word is a noun
+                and not (after[0].isupper() or after.endswith(("ing", "ly")))
+            ):
+                return f'"{match.group(1)} {after}" lacks an article or a preposition'
+        for left, right in zip(words, words[1:], strict=False):
+            # Only a noun that ends the sentence is bare: "with weapon." but "with carved designs".
+            if (
+                right is words[-1]
+                and left.lower() in PREPOSITIONS_NEEDING_ARTICLE
+                and (
+                    right.lower() not in OK_AFTER_VERB
+                    and not right[0].isupper()
+                    and not right.lower().endswith(("s", "ing"))
+                )
+            ):
+                return f'"{left} {right}" lacks an article'
+    return None
 
 
 def clean(text: str) -> str:
@@ -86,7 +158,7 @@ def most_similar(text: str, earlier: Sequence[Earlier]) -> tuple[Earlier, float]
 
 @dataclass(frozen=True)
 class Problem:
-    kind: str  # short, long, banned or similar
+    kind: str  # short, long, banned, grammar or similar
     detail: str  # a few words, for the log
     message: str  # what the writer is told
 
@@ -188,6 +260,16 @@ class Review:
                     ", ".join(found),
                     f"do not use the words {quoted}: say what happens and who is where, never "
                     "how it is filmed or shown. Rewrite it without them.",
+                )
+            )
+        broken = grammar_problem(plain) if count >= MIN_WORDS else None
+        if broken:
+            problems.append(
+                Problem(
+                    "grammar",
+                    broken,
+                    f"{broken}. Write a complete sentence with a subject, a verb and articles "
+                    '("Sintel jumps onto a ledge", not "Sintel jumps new location").',
                 )
             )
         similar = most_similar(plain, self.earlier) if count >= MIN_WORDS else None

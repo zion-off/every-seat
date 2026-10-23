@@ -95,10 +95,12 @@ def read_plot(path: Path) -> str:
     return plot
 
 
-def _target_words(text: str, spoken_s: float, limit_s: float) -> int:
-    """Words that should fit in `limit_s` at the pace the voice just showed, with a little slack."""
-    scaled = int(_words(text) * limit_s / spoken_s * 0.95)
-    return max(MIN_WORDS, min(scaled, _words(text) - 1))
+def _target_words(text: str, spoken_s: float, limit_s: float) -> int | None:
+    """Words that should fit in `limit_s` at the pace the voice just showed, with a little slack;
+    None when that is fewer than `MIN_WORDS`, since a rewrite that short is not a sentence.
+    """
+    target = min(int(_words(text) * limit_s / spoken_s * 0.95), _words(text) - 1)
+    return target if target >= MIN_WORDS else None
 
 
 def fit(
@@ -121,6 +123,11 @@ def fit(
         shortened = 0
         while speech.duration_s > limit and shortened < MAX_SHORTENS:
             target = _target_words(text, speech.duration_s, limit)
+            if target is None:
+                return (
+                    f"{speech.duration_s:.1f} s of speech does not fit {limit:.1f} s without "
+                    f"a rewrite of under {MIN_WORDS} words"
+                )
             progress(
                 f"      {speech.duration_s:.1f} s is over {limit:.1f} s: shortening to "
                 f"{target} words"
