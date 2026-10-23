@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { colors, radius, size, space, type, weight } from '../styles/tokens';
+import Focusable from './Focusable';
 
 type Props = {
   label: string;
@@ -22,16 +23,44 @@ const Pill = ({ label, dot, numberOfLines = 1, style }: Props) => (
   </View>
 );
 
+type ButtonProps = {
+  label: string;
+  accessibilityLabel: string;
+  onPress: () => void;
+};
+
+/** A pill that can be pressed: the same height, padding, radius and type size as `Pill`. */
+export const PillButton = ({
+  label,
+  accessibilityLabel,
+  onPress,
+}: ButtonProps) => (
+  <Focusable
+    accessible
+    accessibilityRole="button"
+    accessibilityLabel={accessibilityLabel}
+    onPress={onPress}
+    radius={radius.pill}
+    contentStyle={(focused) => [styles.pill, focused && styles.pillFocused]}>
+    <Text style={styles.label} numberOfLines={1}>
+      {label}
+    </Text>
+  </Focusable>
+);
+
 const styles = StyleSheet.create({
   pill: {
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: size.pill,
+    height: size.pill,
     paddingHorizontal: space.md,
     borderRadius: radius.pill,
     borderWidth: size.border,
     borderColor: colors.line,
     backgroundColor: colors.surfaceRaised,
+  },
+  pillFocused: {
+    backgroundColor: colors.surfaceFocused,
   },
   dot: {
     width: size.dot,

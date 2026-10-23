@@ -3,11 +3,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Cue, loadSenseVtt } from 'react-native-sensevtt';
 import { formatClock, TitleEntry, TITLES } from '../catalog';
 import Backdrop from '../components/Backdrop';
-import Button from '../components/Button';
 import FilmTile from '../components/FilmTile';
 import HeroStill from '../components/HeroStill';
 import Mark from '../components/Mark';
-import Pill from '../components/Pill';
+import Pill, { PillButton } from '../components/Pill';
 import { cuesUrl } from '../config';
 import { LensSettings } from '../engine/types';
 import { CueSummary, summarizeCues } from '../lens/lens';
@@ -125,10 +124,8 @@ const TitleScreen = ({
               style={styles.couchPill}
               label={`On the couch: ${couchNames}`}
             />
-            <Button
+            <PillButton
               label="Change couch"
-              variant="secondary"
-              size="md"
               accessibilityLabel="Change who is on the couch"
               onPress={onChangeCouch}
             />

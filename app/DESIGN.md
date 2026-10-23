@@ -70,7 +70,7 @@ Every focusable element is a `Focusable` (or a themed `Button`, which wraps the 
 **Couch.** Header "Who's watching?" at `title` with one line of help at `body`. People are tiles in a grid of four columns, each with an initial in a circle, the name at `title`, and what they have switched on at `small`. A selected person has a filled amber check. Below the grid: a primary "Continue", the single main action. "About" is a small text control at the right of the header, reached with Up from the grid. The first tile holds focus on arrival. Grids wrap to a second row; nothing leaves the safe area.
 
 **Films.**
-- Top bar: logo mark and "Every Seat" on the left; on the right a "Couch" button that shows who is on the couch and goes back to the couch screen.
+- Top bar: logo mark and "Every Seat" on the left; on the right a pill "On the couch: names" and, beside it, a pill button "Change couch" of exactly the same size that goes back to the couch screen.
 - Hero: the film's still fills the right of the hero area and fades into the background on its left. On the left: the title at `display`, the byline and length at `body`, then the comfort summary, one pill per kind of moment this couch is protected from ("2 flashes", "1 loud sound", "3 scares") with the strongest intensity, or "Nothing to soften for this couch". Films that have not been analysed say so.
 - Row: one row of 16:9 stills at 408 x 230 with the name at `body` below. Focus moves the hero. The row fits inside the safe area; a longer row scrolls with the focused tile kept visible.
 - Credit line at the bottom in `small`.
@@ -90,7 +90,7 @@ Every focusable element is a `Focusable` (or a themed `Button`, which wraps the 
 | `Focusable` | pressable plus the focus rules above; passes `focused` to its children |
 | `Button` | KUIC `Button` with the theme below, wrapped in the same focus layers; `primary` = amber fill with `onAccent` text, `secondary` = `surface` fill with `text` |
 | Tile | 24 px radius, picture fills it, name below at `body` |
-| Pill | 999 radius, `surfaceRaised`, `small` or `body` text, 8 x 16 padding |
+| Pill | 999 radius, `surfaceRaised`, one size (`size.pill` high, `small` bold text, 24 px side padding) shared by the static pill and the pill button |
 | Card | 16 px radius, `surfaceRaised`, 24 px padding, amber top edge 4 px |
 
 KUIC theme: `src/styles/theme.ts` maps the tokens onto the KUIC theme (text colours, button fills, borders, radii, font sizes) so any KUIC component inherits them.
