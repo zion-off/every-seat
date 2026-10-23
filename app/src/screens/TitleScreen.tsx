@@ -1,83 +1,76 @@
-import {
-  Button,
-  Carousel,
-  CarouselRenderInfo,
-  ItemInfo,
-} from '@amazon-devices/kepler-ui-components';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { Cue, loadSenseVtt } from 'react-native-sensevtt';
 import { formatClock, TitleEntry, TITLES } from '../catalog';
+import Backdrop from '../components/Backdrop';
+import Button from '../components/Button';
+import FilmTile from '../components/FilmTile';
+import HeroStill from '../components/HeroStill';
+import Mark from '../components/Mark';
+import Pill from '../components/Pill';
 import { cuesUrl } from '../config';
 import { LensSettings } from '../engine/types';
-import { buildHeatmap } from '../lens/heatmap';
-import { COLORS } from '../styles/palette';
-import { scaleUxToDp } from '../utils/pixelUtils';
+import { CueSummary, summarizeCues } from '../lens/lens';
+import {
+  colors,
+  heat,
+  safe,
+  size,
+  space,
+  type,
+  weight,
+} from '../styles/tokens';
 
 type Props = {
   couchNames: string;
   lens: LensSettings;
+  /** The film last watched, so Back from the player lands on it again. */
+  initialFolder?: string;
   onChangeCouch: () => void;
   onPick: (title: TitleEntry) => void;
 };
 
-type Item = TitleEntry & { moments: number | null };
+const plural = (n: number, one: string, many: string) =>
+  `${n} ${n === 1 ? one : many}`;
 
-const TILE_W = scaleUxToDp(560);
-const TILE_H = scaleUxToDp(420);
-const PAD = scaleUxToDp(20);
+const marked = (summary: CueSummary) =>
+  summary.flashes + summary.loud + summary.scares;
 
-const momentsText = (n: number | null): string => {
-  if (n === null) {
-    return ' ';
+const spokenSummary = (summary: CueSummary | null): string => {
+  if (summary === null) {
+    return 'Not analysed yet';
   }
+  const n = marked(summary);
   if (n === 0) {
     return 'Nothing marked for this couch';
   }
-  return n === 1
-    ? '1 moment marked for this couch'
-    : `${n} moments marked for this couch`;
+  return `${plural(n, 'moment', 'moments')} marked for this couch`;
 };
 
-const TitleTile = ({
-  item,
+const pillLabels = (summary: CueSummary): string[] => {
+  const labels: string[] = [];
+  if (summary.flashes > 0) {
+    labels.push(plural(summary.flashes, 'flash', 'flashes'));
+  }
+  if (summary.loud > 0) {
+    labels.push(plural(summary.loud, 'loud sound', 'loud sounds'));
+  }
+  if (summary.scares > 0) {
+    labels.push(plural(summary.scares, 'scare', 'scares'));
+  }
+  return labels;
+};
+
+const TitleScreen = ({
+  couchNames,
+  lens,
+  initialFolder,
+  onChangeCouch,
   onPick,
-}: {
-  item: Item;
-  onPick: (title: TitleEntry) => void;
-}) => {
-  const [focused, setFocused] = useState(false);
-  return (
-    <Pressable
-      accessible
-      accessibilityRole="button"
-      accessibilityLabel={`${item.name}. ${formatClock(
-        item.durationS,
-      )}. ${momentsText(item.moments)}`}
-      onPress={() => onPick(item)}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
-      style={[styles.tile, focused && styles.tileFocused]}>
-      <View style={[styles.art, { backgroundColor: item.accent }]}>
-        <Text style={styles.artName} numberOfLines={2}>
-          {item.name}
-        </Text>
-      </View>
-      <View style={styles.meta}>
-        <Text style={styles.byline} numberOfLines={1}>
-          {item.byline}
-        </Text>
-        <Text style={styles.runtime}>{formatClock(item.durationS)}</Text>
-        <Text style={styles.moments} numberOfLines={1}>
-          {momentsText(item.moments)}
-        </Text>
-      </View>
-    </Pressable>
-  );
-};
-
-const TitleScreen = ({ couchNames, lens, onChangeCouch, onPick }: Props) => {
-  // The carousel is drawn once every cue list has been tried, so tiles never change after drawing.
+}: Props) => {
+  const start = TITLES.find((t) => t.folder === initialFolder) ?? TITLES[0];
+  const [focusedFolder, setFocusedFolder] = useState(start.folder);
+  // Null until every cue list has been tried, so the summary never flashes a wrong answer.
   const [cues, setCues] = useState<Record<string, Cue[]> | null>(null);
 
   useEffect(() => {
@@ -105,152 +98,181 @@ const TitleScreen = ({ couchNames, lens, onChangeCouch, onPick }: Props) => {
     };
   }, []);
 
-  const data: Item[] = useMemo(
-    () =>
-      TITLES.map((t) => ({
-        ...t,
-        moments:
-          cues && cues[t.folder]
-            ? buildHeatmap(cues[t.folder], lens, t.durationS * 1000).count
-            : null,
-      })),
-    [cues, lens],
-  );
+  const summaries = useMemo(() => {
+    const result: Record<string, CueSummary | null> = {};
+    TITLES.forEach((t) => {
+      result[t.folder] =
+        cues && cues[t.folder] ? summarizeCues(cues[t.folder], lens) : null;
+    });
+    return result;
+  }, [cues, lens]);
 
-  const ItemView = useCallback(
-    ({ item }: CarouselRenderInfo<Item>) => (
-      <TitleTile item={item} onPick={onPick} />
-    ),
-    [onPick],
-  );
-  const itemDimensions: ItemInfo[] = useMemo(
-    () => [
-      {
-        view: ItemView,
-        dimension: { width: TILE_W + PAD * 2, height: TILE_H },
-      },
-    ],
-    [ItemView],
-  );
-  const getItemForIndex = useCallback(() => ItemView, [ItemView]);
+  const hero = TITLES.find((t) => t.folder === focusedFolder) ?? TITLES[0];
+  const heroSummary = summaries[hero.folder];
+  const labels = heroSummary ? pillLabels(heroSummary) : [];
 
   return (
-    <View style={styles.root}>
-      <Text style={styles.title} accessibilityRole="header">
-        Choose a film
-      </Text>
-      <View style={styles.couchRow}>
-        <Text style={styles.couch} numberOfLines={1}>
-          On the couch: {couchNames}
+    <Backdrop plain>
+      <HeroStill source={hero.still} id={hero.folder} />
+      <View style={styles.layout}>
+        <View style={styles.topBar}>
+          <View style={styles.brand}>
+            <Mark size={size.mark} />
+            <Text style={styles.brandName}>Every Seat</Text>
+          </View>
+          <View style={styles.couch}>
+            <Pill
+              style={styles.couchPill}
+              label={`On the couch: ${couchNames}`}
+            />
+            <Button
+              label="Change couch"
+              variant="secondary"
+              size="md"
+              accessibilityLabel="Change who is on the couch"
+              onPress={onChangeCouch}
+            />
+          </View>
+        </View>
+
+        <View style={styles.hero}>
+          <View style={styles.heroText}>
+            <Text style={styles.heroTitle} numberOfLines={1}>
+              {hero.name}
+            </Text>
+            <Text style={styles.heroMeta}>
+              {hero.byline} · {formatClock(hero.durationS)}
+            </Text>
+            <Text style={styles.blurb}>{hero.blurb}</Text>
+            <Text style={styles.label}>For this couch</Text>
+            <View style={styles.pills}>
+              {cues !== null && heroSummary === null && (
+                <Pill label="Not analysed yet" />
+              )}
+              {cues !== null && heroSummary !== null && labels.length === 0 && (
+                <Pill label="Nothing marked for this couch" />
+              )}
+              {labels.map((label) => (
+                <Pill key={label} label={label} style={styles.pillGap} />
+              ))}
+              {heroSummary !== null && heroSummary.strongest > 0 && (
+                <Pill
+                  label={`Strongest ${heroSummary.strongest} of 5`}
+                  dot={heat[heroSummary.strongest - 1].base}
+                />
+              )}
+            </View>
+          </View>
+        </View>
+
+        <Text style={styles.section} accessibilityRole="header">
+          Choose a film
         </Text>
-        <Button
-          label="Change couch"
-          variant="secondary"
-          mode="outlined"
-          size="md"
-          accessibilityLabel="Change who is on the couch"
-          onPress={onChangeCouch}
-        />
+        <View style={styles.row}>
+          {TITLES.map((t, i) => (
+            <FilmTile
+              key={t.folder}
+              title={t}
+              current={t.folder === hero.folder}
+              spoken={`${formatClock(t.durationS)}. ${spokenSummary(
+                summaries[t.folder],
+              )}`}
+              autoFocus={t.folder === start.folder}
+              marginRight={i < TITLES.length - 1 ? space.lg : 0}
+              onFocus={() => setFocusedFolder(t.folder)}
+              onPress={() => onPick(t)}
+            />
+          ))}
+        </View>
+
+        <Text style={styles.credit}>
+          Films: Blender Foundation | studio.blender.org, CC BY, re-encoded for
+          streaming. Dimming and comfort audio are applied on this device.
+        </Text>
       </View>
-      <View style={styles.carousel}>
-        {cues && (
-          <Carousel
-            data={data}
-            orientation="horizontal"
-            itemDimensions={itemDimensions}
-            itemPadding={PAD}
-            renderItem={ItemView}
-            getItemForIndex={getItemForIndex}
-            keyProvider={(item: Item) => item.folder}
-            focusIndicatorType="fixed"
-            firstItemOffset={scaleUxToDp(80)}
-            itemSelectionExpansion={{ widthScale: 1.08, heightScale: 1.08 }}
-            hasTVPreferredFocus
-          />
-        )}
-      </View>
-      <Text style={styles.credit}>
-        Films: Blender Foundation | studio.blender.org, CC BY, re-encoded for
-        streaming. Dimming and comfort audio are applied on this device.
-      </Text>
-    </View>
+    </Backdrop>
   );
 };
 
 const styles = StyleSheet.create({
-  root: {
+  layout: {
     flex: 1,
-    backgroundColor: COLORS.BACKGROUND,
-    paddingTop: scaleUxToDp(70),
+    paddingHorizontal: safe.x,
+    paddingVertical: safe.y,
   },
-  title: {
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(64),
-    fontWeight: '700',
-    marginLeft: scaleUxToDp(100),
-  },
-  couchRow: {
+  topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: scaleUxToDp(100),
-    marginTop: scaleUxToDp(24),
+    justifyContent: 'space-between',
+    height: size.buttonMd,
+  },
+  brand: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  brandName: {
+    ...type.title,
+    color: colors.text,
+    fontWeight: weight.bold,
+    marginLeft: space.sm,
   },
   couch: {
-    color: COLORS.ACCENT,
-    fontSize: scaleUxToDp(34),
-    marginRight: scaleUxToDp(36),
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  carousel: {
-    height: scaleUxToDp(500),
-    marginTop: scaleUxToDp(40),
+  couchPill: {
+    maxWidth: size.couchPill,
+    marginRight: space.md,
   },
-  tile: {
-    width: TILE_W,
-    height: TILE_H,
-    marginHorizontal: PAD,
-    borderRadius: scaleUxToDp(20),
-    borderWidth: scaleUxToDp(6),
-    borderColor: COLORS.TRANSPARENT,
-    backgroundColor: COLORS.SURFACE,
-    overflow: 'hidden',
+  hero: {
+    flex: 1,
+    justifyContent: 'center',
   },
-  tileFocused: {
-    borderColor: COLORS.TEXT,
+  heroText: {
+    width: size.heroText,
   },
-  art: {
-    height: scaleUxToDp(230),
-    padding: scaleUxToDp(28),
-    justifyContent: 'flex-end',
+  heroTitle: {
+    ...type.display,
+    color: colors.text,
+    fontWeight: weight.bold,
   },
-  artName: {
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(48),
-    fontWeight: '700',
+  heroMeta: {
+    ...type.body,
+    color: colors.textMuted,
+    marginTop: space.xs,
   },
-  meta: {
-    padding: scaleUxToDp(24),
+  blurb: {
+    ...type.body,
+    color: colors.text,
+    marginTop: space.md,
   },
-  byline: {
-    color: COLORS.MUTED,
-    fontSize: scaleUxToDp(26),
+  label: {
+    ...type.small,
+    color: colors.textMuted,
+    marginTop: space.lg,
+    marginBottom: space.xs,
   },
-  runtime: {
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(30),
-    marginTop: scaleUxToDp(6),
+  pills: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    minHeight: size.pill,
   },
-  moments: {
-    color: COLORS.ACCENT,
-    fontSize: scaleUxToDp(28),
-    marginTop: scaleUxToDp(10),
+  pillGap: {
+    marginRight: space.xs,
+  },
+  section: {
+    ...type.title,
+    color: colors.text,
+    fontWeight: weight.bold,
+    marginBottom: space.xl,
+  },
+  row: {
+    flexDirection: 'row',
+    marginBottom: space.xs,
   },
   credit: {
-    position: 'absolute',
-    left: scaleUxToDp(100),
-    right: scaleUxToDp(100),
-    bottom: scaleUxToDp(40),
-    color: COLORS.MUTED,
-    fontSize: scaleUxToDp(24),
+    ...type.small,
+    color: colors.textMuted,
   },
 });
 
