@@ -6,7 +6,8 @@ import {
 } from "@modelcontextprotocol/ext-apps/server";
 import { z } from "zod";
 import { buildComfortReport } from "./comfort.js";
-import { NO_SETTINGS, applyPatch, combineLens, personKey, settingsPatchSchema, settingsSchema } from "./lens.js";
+import { pushHousehold } from "./household.js";
+import { MAX_PEOPLE, NO_SETTINGS, applyPatch, combineLens, personKey, settingsPatchSchema, settingsSchema } from "./lens.js";
 import { CARD_HTML, CARD_META, CARD_URI } from "./ui/card.js";
 import { VERSION } from "./version.js";
 
@@ -18,6 +19,7 @@ import { VERSION } from "./version.js";
 
 const INSTRUCTIONS = [
   "Comfort settings for films, per person: flashing images, sudden loud sounds and scares.",
+  "The household is the people set up on the TV; it can be empty until someone adds a person, here or on the TV.",
   "Use check_title_comfort to answer whether a film suits the people watching.",
   "Use set_tonight_lens to change what the TV does for tonight's couch, and remember_preference to save a person's settings for good.",
   "These are comfort settings, not medical advice.",
@@ -174,7 +176,7 @@ export function createMcpServer({ catalog, store, relay, household }) {
           .array(personName)
           .max(12)
           .optional()
-          .describe("Names of the people watching, such as Leo. Leave out to use tonight's couch."),
+          .describe("Names of the people watching, as they are in the household. Leave out to use tonight's couch."),
       },
       outputSchema: comfortOutput,
       annotations: { readOnlyHint: true, openWorldHint: false },
@@ -227,13 +229,20 @@ export function createMcpServer({ catalog, store, relay, household }) {
       const tonight = await store.getTonight(household);
       const wanted = names && names.length > 0 ? names : (tonight?.people.map((p) => p.name) ?? []);
       if (wanted.length === 0) {
-        return problem("Who is on the couch tonight? Name the people, for example Leo.");
+        const known = (await store.listPeople(household)).map((person) => person.name);
+        return problem(
+          known.length === 0
+            ? "Nobody is in the household yet. Add someone on the TV (Add person on the couch screen), or save their settings here with remember_preference."
+            : `Who is on the couch tonight? Name the people. People I know: ${known.join(", ")}.`,
+        );
       }
       const { found, unknown } = await resolvePeople(wanted);
       if (unknown.length > 0) {
         const known = (await store.listPeople(household)).map((person) => person.name);
         return problem(
-          `I don't have settings for ${unknown.join(", ")}. People I know: ${known.join(", ")}.`,
+          known.length === 0
+            ? `I don't have settings for ${unknown.join(", ")}, and nobody is in the household yet. Save them with remember_preference, or add them on the TV.`
+            : `I don't have settings for ${unknown.join(", ")}. People I know: ${known.join(", ")}. A new person can be added with remember_preference.`,
         );
       }
 
@@ -265,8 +274,8 @@ export function createMcpServer({ catalog, store, relay, household }) {
     {
       title: "Remember a person's comfort settings",
       description:
-        "Saves comfort settings for a person so they apply every time, not just tonight. " +
-        "Settings you leave out stay as they were; a new person starts with everything off.",
+        "Saves comfort settings for a person so they apply every time, not just tonight, and adds them to the household if they are new. " +
+        "The TV is updated. Settings you leave out stay as they were; a new person starts with everything off.",
       inputSchema: {
         person: personName.describe("The person's name."),
         settings: settingsPatchSchema.describe("The settings to save."),
@@ -276,16 +285,22 @@ export function createMcpServer({ catalog, store, relay, household }) {
     },
     timed("remember_preference", async ({ person, settings }) => {
       const existing = await store.getPerson(household, person);
+      if (!existing && (await store.listPeople(household)).length >= MAX_PEOPLE) {
+        return problem(`The household is full (${MAX_PEOPLE} people). Remove someone on the TV first.`);
+      }
       const saved = {
         name: existing?.name ?? person,
         settings: applyPatch(existing?.settings ?? NO_SETTINGS, settings),
       };
       await store.savePerson(household, saved);
+      const delivered = await pushHousehold({ store, relay, household });
       return result({
         name: saved.name,
         settings: saved.settings,
         created: !existing,
-        summary: `Saved ${saved.name}'s comfort settings.`,
+        summary: `Saved ${saved.name}'s comfort settings.${
+          delivered > 0 ? " The TV is updated." : " The TV isn't connected right now; it will get them when it reconnects."
+        }`,
       });
     }),
   );

@@ -154,7 +154,7 @@ export function createConverse({ config, catalog, store, relay }) {
       text,
       "",
       `Tonight's couch on the TV: ${couch}.`,
-      `People in this household: ${people.map((p) => p.name).join(", ")}.`,
+      `People in this household: ${people.length > 0 ? people.map((p) => p.name).join(", ") : "nobody yet"}.`,
       `Films with an analysis: ${catalog.titles.map((t) => t.name).join(", ")}.`,
     ].join("\n");
   }

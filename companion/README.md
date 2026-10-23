@@ -4,7 +4,7 @@ The companion is a small Node server that sits next to the TV app. It does five 
 
 - **MCP server** at `/mcp` (Streamable HTTP, protocol 2025-11-25). Voice assistants and other MCP hosts use it to ask whether a film is comfortable for the people on the couch and to change what the TV does tonight.
 - **WebSocket relay** at `/relay`. It carries the combined comfort lens from the companion to the TV, and the playback clock from the TV to phones.
-- **Preference store.** Each household's saved comfort settings live in a local JSON file, or optionally in DynamoDB.
+- **Preference store.** Each household's people and comfort settings live in a local JSON file, or optionally in DynamoDB. A household starts empty; the TV's household editor and `remember_preference` fill it.
 - **Voice page.** A voice-assistant style web page at `/`, backed by `/converse`, which turns a spoken or typed sentence into tool calls with Amazon Nova 2 Lite. See [Voice page](#voice-page).
 - **Phone page.** A page at `/phone/` that plays a film's audio description from the phone, in step with the TV. See [Phone page](#phone-page).
 
@@ -42,7 +42,8 @@ Every setting has a default that works on a laptop. Set them as environment vari
 | `EVERYSEAT_DYNAMODB_ENDPOINT` | unset | Point the DynamoDB client at DynamoDB Local. |
 | `EVERYSEAT_ALLOWED_ORIGINS` | none | Extra browser origins (comma-separated) allowed to call the server. |
 | `EVERYSEAT_HEARTBEAT_MS` | `20000` | Relay heartbeat interval. Idle connections are dropped after three missed beats. |
-| `EVERYSEAT_REPLAY_LENS` | off | Set to `1` to send the last lens to a TV when it connects. |
+| `EVERYSEAT_REPLAY_LENS` | on | Send the latest household and lens to a TV when it connects. Set to `0` to turn it off. |
+| `EVERYSEAT_DEMO_HOUSEHOLD` | off | Set to `1` to start an empty, never-edited household with the demo people from `../fixtures/demo-household.json` (Leo, Mom, Grandpa and Dad). Without it a household starts empty and people are added on the TV or with `remember_preference`. |
 
 Browsers are accepted from `localhost`, `127.0.0.1` and `[::1]` on any port. When the server is bound to a non-loopback address, private-network and `.local` origins are accepted too. Requests with no `Origin` header (apps, scripts) are always accepted by the origin check.
 
@@ -54,7 +55,7 @@ The server is stateless: every request gets its own server and transport and a J
 | --- | --- |
 | `check_title_comfort` | `{ title, viewers? }`. Lists the flashes, sudden loud moments and scares in a title, and how each would be handled for the viewers (default: tonight's couch). The result has `structuredContent` and carries `_meta.ui.resourceUri`, which points at an inlined card (`ui://everyseat/title-comfort-<hash>.html`) that draws an intensity timeline. |
 | `set_tonight_lens` | `{ people?, settings? }`. Sets who is on the couch and, optionally, patches their settings for tonight. Saves tonight's lens and sends it to connected TVs. |
-| `remember_preference` | `{ person, settings }`. Saves a person's comfort settings. |
+| `remember_preference` | `{ person, settings }`. Saves a person's comfort settings, adding the person to the household if new, and updates the TV. |
 
 Comfort settings are `flashes` (`soften` or `off`), `loud` (`cap` or `off`), `scares` (`headsup` or `off`) and `ad` (`on` or `off`). The combined lens takes the most protective value of each across the people on the couch.
 
@@ -70,7 +71,7 @@ Open `http://127.0.0.1:8787/` after `npm run web:build`. It is a dark, landscape
 ### `POST /converse`
 
 ```json
-{ "message": "Is Tears of Steel okay for Leo tonight?", "history": [{ "role": "user", "text": "…" }, { "role": "assistant", "text": "…" }] }
+{ "message": "Is Tears of Steel okay for Sam tonight?", "history": [{ "role": "user", "text": "…" }, { "role": "assistant", "text": "…" }] }
 ```
 
 `message` is up to 1000 characters and `history` up to 20 earlier turns. The server gives Nova 2 Lite the three MCP tools and tonight's context, runs the tool calls it picks in process, and returns:
@@ -100,15 +101,16 @@ Messages are JSON objects, one per line (`\n`-terminated), so one message can sp
 
 1. The client connects to `/relay` and sends `{"t":"hello","role":"tv"|"phone"|"companion","household":"<id>"}` within 10 s.
 2. `companion` → `tv`: `lens` (people on the couch and the combined settings).
-3. `tv` → `phone`: `clock` (media time, wall clock in the relay's time, rate, title), on every play, pause, seek and stall and every 2 s.
-4. `tv` or `phone` → relay: `{"t":"sync?","c":<ms>}`; the relay answers `{"t":"sync!","c":<ms>,"s":<ms>}` with its own time. The sender keeps the probe with the shortest round trip to learn its offset from the relay's clock.
-5. `ping` is answered with `pong` at any time. The relay also sends a ping every heartbeat interval.
+3. `tv` ↔ `companion`: `household` (`{"t":"household","people":[{name,settings}],"updatedAt":<ms>}`, at most 7 people). Last writer wins by `updatedAt`: the relay keeps the latest, hands it to every other TV and companion client, saves a TV's household in the preference store, and answers an older one with the latest. A TV sends its household when it connects; one that connects to a relay holding a household gets that first, then the current lens. The MCP tool `remember_preference` pushes the household to the TVs.
+4. `tv` → `phone`: `clock` (media time, wall clock in the relay's time, rate, title), on every play, pause, seek and stall and every 2 s.
+5. `tv` or `phone` → relay: `{"t":"sync?","c":<ms>}`; the relay answers `{"t":"sync!","c":<ms>,"s":<ms>}` with its own time. The sender keeps the probe with the shortest round trip to learn its offset from the relay's clock.
+6. `ping` is answered with `pong` at any time. The relay also sends a ping every heartbeat interval.
 
 Messages route only within the sender's household.
 
 ## DynamoDB
 
-Install the optional AWS SDK packages (`npm install` does this by default) and set `EVERYSEAT_DYNAMODB_TABLE`. The table must already exist, with partition key `household` (string) and sort key `item` (string). Items are `person#<lowercase name>` (`name`, `settings`) and `tonight` (`lens`). Credentials come from the usual AWS provider chain. The people in `data/household.json` are the starting point; saved items win.
+Install the optional AWS SDK packages (`npm install` does this by default) and set `EVERYSEAT_DYNAMODB_TABLE`. The table must already exist, with partition key `household` (string) and sort key `item` (string). Items are `person#<lowercase name>` (`name`, `settings`), `meta` (`updatedAt`) and `tonight` (`lens`). Credentials come from the usual AWS provider chain. A `meta` item holds when the household last changed.
 
 To try it without an AWS account, run DynamoDB Local and point the client at it:
 

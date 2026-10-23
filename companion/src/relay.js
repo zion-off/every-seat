@@ -1,10 +1,11 @@
 import { StringDecoder } from "node:string_decoder";
 import { WebSocketServer } from "ws";
 import { z } from "zod";
-import { settingsSchema } from "./lens.js";
+import { MAX_PEOPLE, settingsSchema } from "./lens.js";
 
 /** @typedef {import("./contracts.d.ts").RelayMessage} RelayMessage */
 /** @typedef {import("./contracts.d.ts").LensMessage} LensMessage */
+/** @typedef {import("./contracts.d.ts").HouseholdMessage} HouseholdMessage */
 /** @typedef {import("./contracts.d.ts").RelayRole} RelayRole */
 
 const MAX_LINE_BYTES = 1024 * 1024;
@@ -22,6 +23,11 @@ export const relayMessageSchema = z.discriminatedUnion("t", [
   z.strictObject({ t: z.literal("ping") }),
   z.strictObject({ t: z.literal("pong") }),
   z.strictObject({ t: z.literal("lens"), people: z.array(person), settings: settingsSchema }),
+  z.strictObject({
+    t: z.literal("household"),
+    people: z.array(person).max(MAX_PEOPLE),
+    updatedAt: z.number().int().min(0),
+  }),
   z.strictObject({
     t: z.literal("clock"),
     mediaTime: z.number().min(0),
@@ -73,14 +79,18 @@ export class LineFramer {
  * @typedef {object} RelayOptions
  * @property {number} [heartbeatMs] Interval between pings; the contract allows at most 25 s.
  * @property {number} [idleMs] A client silent for this long is dropped.
- * @property {boolean} [replayLens] Send the last lens to a TV when it connects.
+ * @property {boolean} [replayLens] Send the latest household and lens to a TV when it connects.
+ * @property {(household: string, message: HouseholdMessage) => void} [onHousehold]
+ *   Called when a TV or companion client sends a household that is newer than the latest one.
  * @property {(request: import("node:http").IncomingMessage, url: URL) => boolean} [authorize]
  * @property {(message: string) => void} [log]
  */
 
 /**
  * Routes newline-delimited JSON messages between a household's TV, phones and companion.
- * Companion lens messages go to the TVs, TV clock messages go to the phones, and a phone's or
+ * Companion lens messages go to the TVs, a household from a TV or companion client goes to the
+ * others when it is newer than the latest one (last writer wins; an older one is answered with the
+ * latest), TV clock messages go to the phones, and a phone's or
  * TV's `sync?` is answered with the relay's own clock, which both sides stamp their times with.
  */
 export class Relay {
@@ -88,13 +98,16 @@ export class Relay {
   constructor(options = {}) {
     this.heartbeatMs = options.heartbeatMs ?? 20_000;
     this.idleMs = options.idleMs ?? this.heartbeatMs * 3;
-    this.replayLens = options.replayLens ?? false;
+    this.replayLens = options.replayLens ?? true;
+    this.onHousehold = options.onHousehold ?? (() => {});
     this.authorize = options.authorize ?? (() => true);
     this.log = options.log ?? (() => {});
     /** @type {Set<Connection>} */
     this.connections = new Set();
     /** @type {Map<string, LensMessage>} */
     this.lastLens = new Map();
+    /** @type {Map<string, HouseholdMessage>} */
+    this.lastHousehold = new Map();
     this.wss = new WebSocketServer({ noServer: true, perMessageDeflate: false });
     this.timer = setInterval(() => this.heartbeat(), this.heartbeatMs);
     this.timer.unref();
@@ -177,8 +190,12 @@ export class Relay {
       from.role = message.role;
       from.household = message.household;
       this.log(`relay: ${message.role} joined ${message.household}`);
-      const last = this.lastLens.get(message.household);
-      if (message.role === "tv" && this.replayLens && last) this.send(from, last);
+      if (message.role === "tv" && this.replayLens) {
+        const household = this.lastHousehold.get(message.household);
+        const lens = this.lastLens.get(message.household);
+        if (household) this.send(from, household);
+        if (lens) this.send(from, lens);
+      }
       return;
     }
     if (message.t === "ping") {
@@ -193,6 +210,8 @@ export class Relay {
 
     if (message.t === "lens" && from.role === "companion") {
       this.sendLens(from.household, message);
+    } else if (message.t === "household" && (from.role === "tv" || from.role === "companion")) {
+      this.receiveHousehold(from, message);
     } else if (message.t === "clock" && from.role === "tv") {
       this.broadcast(from.household, "phone", message);
     } else if (message.t === "sync?" && (from.role === "phone" || from.role === "tv")) {
@@ -200,6 +219,42 @@ export class Relay {
     } else {
       this.log(`relay: ignoring ${message.t} from a ${from.role}`);
     }
+  }
+
+  /**
+   * Keeps a household that is newer than the latest and passes it on to every other TV and
+   * companion client; an older or equal one is dropped, and an older one is answered with the
+   * latest so the sender catches up.
+   * @param {Connection} from
+   * @param {HouseholdMessage} message
+   */
+  receiveHousehold(from, message) {
+    const household = /** @type {string} */ (from.household);
+    const latest = this.lastHousehold.get(household);
+    if (latest && message.updatedAt <= latest.updatedAt) {
+      if (message.updatedAt < latest.updatedAt) this.send(from, latest);
+      return;
+    }
+    this.onHousehold(household, message);
+    this.sendHousehold(household, message, from);
+  }
+
+  /**
+   * Makes a household the latest and delivers it to every TV and companion client but `except`.
+   * @param {string} household
+   * @param {HouseholdMessage} message
+   * @param {Connection} [except]
+   * @returns {number} How many TVs it went to.
+   */
+  sendHousehold(household, message, except) {
+    this.lastHousehold.set(household, message);
+    let tvs = 0;
+    for (const connection of this.connections) {
+      if (connection === except || connection.household !== household) continue;
+      if (connection.role !== "tv" && connection.role !== "companion") continue;
+      if (this.send(connection, message) && connection.role === "tv") tvs += 1;
+    }
+    return tvs;
   }
 
   /**

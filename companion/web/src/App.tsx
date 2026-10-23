@@ -150,7 +150,7 @@ export function App() {
         <section className="talk" aria-label="Conversation">
           {entries.length === 0 && !setup && (
             <p className="hint">
-              Try “Is Tears of Steel okay for Leo tonight?” or “Heads-ups, but don't skip anything.”
+              Try “Add a person called Sam who wants flashes softened” or “Is Tears of Steel okay for the couch tonight?” or “Heads-ups, but don't skip anything.”
             </p>
           )}
           {setup && <p className="error">{setup}</p>}

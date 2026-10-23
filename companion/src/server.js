@@ -3,6 +3,7 @@ import os from "node:os";
 import { createApp, isAuthorized } from "./app.js";
 import { loadCatalog } from "./catalog.js";
 import { loadConfig } from "./config.js";
+import { restoreHousehold } from "./household.js";
 import { Relay } from "./relay.js";
 import { startSandbox } from "./sandbox.js";
 import { createStore } from "./store/index.js";
@@ -30,8 +31,20 @@ function phoneUrls(settings) {
 const relay = new Relay({
   heartbeatMs: config.heartbeatMs,
   replayLens: config.replayLens,
+  onHousehold: (household, message) => {
+    store.setHousehold(household, message.people, message.updatedAt).catch((error) => {
+      console.error("could not save the household", error);
+    });
+  },
   authorize: (request, url) => isAuthorized(config, request, url),
   log: (message) => console.info(message),
+});
+
+await restoreHousehold({
+  store,
+  relay,
+  household: config.household,
+  demoFile: config.demoHousehold ? config.demoHouseholdFile : undefined,
 });
 
 const server = http.createServer(createApp({ config, catalog, store, relay }));
