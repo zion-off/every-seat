@@ -2,9 +2,16 @@ import React, { useEffect, useRef } from 'react';
 import { AccessibilityInfo, StyleSheet, Text, View } from 'react-native';
 import { SenseController } from 'react-native-sensevtt';
 import { useControllerState } from '../engine/useController';
-import { COLORS } from '../styles/palette';
-import { scaleUxToDp } from '../utils/pixelUtils';
-import { CARD_Z_INDEX } from './HeadsUpCard';
+import {
+  colors,
+  layer,
+  radius,
+  safe,
+  size,
+  space,
+  type,
+  weight,
+} from '../styles/tokens';
 
 const BARS = 12;
 /** The meter spans this many dB below full volume. */
@@ -81,56 +88,56 @@ const ComfortBadges = ({ controller }: Props) => {
 const styles = StyleSheet.create({
   root: {
     position: 'absolute',
-    top: scaleUxToDp(48),
-    left: scaleUxToDp(80),
-    zIndex: CARD_Z_INDEX,
+    top: safe.y,
+    left: safe.x,
+    zIndex: layer.card,
     alignItems: 'flex-start',
   },
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: scaleUxToDp(14),
-    paddingHorizontal: scaleUxToDp(26),
-    marginBottom: scaleUxToDp(14),
-    borderRadius: scaleUxToDp(18),
-    backgroundColor: 'rgba(15, 20, 28, 0.92)',
-    borderWidth: scaleUxToDp(3),
-    borderColor: COLORS.ACCENT,
+    minHeight: size.pill,
+    paddingHorizontal: space.md,
+    marginBottom: space.xs,
+    borderRadius: radius.pill,
+    backgroundColor: colors.scrimStrong,
+    borderWidth: size.border,
+    borderColor: colors.line,
   },
   badgeDot: {
-    width: scaleUxToDp(18),
-    height: scaleUxToDp(18),
-    borderRadius: scaleUxToDp(9),
-    backgroundColor: COLORS.ACCENT,
-    marginRight: scaleUxToDp(14),
+    width: size.dot,
+    height: size.dot,
+    borderRadius: radius.pill,
+    backgroundColor: colors.accent,
+    marginRight: space.xs,
   },
   badgeText: {
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(32),
-    fontWeight: '700',
+    ...type.small,
+    color: colors.text,
+    fontWeight: weight.bold,
   },
   bars: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    height: scaleUxToDp(36),
-    marginHorizontal: scaleUxToDp(20),
+    height: size.meterBar.height,
+    marginHorizontal: space.sm,
   },
   bar: {
-    width: scaleUxToDp(10),
-    height: scaleUxToDp(36),
-    marginRight: scaleUxToDp(5),
-    borderRadius: scaleUxToDp(3),
+    width: size.meterBar.width,
+    height: size.meterBar.height,
+    marginRight: size.meterBar.gap,
+    borderRadius: size.meterBar.width / 2,
   },
   barLit: {
-    backgroundColor: COLORS.ACCENT,
+    backgroundColor: colors.accent,
   },
   barDim: {
-    backgroundColor: COLORS.TRACK,
+    backgroundColor: colors.line,
   },
   level: {
-    color: COLORS.MUTED,
-    fontSize: scaleUxToDp(30),
-    minWidth: scaleUxToDp(90),
+    ...type.small,
+    color: colors.textMuted,
+    minWidth: size.meterLevel,
   },
 });
 

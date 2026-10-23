@@ -10,18 +10,23 @@ import {
   AccessibilityInfo,
   BackHandler,
   findNodeHandle,
-  Pressable,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 import { Cue, SenseController } from 'react-native-sensevtt';
 import { useControllerState } from '../engine/useController';
-import { COLORS } from '../styles/palette';
-import { scaleUxToDp } from '../utils/pixelUtils';
-
-/** Above the dim overlay (10), the controls (30) and the couch panel (40). */
-export const CARD_Z_INDEX = 50;
+import {
+  colors,
+  layer,
+  radius,
+  safe,
+  size,
+  space,
+  type,
+  weight,
+} from '../styles/tokens';
+import Focusable from './Focusable';
 
 type Choice = 'soften' | 'watch';
 
@@ -58,29 +63,24 @@ const CardButton = ({
   onPress,
   onFocus,
   onBlur,
-}: ButtonProps) => {
-  const [focused, setFocused] = useState(false);
-  return (
-    <Pressable
-      ref={buttonRef}
-      accessible
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      accessibilityHint={hint}
-      onPress={onPress}
-      onFocus={() => {
-        setFocused(true);
-        onFocus();
-      }}
-      onBlur={() => {
-        setFocused(false);
-        onBlur();
-      }}
-      style={[styles.button, focused && styles.buttonFocused]}>
-      <Text style={styles.buttonText}>{label}</Text>
-    </Pressable>
-  );
-};
+}: ButtonProps) => (
+  <Focusable
+    ref={buttonRef}
+    accessible
+    accessibilityRole="button"
+    accessibilityLabel={label}
+    accessibilityHint={hint}
+    onPress={onPress}
+    onFocus={onFocus}
+    onBlur={onBlur}
+    style={styles.button}
+    contentStyle={(focused) => [
+      styles.buttonFill,
+      focused && styles.buttonFocused,
+    ]}>
+    <Text style={styles.buttonText}>{label}</Text>
+  </Focusable>
+);
 
 type BodyProps = {
   controller: SenseController;
@@ -196,6 +196,7 @@ const CardBody = ({ controller, cards, anchors }: BodyProps) => {
 
   return (
     <View style={styles.card} accessible={false}>
+      <View style={styles.edge} />
       <Text style={styles.title} accessibilityRole="header">
         Heads-up: {kind} is coming up
       </Text>
@@ -260,54 +261,67 @@ const HeadsUpCard = ({ controller, anchors = [] }: Props) => {
 const styles = StyleSheet.create({
   card: {
     position: 'absolute',
-    left: scaleUxToDp(80),
-    bottom: scaleUxToDp(290),
-    width: scaleUxToDp(1100),
-    padding: scaleUxToDp(32),
-    borderRadius: scaleUxToDp(24),
-    backgroundColor: COLORS.SURFACE,
-    borderWidth: scaleUxToDp(4),
-    borderColor: COLORS.ACCENT,
-    zIndex: CARD_Z_INDEX,
+    left: safe.x,
+    bottom: size.cardBottom,
+    width: size.column,
+    paddingTop: space.lg,
+    paddingBottom: space.lg,
+    paddingHorizontal: space.lg,
+    borderRadius: radius.md,
+    backgroundColor: colors.surfaceRaised,
+    borderWidth: size.border,
+    borderColor: colors.line,
+    zIndex: layer.card,
+  },
+  edge: {
+    position: 'absolute',
+    top: -size.border,
+    left: -size.border,
+    right: -size.border,
+    height: size.accentEdge,
+    borderTopLeftRadius: radius.md,
+    borderTopRightRadius: radius.md,
+    backgroundColor: colors.accent,
   },
   title: {
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(40),
-    fontWeight: '700',
+    ...type.title,
+    color: colors.text,
+    fontWeight: weight.bold,
   },
   preview: {
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(32),
-    marginTop: scaleUxToDp(14),
+    ...type.body,
+    color: colors.text,
+    marginTop: space.sm,
   },
   hint: {
-    color: COLORS.MUTED,
-    fontSize: scaleUxToDp(28),
-    marginTop: scaleUxToDp(10),
-    marginBottom: scaleUxToDp(22),
+    ...type.body,
+    color: colors.textMuted,
+    marginTop: space.xs,
+    marginBottom: space.md,
   },
   row: {
     flexDirection: 'row',
   },
   button: {
-    minWidth: scaleUxToDp(220),
+    minWidth: size.cardButton,
+    marginRight: space.md,
+  },
+  buttonFill: {
     alignItems: 'center',
-    paddingVertical: scaleUxToDp(16),
-    paddingHorizontal: scaleUxToDp(32),
-    marginRight: scaleUxToDp(24),
-    borderRadius: scaleUxToDp(16),
-    borderWidth: scaleUxToDp(5),
-    borderColor: COLORS.TRACK_SEEK,
-    backgroundColor: COLORS.BACKGROUND,
+    justifyContent: 'center',
+    minHeight: size.buttonMd,
+    paddingHorizontal: space.lg,
+    backgroundColor: colors.surface,
+    borderWidth: size.border,
+    borderColor: colors.line,
   },
   buttonFocused: {
-    borderColor: COLORS.TEXT,
-    backgroundColor: COLORS.SURFACE_FOCUSED,
+    backgroundColor: colors.surfaceFocused,
   },
   buttonText: {
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(34),
-    fontWeight: '700',
+    ...type.body,
+    color: colors.text,
+    fontWeight: weight.bold,
   },
 });
 

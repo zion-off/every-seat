@@ -6,13 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {
-  BackHandler,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import { BackHandler, StyleSheet, Text, View } from 'react-native';
 import { Cue, loadSenseVtt, VegaVideoSurface } from 'react-native-sensevtt';
 import { DimOverlay } from 'react-native-sensevtt/react';
 import ComfortBadges from '../components/ComfortBadges';
@@ -26,7 +20,15 @@ import { useController } from '../engine/useController';
 import { usePlayer } from '../media/usePlayer';
 import { startClockMessages } from '../relay/clockMessages';
 import { RelayContext } from '../relay/RelayContext';
-import { COLORS } from '../styles/palette';
+import {
+  colors,
+  layer,
+  radius,
+  safe,
+  space,
+  type,
+  weight,
+} from '../styles/tokens';
 
 type Props = {
   /** Media folder of the film. */
@@ -48,8 +50,6 @@ const PlayerScreen = ({
   onToggle,
   onExit,
 }: Props) => {
-  const { width } = useWindowDimensions();
-  const scale = width / 1920;
   const { adapter, loaded, surfaceOn, durationMs, error } = usePlayer(
     manifestUrl(title),
     audioLabelFor(lens),
@@ -189,9 +189,7 @@ const PlayerScreen = ({
           onClose={closePanel}
         />
       )}
-      {error && (
-        <Text style={[styles.error, { fontSize: 36 * scale }]}>{error}</Text>
-      )}
+      {error && <Text style={styles.error}>{error}</Text>}
     </View>
   );
 };
@@ -199,17 +197,24 @@ const PlayerScreen = ({
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: COLORS.BLACK,
+    backgroundColor: colors.black,
   },
   surface: {
     ...StyleSheet.absoluteFillObject,
   },
   error: {
+    ...type.body,
     position: 'absolute',
-    top: 40,
-    left: 40,
-    color: COLORS.ACCENT,
-    zIndex: 20,
+    top: safe.y,
+    left: safe.x,
+    paddingVertical: space.xs,
+    paddingHorizontal: space.md,
+    borderRadius: radius.md,
+    overflow: 'hidden',
+    backgroundColor: colors.scrimStrong,
+    color: colors.accent,
+    fontWeight: weight.bold,
+    zIndex: layer.card,
   },
 });
 

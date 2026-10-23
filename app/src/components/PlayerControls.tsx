@@ -1,15 +1,23 @@
 import { SeekBar, SeekBarHandle } from '@amazon-devices/kepler-ui-components';
 import { useTVEventHandler } from '@amazon-devices/react-native-kepler';
 import React, { RefObject, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 import { Cue, SenseController, VegaAdapter } from 'react-native-sensevtt';
 import { formatClock } from '../catalog';
 import { LensSettings } from '../engine/types';
 import { buildHeatmap } from '../lens/heatmap';
-import { COLORS, HEAT } from '../styles/palette';
-import { scaleUxToDp } from '../utils/pixelUtils';
-
-export const CONTROLS_Z_INDEX = 30;
+import {
+  colors,
+  heat,
+  layer,
+  radius,
+  safe,
+  size,
+  space,
+  type,
+  weight,
+} from '../styles/tokens';
+import Focusable from './Focusable';
 
 const HIDE_AFTER_MS = 6000;
 const SCRUB_CANCEL_MS = 4000;
@@ -66,7 +74,6 @@ const PlayerControls = ({
   const [positionMs, setPositionMs] = useState(0);
   const [thumbMs, setThumbMs] = useState(0);
   const [scrubbing, setScrubbing] = useState(false);
-  const [chipFocused, setChipFocused] = useState(false);
 
   const heatmap = useMemo(
     () => buildHeatmap(cues, lens, durationMs),
@@ -183,58 +190,62 @@ const PlayerControls = ({
 
   return (
     <Animated.View style={[styles.root, { opacity }]} pointerEvents="box-none">
-      <View style={styles.row}>
-        <Text style={styles.name} numberOfLines={1}>
-          {name}
-        </Text>
-        <Text style={styles.time} accessibilityLiveRegion="none">
-          {scrubbing ? 'Jump to ' : ''}
-          {formatClock(shownMs / 1000)} / {formatClock(durationMs / 1000)}
-        </Text>
-      </View>
-      <SeekBar
-        ref={seekRef}
-        currentValue={positionMs}
-        totalValue={Math.max(1, durationMs)}
-        step={STEP_MS}
-        markers={heatmap.markers}
-        segmentColors={heatmap.segmentColors}
-        barTrackColor={COLORS.TRACK}
-        onValueChange={onValueChange}
-        onPress={activate}
-        onPlayPause={activate}
-        disabledWhenNotFocused
-        hasTVPreferredFocus
-        accessibilityLabel={`Seek bar. ${formatClock(
-          shownMs / 1000,
-        )} of ${formatClock(durationMs / 1000)}. Left and right to jump`}
-      />
-      <View style={styles.row}>
-        <View style={styles.legend}>
-          <View
-            style={[
-              styles.dot,
-              {
-                backgroundColor:
-                  heatmap.count > 0 ? HEAT[2].base : COLORS.TRACK_SEEK,
-              },
-            ]}
-          />
-          <Text style={styles.legendText}>{momentsLabel(heatmap.count)}</Text>
-        </View>
-        <Pressable
-          ref={chipRef}
-          accessible
-          accessibilityRole="button"
-          accessibilityLabel={`On the couch: ${couchLabel}. Change who is on the couch`}
-          onPress={onOpenCouch}
-          onFocus={() => setChipFocused(true)}
-          onBlur={() => setChipFocused(false)}
-          style={[styles.chip, chipFocused && styles.chipFocused]}>
-          <Text style={styles.chipText} numberOfLines={1}>
-            Couch: {couchLabel}
+      <View style={styles.panel}>
+        <View style={styles.row}>
+          <Text style={styles.name} numberOfLines={1}>
+            {name}
           </Text>
-        </Pressable>
+          <Text style={styles.time} accessibilityLiveRegion="none">
+            {scrubbing ? 'Jump to ' : ''}
+            {formatClock(shownMs / 1000)} / {formatClock(durationMs / 1000)}
+          </Text>
+        </View>
+        <SeekBar
+          ref={seekRef}
+          currentValue={positionMs}
+          totalValue={Math.max(1, durationMs)}
+          step={STEP_MS}
+          markers={heatmap.markers}
+          segmentColors={heatmap.segmentColors}
+          barTrackColor={colors.line}
+          onValueChange={onValueChange}
+          onPress={activate}
+          onPlayPause={activate}
+          disabledWhenNotFocused
+          hasTVPreferredFocus
+          accessibilityLabel={`Seek bar. ${formatClock(
+            shownMs / 1000,
+          )} of ${formatClock(durationMs / 1000)}. Left and right to jump`}
+        />
+        <View style={styles.row}>
+          <View style={styles.legend}>
+            <View
+              style={[
+                styles.dot,
+                {
+                  backgroundColor:
+                    heatmap.count > 0 ? heat[2].base : colors.textMuted,
+                },
+              ]}
+            />
+            <Text style={styles.legendText}>{momentsLabel(heatmap.count)}</Text>
+          </View>
+          <Focusable
+            ref={chipRef}
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel={`On the couch: ${couchLabel}. Change who is on the couch`}
+            onPress={onOpenCouch}
+            style={styles.chip}
+            contentStyle={(focused) => [
+              styles.chipFill,
+              focused && styles.chipFocused,
+            ]}>
+            <Text style={styles.chipText} numberOfLines={1}>
+              Couch: {couchLabel}
+            </Text>
+          </Focusable>
+        </View>
       </View>
     </Animated.View>
   );
@@ -243,62 +254,67 @@ const PlayerControls = ({
 const styles = StyleSheet.create({
   root: {
     position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    paddingHorizontal: scaleUxToDp(80),
-    paddingTop: scaleUxToDp(40),
-    paddingBottom: scaleUxToDp(44),
-    backgroundColor: 'rgba(10, 14, 20, 0.78)',
-    zIndex: CONTROLS_Z_INDEX,
+    left: safe.x,
+    right: safe.x,
+    bottom: safe.y,
+    zIndex: layer.controls,
+  },
+  panel: {
+    paddingVertical: space.md,
+    paddingHorizontal: space.lg,
+    borderRadius: radius.lg,
+    backgroundColor: colors.scrimStrong,
+    borderWidth: size.border,
+    borderColor: colors.line,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginVertical: scaleUxToDp(10),
+    marginVertical: space.xs,
   },
   name: {
+    ...type.title,
     flex: 1,
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(36),
-    fontWeight: '700',
+    color: colors.text,
+    fontWeight: weight.bold,
   },
   time: {
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(32),
+    ...type.body,
+    color: colors.textMuted,
   },
   legend: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   dot: {
-    width: scaleUxToDp(20),
-    height: scaleUxToDp(20),
-    borderRadius: scaleUxToDp(10),
-    marginRight: scaleUxToDp(14),
+    width: size.dot,
+    height: size.dot,
+    borderRadius: radius.pill,
+    marginRight: space.xs,
   },
   legendText: {
-    color: COLORS.MUTED,
-    fontSize: scaleUxToDp(30),
+    ...type.body,
+    color: colors.textMuted,
   },
   chip: {
-    paddingVertical: scaleUxToDp(12),
-    paddingHorizontal: scaleUxToDp(28),
-    borderRadius: scaleUxToDp(14),
-    borderWidth: scaleUxToDp(4),
-    borderColor: COLORS.TRACK_SEEK,
-    backgroundColor: COLORS.SURFACE,
-    maxWidth: scaleUxToDp(760),
+    maxWidth: size.chip,
+  },
+  chipFill: {
+    justifyContent: 'center',
+    minHeight: size.pill,
+    paddingHorizontal: space.md,
+    backgroundColor: colors.surfaceRaised,
+    borderWidth: size.border,
+    borderColor: colors.line,
   },
   chipFocused: {
-    borderColor: COLORS.TEXT,
-    backgroundColor: COLORS.SURFACE_FOCUSED,
+    backgroundColor: colors.surfaceFocused,
   },
   chipText: {
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(30),
-    fontWeight: '600',
+    ...type.body,
+    color: colors.text,
+    fontWeight: weight.bold,
   },
 });
 
