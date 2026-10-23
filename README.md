@@ -166,7 +166,7 @@ adapter) and the pipeline reads and writes cue files with the Python package.
 | `companion/` | MCP server, relay, voice page and phone audio-description page (Node 22) |
 | `tools/media/` | Film download, HLS and comfort audio build, media server, clip export |
 | `fixtures/` | Hand-written sample data: cue files, recipes, demo household |
-| `generated/` | Pipeline output: cue files, recipes, run logs and audio description clips (`ad/`) |
+| `generated/` | Pipeline output: cue files, recipes, run logs and audio description clips (`ad/`); hand corrections are recorded in each run log |
 
 ## Credits and licenses
 
