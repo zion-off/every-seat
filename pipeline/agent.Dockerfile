@@ -24,7 +24,7 @@ WORKDIR /app
 
 # Dependencies first, so a code change does not reinstall them. The SenseVTT library comes from
 # its public repository as an archive, since the image has no git.
-RUN pip install "sensevtt @ https://github.com/zion-off/sensevtt/archive/refs/heads/main.zip#subdirectory=python"
+RUN pip install "sensevtt @ https://github.com/zion-off/sensevtt/archive/28e88f087f7ac0541676aa65919b37d99227bb75.zip#subdirectory=python"
 
 COPY pyproject.toml ./
 RUN python -c "import tomllib; p = tomllib.load(open('pyproject.toml', 'rb'))['project']; \

@@ -1,4 +1,4 @@
 # The SenseVTT library (cue file reader, validator and writer), from its public repository.
 # Install it before the pipeline, from this directory:
 #   .venv/bin/pip install -r requirements-local.txt
-sensevtt @ git+https://github.com/zion-off/sensevtt.git@main#subdirectory=python
+sensevtt @ git+https://github.com/zion-off/sensevtt.git@28e88f087f7ac0541676aa65919b37d99227bb75#subdirectory=python
