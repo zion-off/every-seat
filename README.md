@@ -1,6 +1,6 @@
 # Every Seat
 
-Same movie. Every seat.
+Movie night for the whole couch.
 
 Every Seat is comfort for everyone on the couch. It is a Fire TV (Vega OS) app that pre-analyzes a
 film and then, for each person watching, can:
