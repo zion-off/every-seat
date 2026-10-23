@@ -18,7 +18,7 @@
   },
   "6": {
     "write": [
-      "Sintel holds food. She gives it to Scales, who eats it."
+      "Sintel holds a bowl of food. She gives it to Scales, who eats it."
     ]
   },
   "7": {
@@ -29,7 +29,7 @@
     "shorten": [
       "Sintel crouches in a dark hollow with Scales pressed against her chest. She strokes his small pale head and whispers softly to him while snow blows past the opening.",
       "Sintel crouches in a dark hollow, holding Scales to her chest. This shows her stroking his small pale head while snow blows past.",
-      "Sintel crouches in a dark hollow, holding Scales to her chest. She strokes his small pale head as snow blows past."
+      "Sintel crouches in a dark hollow and holds Scales close as snow blows past."
     ]
   },
   "8": {
@@ -77,6 +77,36 @@
         {
           "at_s": 312.0,
           "text": "Scales climbs over a stone wall."
+        }
+      ]
+    ]
+  },
+  "13": {
+    "write": [
+      [
+        {
+          "at_s": 324.0,
+          "text": "Sintel stands at the edge of a rocky pit."
+        },
+        {
+          "at_s": 328.4,
+          "text": "She grips a rope and starts to climb."
+        },
+        {
+          "at_s": 330.6,
+          "text": "A rock slides loose under her hand."
+        },
+        {
+          "at_s": 332.2,
+          "text": "Scales flaps up beside her with a rope in its claws."
+        },
+        {
+          "at_s": 335.4,
+          "text": "Sintel reaches a narrow ledge and rests."
+        },
+        {
+          "at_s": 337.6,
+          "text": "She pulls herself over the edge."
         }
       ]
     ]
@@ -232,9 +262,69 @@
       "Sintel calls out for Scales. She looks around, searching for the baby dragon."
     ]
   },
+  "27": {
+    "write": [
+      [
+        {
+          "at_s": 688.0,
+          "text": "Old man retaliates with weapon."
+        },
+        {
+          "at_s": 701.0,
+          "text": "Sintel runs bamboo forest quickly."
+        }
+      ],
+      [
+        {
+          "at_s": 688.0,
+          "text": "Sintel jumps into a new place."
+        },
+        {
+          "at_s": 701.0,
+          "text": "The dragon's wings stir up a strong gust of wind."
+        },
+        {
+          "at_s": 711.0,
+          "text": "Sintel and the dragon battle above the clouds."
+        }
+      ]
+    ]
+  },
   "28": {
     "write": [
       "Sintel walks through a rocky landscape. She stops and looks around. Scales lies injured on the ground."
+    ]
+  },
+  "29": {
+    "write": [
+      [
+        {
+          "at_s": 745.0,
+          "text": "The scene transitions to white fog."
+        }
+      ],
+      [
+        {
+          "at_s": 745.0,
+          "text": "A lens with a circular design is visible."
+        }
+      ],
+      [
+        {
+          "at_s": 745.0,
+          "text": "Sintel steps into a snowy clearing."
+        }
+      ]
+    ]
+  },
+  "30": {
+    "write": [
+      [
+        {
+          "at_s": 774.0,
+          "text": "Sintel walks slowly along a narrow ridge above the valley while cold wind pulls at her cloak and loose stones slide away from under her boots as she looks for a safe path down."
+        }
+      ]
     ]
   },
   "32": {
