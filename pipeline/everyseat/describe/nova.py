@@ -18,10 +18,12 @@ from everyseat.describe.writers import (
     NO_SUBMIT_RETRIES,
     Request,
     Usage,
+    model_error_reason,
 )
 from everyseat.detectors import sheet
 
 MAX_MODEL_CALLS = MAX_ANSWERS + NO_SUBMIT_RETRIES  # one call per answer, and per reminder
+MAX_TOKENS = 2000  # room for several items per answer
 MAX_ITEMS = 8  # items one answer may have
 EARLIER_SHOWN = 8  # the model is shown this many of the latest descriptions; the review sees all
 
@@ -171,7 +173,7 @@ class NovaWriter:
     def __init__(self, choice: str = "nova-pro"):
         self.name = model.model_id(choice)
         self.usage = Usage()
-        self._model = model.bedrock_model(choice, max_tokens=700, temperature=0.3)
+        self._model = model.bedrock_model(choice, max_tokens=MAX_TOKENS, temperature=0.3)
 
     def write(self, request: Request) -> list[Item] | None:
         content = [
@@ -249,12 +251,22 @@ class NovaWriter:
             conversation_manager=NullConversationManager(),
             hooks=[watch],
         )
-        agent(content)
+        failure: list[str] = []
+
+        def run(message: object) -> None:
+            # One window must never end the film: a failed call is handled like no submission.
+            try:
+                agent(message)
+            except Exception as exc:  # strands raises many kinds, e.g. MaxTokensReachedException
+                failure[:] = [f"{type(exc).__name__}: {exc}"]
+                note(f"    model error: {failure[0]}")
+
+        run(content)
         for retry in range(1, NO_SUBMIT_RETRIES + 1):
             if answers or rejected:
                 break
             note(f"    the model did not call submit_description; reminding it ({retry}/2)")
-            agent(NO_SUBMIT_REPLY)
+            run(NO_SUBMIT_REPLY)
         usage = agent.event_loop_metrics.accumulated_usage
         self.usage.input_tokens += int(usage.get("inputTokens", 0))
         self.usage.output_tokens += int(usage.get("outputTokens", 0))
@@ -262,6 +274,8 @@ class NovaWriter:
         if not answers:
             if rejected:
                 raise gave_up(len(rejected), rejected[-1])
+            if failure:
+                raise Rejected(model_error_reason(failure[0]))
             raise Rejected(NO_SUBMIT_REASON)
         return answers[-1]
 

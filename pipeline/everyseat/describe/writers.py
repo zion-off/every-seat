@@ -14,6 +14,12 @@ from everyseat.describe.subtitles import Line, Window
 STUB_ITEMS = 3  # items a placeholder answer has at most
 NO_SUBMIT_RETRIES = 2  # reminders after an answer that never called the submit tool
 NO_SUBMIT_REASON = "no description (model did not submit)"
+
+
+def model_error_reason(error: str) -> str:
+    return f"no description (model error: {error})"
+
+
 NO_SUBMIT_REPLY = "Call submit_description with your items, or with nothing_to_describe=true."
 MAX_ANSWERS = 5  # answers a writer may give for one window, the first and its corrections
 
@@ -88,6 +94,7 @@ class Script:
     shorten: dict[int, list[str | None]] = field(default_factory=dict)
 
 
+MODEL_ERROR = "<model_error>"  # prefix of a scripted answer in which the model call fails
 NO_SUBMIT = "<no_submit>"  # a scripted answer in which the model never calls the tool
 
 
@@ -96,6 +103,8 @@ def _answer(given: object, where: str) -> list[Item] | str | None:
         return given
     if given == {"no_submit": True}:
         return NO_SUBMIT
+    if isinstance(given, dict) and set(given) == {"model_error"}:
+        return f"{MODEL_ERROR}{given['model_error']}"
     if isinstance(given, list) and given:
         try:
             return [Item(float(g["at_s"]), str(g["text"])) for g in given]
@@ -199,10 +208,14 @@ class StubWriter:
             self.usage.calls += 1
             if given is None:
                 return None
-            if given == NO_SUBMIT:
+            failing = isinstance(given, str) and given.startswith(MODEL_ERROR)
+            if given == NO_SUBMIT or failing:
                 silent += 1
+                error = given[len(MODEL_ERROR) :] if failing else ""
+                if failing:
+                    request.note(f"    model error: {error}")
                 if silent > NO_SUBMIT_RETRIES:
-                    raise Rejected(NO_SUBMIT_REASON)
+                    raise Rejected(model_error_reason(error) if failing else NO_SUBMIT_REASON)
                 request.note(
                     f"    the model did not call submit_description; reminding it "
                     f"({silent}/{NO_SUBMIT_RETRIES})"
