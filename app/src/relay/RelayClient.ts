@@ -12,6 +12,13 @@ export interface LensMessage {
   settings: LensSettings;
 }
 
+/** Both directions: everyone in the household; the latest `updatedAt` wins. */
+export interface HouseholdMessage {
+  t: 'household';
+  people: LensPerson[];
+  updatedAt: number;
+}
+
 /** The relay contract allows at most 25 s between pings. */
 const PING_MS = 20000;
 /** A link that has said nothing for this long is dropped and rebuilt. */
@@ -56,7 +63,7 @@ export class LineFramer {
 const isOneOf = (value: unknown, allowed: string[]): boolean =>
   typeof value === 'string' && allowed.includes(value);
 
-const readSettings = (value: any): LensSettings | null =>
+export const readSettings = (value: any): LensSettings | null =>
   value &&
   isOneOf(value.flashes, ['soften', 'off']) &&
   isOneOf(value.loud, ['cap', 'off']) &&
@@ -94,10 +101,36 @@ export const readLensMessage = (value: any): LensMessage | null => {
   return { t: 'lens', people, settings };
 };
 
+/** A household message with valid people and a timestamp, or null. */
+export const readHouseholdMessage = (value: any): HouseholdMessage | null => {
+  if (
+    !value ||
+    value.t !== 'household' ||
+    !Array.isArray(value.people) ||
+    !Number.isFinite(value.updatedAt)
+  ) {
+    return null;
+  }
+  const people: LensPerson[] = [];
+  for (const entry of value.people) {
+    const settings = readSettings(entry?.settings);
+    if (
+      typeof entry?.name !== 'string' ||
+      entry.name.trim() === '' ||
+      !settings
+    ) {
+      return null;
+    }
+    people.push({ name: entry.name.trim(), settings });
+  }
+  return { t: 'household', people, updatedAt: Math.round(value.updatedAt) };
+};
+
 type Options = {
   url: string;
   household: string;
   onLens: (message: LensMessage) => void;
+  onHousehold: (message: HouseholdMessage) => void;
   onStatus?: (connected: boolean) => void;
 };
 
@@ -214,6 +247,14 @@ export class RelayClient {
       if (Number.isFinite(json.c) && Number.isFinite(json.s)) {
         this.onSyncReply(json.c, json.s);
       }
+    } else if (json?.t === 'household') {
+      const household = readHouseholdMessage(json);
+      if (household) {
+        console.info('relay', 'household', household.people.length);
+        this.options.onHousehold(household);
+      } else {
+        console.info('relay', 'ignored an invalid household message');
+      }
     } else if (json?.t === 'lens') {
       const lens = readLensMessage(json);
       if (lens) {
@@ -223,6 +264,15 @@ export class RelayClient {
         console.info('relay', 'ignored an invalid lens message');
       }
     }
+  }
+
+  /** Sends the household to the relay; it is dropped when the link is down, and sent again on connecting. */
+  sendHousehold(message: HouseholdMessage): boolean {
+    if (!this.ws || this.ws.readyState !== 1) {
+      return false;
+    }
+    this.send(message as unknown as Record<string, unknown>);
+    return true;
   }
 
   private send(message: Record<string, unknown>) {
