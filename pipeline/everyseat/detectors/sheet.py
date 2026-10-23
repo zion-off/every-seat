@@ -47,6 +47,27 @@ def frame_at(media: Path, time: float, tile_width: int) -> Image.Image:
     return Image.open(io.BytesIO(data)).convert("RGB")
 
 
+def tile_frames(
+    frames: Sequence[Image.Image], labels: Sequence[str], *, columns: int = 4
+) -> Image.Image:
+    """Tile `frames` (all the size of the first) in reading order, each with its label."""
+    if not frames:
+        raise ValueError("no frames to show")
+    width, height = frames[0].size
+    columns = max(1, min(columns, len(frames)))
+    rows = -(-len(frames) // columns)
+    sheet = Image.new("RGB", (columns * width, rows * height), "black")
+    font = ImageFont.load_default(size=max(12, width // 20))
+    for index, (frame, text) in enumerate(zip(frames, labels, strict=True)):
+        x, y = (index % columns) * width, (index // columns) * height
+        sheet.paste(frame.resize((width, height)), (x, y))
+        draw = ImageDraw.Draw(sheet)
+        left, top, right, bottom = draw.textbbox((x + LABEL_PAD, y + LABEL_PAD), text, font=font)
+        draw.rectangle((left - 2, top - 2, right + 2, bottom + 2), fill="black")
+        draw.text((x + LABEL_PAD, y + LABEL_PAD), text, fill="white", font=font)
+    return sheet
+
+
 def contact_sheet(
     media: Path,
     times: Sequence[float],
@@ -64,20 +85,7 @@ def contact_sheet(
     if not times:
         raise ValueError("no times to show")
     frames = [frame_at(media, t, tile_width) for t in times]
-    width, height = frames[0].size
-    columns = max(1, min(columns, len(frames)))
-    rows = -(-len(frames) // columns)
-    sheet = Image.new("RGB", (columns * width, rows * height), "black")
-    font = ImageFont.load_default(size=max(12, tile_width // 20))
-    for index, (frame, time) in enumerate(zip(frames, times, strict=True)):
-        x, y = (index % columns) * width, (index // columns) * height
-        sheet.paste(frame.resize((width, height)), (x, y))
-        draw = ImageDraw.Draw(sheet)
-        text = label(time + label_offset)
-        left, top, right, bottom = draw.textbbox((x + LABEL_PAD, y + LABEL_PAD), text, font=font)
-        draw.rectangle((left - 2, top - 2, right + 2, bottom + 2), fill="black")
-        draw.text((x + LABEL_PAD, y + LABEL_PAD), text, fill="white", font=font)
-    return sheet
+    return tile_frames(frames, [label(t + label_offset) for t in times], columns=columns)
 
 
 def jpeg_bytes(image: Image.Image, quality: int = 80) -> bytes:
