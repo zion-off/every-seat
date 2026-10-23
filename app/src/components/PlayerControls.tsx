@@ -239,7 +239,7 @@ const PlayerControls = ({
             ref={chipRef}
             accessible
             accessibilityRole="button"
-            accessibilityLabel={`On the couch: ${couchLabel}. Change who is on the couch`}
+            accessibilityLabel={`On the couch: ${couchLabel}. Change couch`}
             onPress={onOpenCouch}
             radius={radius.md}
             style={styles.chip}
@@ -247,9 +247,9 @@ const PlayerControls = ({
               styles.couch,
               focused && styles.couchFocused,
             ]}>
-            <Text style={styles.couchLabel}>
-              {people.length > 0 ? 'On the couch' : 'Nobody on the couch yet'}
-            </Text>
+            {people.length === 0 && (
+              <Text style={styles.couchLabel}>Nobody on the couch yet</Text>
+            )}
             {people.map((person) => (
               <View key={person.id} style={styles.person}>
                 <Avatar name={person.name} muted small />
