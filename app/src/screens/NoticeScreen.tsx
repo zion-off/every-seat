@@ -3,7 +3,6 @@ import React, { useEffect, useRef } from 'react';
 import { findNodeHandle, StyleSheet, Text, View } from 'react-native';
 import Backdrop from '../components/Backdrop';
 import Button from '../components/Button';
-import Mark from '../components/Mark';
 import {
   ABOUT_DISCLAIMER,
   ABOUT_SUMMARY,
@@ -37,11 +36,6 @@ const NoticeScreen = ({ mode, onDone }: Props) => {
     <Backdrop>
       <View style={styles.layout}>
         <View style={styles.column}>
-          {about && (
-            <View style={styles.mark}>
-              <Mark size={size.markAbout} />
-            </View>
-          )}
           <Text style={styles.title} accessibilityRole="header">
             {about ? 'About Every Seat' : 'Before you start'}
           </Text>
@@ -83,42 +77,33 @@ const NoticeScreen = ({ mode, onDone }: Props) => {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     paddingHorizontal: safe.x,
-    paddingVertical: safe.y,
+    paddingTop: safe.y + space.xxl + space.xl,
+    paddingBottom: safe.y,
   },
   column: {
     width: size.readable,
-    alignItems: 'center',
-  },
-  mark: {
-    marginBottom: space.lg,
   },
   title: {
     ...type.display,
     color: colors.text,
     fontWeight: weight.bold,
-    textAlign: 'center',
     marginBottom: space.md,
   },
   lead: {
     ...type.body,
     color: colors.text,
-    textAlign: 'center',
     marginBottom: space.md,
   },
   heading: {
     ...type.title,
     color: colors.text,
     fontWeight: weight.bold,
-    textAlign: 'center',
     marginBottom: space.sm,
   },
   note: {
     ...type.small,
     color: colors.textMuted,
-    textAlign: 'center',
     marginBottom: space.sm,
   },
   action: {
