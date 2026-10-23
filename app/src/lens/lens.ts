@@ -55,6 +55,18 @@ export const describeLens = (lens: LensSettings): string[] => {
 export const couchNames = (people: Person[]): string =>
   people.length === 0 ? 'Nobody yet' : people.map((p) => p.name).join(', ');
 
+const INTENSITY_WORDS = [
+  'mild',
+  'moderate',
+  'strong',
+  'intense',
+  'very intense',
+];
+
+/** A plain word for an intensity from 1 to 5, so a number never has to be explained. */
+export const intensityWord = (intensity: number): string =>
+  INTENSITY_WORDS[Math.min(Math.max(Math.round(intensity), 1), 5) - 1];
+
 export interface CueSummary {
   flashes: number;
   loud: number;

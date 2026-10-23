@@ -71,7 +71,7 @@ Every focusable element is a `Focusable` (or a themed `Button`, which wraps the 
 
 **Films.**
 - Top bar: logo mark and "Every Seat" on the left; on the right a pill "On the couch: names" and, beside it, a pill button "Change couch" of exactly the same size that goes back to the couch screen.
-- Hero: the film's still fills the right of the hero area and fades into the background on its left. On the left: the title at `display`, the byline and length at `body`, then the comfort summary, one pill per kind of moment this couch is protected from ("2 flashes", "1 loud sound", "3 scares") with the strongest intensity, or "Nothing to soften for this couch". Films that have not been analysed say so.
+- Hero: the film's still fills the right of the hero area and fades into the background on its left. On the left: the title at `display`, the byline and length at `body`, then the comfort summary, one pill per kind of moment this couch is protected from ("2 flashes", "1 loud sound", "3 scares") and a last pill with the strongest intensity as a word ("Strongest: intense"; the scale is mild, moderate, strong, intense, very intense), or "Nothing to soften for this couch". Films that have not been analysed say so.
 - Row: one row of 16:9 stills at 408 x 230 with the name at `body` below. Focus moves the hero. The row fits inside the safe area; a longer row scrolls with the focused tile kept visible.
 - Credit line at the bottom in `small`.
 - Back from a film returns to the same tile.

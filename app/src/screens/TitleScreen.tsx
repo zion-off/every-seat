@@ -9,7 +9,7 @@ import Mark from '../components/Mark';
 import Pill, { PillButton } from '../components/Pill';
 import { cuesUrl } from '../config';
 import { LensSettings } from '../engine/types';
-import { CueSummary, summarizeCues } from '../lens/lens';
+import { CueSummary, intensityWord, summarizeCues } from '../lens/lens';
 import {
   colors,
   heat,
@@ -154,7 +154,7 @@ const TitleScreen = ({
               ))}
               {heroSummary !== null && heroSummary.strongest > 0 && (
                 <Pill
-                  label={`Strongest ${heroSummary.strongest} of 5`}
+                  label={`Strongest: ${intensityWord(heroSummary.strongest)}`}
                   dot={heat[heroSummary.strongest - 1].base}
                 />
               )}
