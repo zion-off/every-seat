@@ -67,6 +67,8 @@ const App = () => {
   // The person being edited (null for a new one) and the screen the editor leaves to.
   const [editing, setEditing] = useState<string | null>(null);
   const [editorBack, setEditorBack] = useState<Route>('couch');
+  // The card that takes focus back on the couch screen after the editor closes.
+  const [lastEdited, setLastEdited] = useState<string | undefined>();
 
   const householdRef = useRef(household);
   householdRef.current = household;
@@ -277,6 +279,7 @@ const App = () => {
 
   const openEditor = useCallback((id: string | null, back: Route) => {
     setEditing(id);
+    setLastEdited(id ?? undefined);
     setEditorBack(back);
     setRoute('editor');
   }, []);
@@ -295,6 +298,7 @@ const App = () => {
           ? [...current, person]
           : current.map((p, i) => (i === at ? person : p)),
       );
+      setLastEdited(person.id);
       if (at === -1) {
         setCouch((prev) => [...prev, person.id]);
       } else if (editing !== person.id) {
@@ -360,6 +364,7 @@ const App = () => {
               onAbout={() => setRoute('about')}
               onAdd={() => openEditor(null, 'couch')}
               onEdit={(id) => openEditor(id, 'couch')}
+              focusId={lastEdited}
             />
           )}
           {route === 'titles' && (
