@@ -4,7 +4,7 @@ import {
 } from '@amazon-devices/kepler-ui-components';
 import React, { forwardRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { focus, radius } from '../styles/tokens';
+import { focus, layer, radius } from '../styles/tokens';
 import { FocusRing, useFocusMotion } from './Focusable';
 
 /** The KUIC button, themed from the tokens and drawn with the shared focus outline and glow. */
@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   raised: {
-    zIndex: 1,
+    zIndex: layer.raised,
+    elevation: layer.raised,
   },
 });
 

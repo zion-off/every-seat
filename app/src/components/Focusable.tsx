@@ -15,7 +15,13 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { colors, focus, motion, radius as radii } from '../styles/tokens';
+import {
+  colors,
+  focus,
+  layer,
+  motion,
+  radius as radii,
+} from '../styles/tokens';
 
 /** Drives the focus animation: one 0..1 value on the native driver, plus the plain focused flag. */
 export const useFocusMotion = (scale: number) => {
@@ -172,7 +178,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   raised: {
-    zIndex: 1,
+    zIndex: layer.raised,
+    elevation: layer.raised,
   },
   content: {
     flexGrow: 1,

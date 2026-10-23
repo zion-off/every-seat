@@ -80,6 +80,8 @@ export const focus = {
 };
 
 export const layer = {
+  /** A focused element, above its neighbours so its outline and halo are never covered. */
+  raised: 1,
   dim: 10,
   controls: 30,
   panel: 40,

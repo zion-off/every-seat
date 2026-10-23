@@ -57,6 +57,7 @@ Every focusable element is a `Focusable` (or a themed `Button`, which wraps the 
 - Scale to `1.05` for tiles and `1.04` for buttons, chips and the seek bar, 150 ms.
 - A 3 px amber outline sits 4 px outside the element, drawn on its own layer so it can fade without changing layout.
 - A faint amber halo (`glow`) sits behind the outline and fades out within 14 px.
+- The focused element is raised above its neighbours (zIndex and elevation), so its outline and halo are never covered by a tile beside it.
 - Resting elements have a quiet `line` outline or none; they never use amber, so amber always means "here".
 - A selected (not focused) element shows a filled amber check or dot, never an outline.
 - Layouts leave 16 px of room around every focusable for the outline and scale.
