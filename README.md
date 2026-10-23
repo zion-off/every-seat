@@ -131,8 +131,8 @@ else works without them. All settings are in [companion/README.md](companion/REA
 ### 5. Open the phone page
 
 On a phone on the same Wi-Fi, open the `phone page:` address from the companion's log, for example
-`http://192.168.1.20:8787/phone/`. Tap **Start** once (that turns on audio), set Auto-Lock to Never
-so the screen stays on, and turn the volume up. Then play a film on the TV: the page follows it live,
+`http://192.168.1.20:8787/phone/`. Tap **Start** once (that turns on audio), set the phone's screen
+not to lock while you watch, and turn the volume up. Then play a film on the TV: the page follows it live,
 through play, pause and seek, and speaks the audio description in step. Listen through the phone's
 speaker or any earphones. The audio description clips for Sintel are in
 `generated/ad/`; `tools/media/export_ad.py` makes more from `everyseat describe` output.
