@@ -109,7 +109,9 @@ scripts/deploy.sh        # Release build, then installs and launches on the runn
 ```
 
 Or skip the build: install the prebuilt `.vpkg` from the GitHub Releases page (see Releases) with
-`vega run-app everyseat-app_aarch64.vpkg`. Details are in [app/README.md](app/README.md).
+`vega run-app everyseat-app_aarch64.vpkg com.everyseat.app.main`, run from the folder you downloaded
+it to (outside `app/`, `vega run-app` needs the app id to launch it). Details are in
+[app/README.md](app/README.md).
 
 ### 4. Start the companion
 
