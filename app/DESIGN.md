@@ -28,7 +28,7 @@ Derived from the logo: five dark navy armchairs on a deep navy field, one chair 
 | `onAccent` | `#1a1206` | text on an amber fill (11:1) |
 | `scrim` | `rgba(13,17,28,0.72)` | picture overlays that stay see-through |
 | `scrimStrong` | `rgba(13,17,28,0.94)` | panels over the picture that carry text |
-| `glow` | `rgba(255,190,92,0.28)` | focus halo |
+| `glow` | `rgba(255,190,92,0.12)` | one layer of the focus halo; six are stacked to fade out over 24 px |
 
 The heat ramp for the seek bar goes from pale amber to ember: `#ffd899`, `#ffbe5c`, `#e8973a`, `#e0612f`, `#d94040`, each with a lighter "played" tone. Intensity is also written as a number and a word wherever it matters, never by colour alone.
 

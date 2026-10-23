@@ -1,7 +1,7 @@
 import { SegmentColorsConfig } from '@amazon-devices/kepler-ui-components';
 import { Cue } from 'react-native-sensevtt';
 import { LensSettings } from '../engine/types';
-import { COLORS, HEAT } from '../styles/palette';
+import { colors, heat as heatRamp } from '../styles/tokens';
 import { coversCue } from './lens';
 
 export interface BreakMarker {
@@ -20,14 +20,14 @@ export interface Heatmap {
 const MIN_SPAN = 0.012;
 
 const NEUTRAL = {
-  baseColor: COLORS.TRACK,
-  progressedColor: COLORS.TEXT,
-  seekColor: COLORS.TRACK_SEEK,
+  baseColor: colors.line,
+  progressedColor: colors.text,
+  seekColor: colors.textMuted,
 };
 
 const heat = (intensity: number) => {
   const step =
-    HEAT[Math.min(HEAT.length, Math.max(1, Math.round(intensity))) - 1];
+    heatRamp[Math.min(heatRamp.length, Math.max(1, Math.round(intensity))) - 1];
   return {
     baseColor: step.base,
     progressedColor: step.progressed,
