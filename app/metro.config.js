@@ -23,8 +23,11 @@ const appModules = new Proxy(
  *
  * @type {import('metro-config').MetroConfig}
  */
+// The demo household is a JSON file in the repository's fixtures folder, imported by the app.
+const FIXTURES = path.resolve(__dirname, '../fixtures');
+
 const config = {
-  watchFolders: [SENSEVTT_LIBRARY],
+  watchFolders: [SENSEVTT_LIBRARY, FIXTURES],
   resolver: {
     blockList: exclusionList([new RegExp(`${SENSEVTT_LIBRARY}/node_modules/.*`)]),
     extraNodeModules: new Proxy(

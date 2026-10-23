@@ -3,32 +3,12 @@ import { LensSettings } from '../engine/types';
 export interface Person {
   id: string;
   name: string;
+  /** These are choices people make, not anything about them. */
   settings: LensSettings;
 }
 
-/** The household's comfort settings. These are choices people make, not anything about them. */
-export const PEOPLE: Person[] = [
-  {
-    id: 'leo',
-    name: 'Leo',
-    settings: { flashes: 'off', loud: 'cap', scares: 'off', ad: 'off' },
-  },
-  {
-    id: 'mom',
-    name: 'Mom',
-    settings: { flashes: 'soften', loud: 'off', scares: 'off', ad: 'off' },
-  },
-  {
-    id: 'grandpa',
-    name: 'Grandpa',
-    settings: { flashes: 'off', loud: 'off', scares: 'off', ad: 'on' },
-  },
-  {
-    id: 'dad',
-    name: 'Dad',
-    settings: { flashes: 'off', loud: 'off', scares: 'off', ad: 'off' },
-  },
-];
+/** The most people a household holds; the couch screen shows them on two rows with the add tile. */
+export const MAX_PEOPLE = 7;
 
-export const personById = (id: string): Person | undefined =>
-  PEOPLE.find((p) => p.id === id);
+/** The longest name the editor accepts, so a tile never has to wrap it. */
+export const MAX_NAME = 16;

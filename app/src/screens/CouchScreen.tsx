@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import CouchPicker from '../components/CouchPicker';
 import Focusable from '../components/Focusable';
 import { LensSettings } from '../engine/types';
+import { useHousehold } from '../lens/household';
 import { describeLens } from '../lens/lens';
 import { colors, radius, safe, space, type, weight } from '../styles/tokens';
 
@@ -14,6 +15,8 @@ type Props = {
   onToggle: (id: string) => void;
   onContinue: () => void;
   onAbout: () => void;
+  onAdd: () => void;
+  onEdit: (id: string) => void;
 };
 
 const CouchScreen = ({
@@ -22,7 +25,10 @@ const CouchScreen = ({
   onToggle,
   onContinue,
   onAbout,
+  onAdd,
+  onEdit,
 }: Props) => {
+  const empty = useHousehold().length === 0;
   const active = describeLens(lens);
   const continueRef = useRef<View>(null);
   return (
@@ -50,8 +56,9 @@ const CouchScreen = ({
           </Focusable>
         </View>
         <Text style={styles.hint}>
-          Choose everyone watching. The most protective setting of each kind
-          applies to the whole couch.
+          {empty
+            ? 'Nobody is here yet. Add the people who watch, and the comfort settings each of them likes.'
+            : 'Choose everyone watching. The most protective setting of each kind applies to the whole couch.'}
         </Text>
         <CouchPicker
           selected={selected}
@@ -59,6 +66,8 @@ const CouchScreen = ({
           layout="grid"
           below={continueRef}
           autoFocus
+          onAdd={onAdd}
+          onEdit={onEdit}
         />
         <Text style={styles.summary} accessibilityLiveRegion="polite">
           {active.length > 0
@@ -101,12 +110,12 @@ const styles = StyleSheet.create({
     ...type.body,
     color: colors.textMuted,
     marginTop: space.xs,
-    marginBottom: space.xl,
+    marginBottom: space.lg,
   },
   summary: {
     ...type.body,
     color: colors.text,
-    marginTop: space.lg,
+    marginTop: space.xs,
     marginBottom: space.md,
   },
   actions: {

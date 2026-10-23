@@ -1,6 +1,5 @@
-import { FocusManager } from '@amazon-devices/react-native-kepler';
-import React, { RefObject, useEffect, useRef } from 'react';
-import { findNodeHandle, StyleSheet, Text, View } from 'react-native';
+import React, { RefObject, useRef } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { describeLens } from '../lens/lens';
 import { Person } from '../lens/people';
 import {
@@ -12,6 +11,7 @@ import {
   type,
   weight,
 } from '../styles/tokens';
+import { useDownTo } from '../utils/focusRoutes';
 import Avatar from './Avatar';
 import Focusable from './Focusable';
 
@@ -47,15 +47,7 @@ const PersonTile = ({
 }: Props) => {
   const card = variant === 'card';
   const ref = useRef<View>(null);
-  useEffect(() => {
-    const from = ref.current && findNodeHandle(ref.current);
-    const to = downTo?.current && findNodeHandle(downTo.current);
-    if (!from || !to) {
-      return undefined;
-    }
-    FocusManager.setNextFocus(from, to, 'down');
-    return () => FocusManager.clearNextFocus(from, 'down');
-  }, [downTo]);
+  useDownTo(ref, downTo);
   const avatar = <Avatar name={person.name} selected={selected} />;
   const box = (
     <View style={[styles.box, selected && styles.boxSelected]}>
@@ -116,7 +108,7 @@ const PersonTile = ({
 const styles = StyleSheet.create({
   card: {
     width: size.tileW,
-    marginBottom: space.lg,
+    marginBottom: space.sm,
   },
   row: {
     alignSelf: 'stretch',
