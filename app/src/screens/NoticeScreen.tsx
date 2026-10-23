@@ -4,16 +4,13 @@ import { findNodeHandle, StyleSheet, Text, View } from 'react-native';
 import Backdrop from '../components/Backdrop';
 import Button from '../components/Button';
 import Mark from '../components/Mark';
-import { HOW_IT_WORKS, NOTICE_POINTS, NOTICE_TITLE } from '../notice';
 import {
-  colors,
-  radius,
-  safe,
-  size,
-  space,
-  type,
-  weight,
-} from '../styles/tokens';
+  ABOUT_DISCLAIMER,
+  ABOUT_SUMMARY,
+  NOTICE_POINTS,
+  NOTICE_TITLE,
+} from '../notice';
+import { colors, safe, size, space, type, weight } from '../styles/tokens';
 
 type Props = {
   /** The first-run notice must be accepted; About can also be left with Back. */
@@ -40,18 +37,31 @@ const NoticeScreen = ({ mode, onDone }: Props) => {
     <Backdrop>
       <View style={styles.layout}>
         <View style={styles.column}>
+          {about && (
+            <View style={styles.mark}>
+              <Mark size={size.markAbout} />
+            </View>
+          )}
           <Text style={styles.title} accessibilityRole="header">
             {about ? 'About Every Seat' : 'Before you start'}
           </Text>
-          {about && <Text style={styles.body}>{HOW_IT_WORKS}</Text>}
-          <Text style={styles.heading} accessibilityRole="header">
-            {NOTICE_TITLE}
-          </Text>
-          {NOTICE_POINTS.map((point) => (
-            <Text key={point} style={styles.body}>
-              {point}
-            </Text>
-          ))}
+          {about ? (
+            <>
+              <Text style={styles.lead}>{ABOUT_SUMMARY}</Text>
+              <Text style={styles.note}>{ABOUT_DISCLAIMER}</Text>
+            </>
+          ) : (
+            <>
+              <Text style={styles.heading} accessibilityRole="header">
+                {NOTICE_TITLE}
+              </Text>
+              {NOTICE_POINTS.map((point) => (
+                <Text key={point} style={styles.note}>
+                  {point}
+                </Text>
+              ))}
+            </>
+          )}
           <View style={styles.action}>
             <Button
               ref={buttonRef}
@@ -65,7 +75,6 @@ const NoticeScreen = ({ mode, onDone }: Props) => {
             />
           </View>
         </View>
-        <Mark size={size.markHero} rounded={radius.lg} />
       </View>
     </Backdrop>
   );
@@ -74,35 +83,46 @@ const NoticeScreen = ({ mode, onDone }: Props) => {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     paddingHorizontal: safe.x,
     paddingVertical: safe.y,
   },
   column: {
-    width: size.column,
+    width: size.readable,
+    alignItems: 'center',
+  },
+  mark: {
+    marginBottom: space.lg,
   },
   title: {
     ...type.display,
     color: colors.text,
     fontWeight: weight.bold,
+    textAlign: 'center',
+    marginBottom: space.md,
+  },
+  lead: {
+    ...type.body,
+    color: colors.text,
+    textAlign: 'center',
     marginBottom: space.md,
   },
   heading: {
     ...type.title,
-    color: colors.accent,
+    color: colors.text,
     fontWeight: weight.bold,
+    textAlign: 'center',
     marginBottom: space.sm,
   },
-  body: {
-    ...type.body,
+  note: {
+    ...type.small,
     color: colors.textMuted,
+    textAlign: 'center',
     marginBottom: space.sm,
   },
   action: {
     marginTop: space.xl,
-    alignSelf: 'flex-start',
   },
 });
 

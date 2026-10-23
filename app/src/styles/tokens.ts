@@ -99,6 +99,8 @@ export const size = {
   markHero: dp(448),
   pill: dp(48),
   column: dp(1040),
+  readable: dp(900),
+  markAbout: dp(96),
   tileW: dp(408),
   tileH: dp(230),
   columns: 4,

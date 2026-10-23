@@ -6,5 +6,8 @@ export const NOTICE_POINTS: string[] = [
   'Comfort settings are personal preferences for how a film looks and sounds. You can change who is on the couch, or stop watching, at any time.',
 ];
 
-export const HOW_IT_WORKS =
-  'Choose who is on the couch and the TV softens or warns about the moments that matter to them: flashes are dimmed, sudden loud sounds are lowered, and a heads-up card appears a few seconds before a scare.';
+export const ABOUT_SUMMARY =
+  'Every Seat softens flashes, lowers sudden loud sounds and gives a heads-up before scares, for everyone on the couch.';
+
+export const ABOUT_DISCLAIMER =
+  'Not a medical device. Comfort settings are personal preferences, and the analysis can miss moments.';

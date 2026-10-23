@@ -63,7 +63,9 @@ Every focusable element is a `Focusable` (or a themed `Button`, which wraps the 
 
 ## Screens
 
-**Welcome and About.** Left-aligned column inside the safe area: the headline at `display`, the short paragraphs at `body`, one primary button. The logo mark sits on the right. Nothing is centred in the middle of the screen.
+**Welcome.** Left-aligned column inside the safe area: the headline at `display`, the short paragraphs at `body`, one primary button. The logo mark sits on the right. Nothing is centred in the middle of the screen.
+
+**About.** The one exception: a calm, centred group with a lot of empty space. A small logo mark, the title at `display`, one sentence at `body`, one line of "not a medical device" at `small` in `textMuted`, and a primary Back button. No cards or panels; the text column is at most 900 px. The first-run notice uses the same layout with the full notice at `small`.
 
 **Couch.** Header "Who's watching?" at `title` with one line of help at `body`. People are tiles in a grid of four columns, each with an initial in a circle, the name at `title`, and what they have switched on at `small`. A selected person has a filled amber check. Below the grid: a primary "Continue" and a quiet "About". The first tile holds focus on arrival. Grids wrap to a second row; nothing leaves the safe area.
 
