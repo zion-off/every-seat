@@ -102,7 +102,6 @@ const styles = StyleSheet.create({
   },
   action: {
     marginTop: space.xl,
-    marginLeft: space.xs,
     alignSelf: 'flex-start',
   },
 });

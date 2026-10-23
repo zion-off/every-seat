@@ -67,6 +67,8 @@ export const weight = {
 export const motion = {
   /** Focus and state changes, on the native driver (opacity and transform only). */
   focusMs: 150,
+  /** The hero picture cross-fades slowly enough to stay gentle for light-sensitive viewers. */
+  heroMs: 400,
 };
 
 export const focus = {
@@ -96,4 +98,23 @@ export const size = {
   markHero: dp(448),
   pill: dp(48),
   column: dp(1040),
+  tileW: dp(408),
+  tileH: dp(230),
+  columns: 4,
+  heroW: dp(1100),
+  heroH: dp(619),
+  heroText: dp(700),
+  heroFadeX: dp(560),
+  heroFadeY: dp(320),
+  topFade: dp(240),
+  dot: dp(12),
+  couchPill: dp(560),
+  seekTrack: dp(12),
+  cardBottom: dp(344),
+  meterBar: { width: dp(8), height: dp(32), gap: dp(4) },
+  chip: dp(640),
+  cardButton: dp(224),
+  meterLevel: dp(96),
+  tick: { width: dp(20), height: dp(10), stroke: dp(4) },
+  panel: dp(760),
 };

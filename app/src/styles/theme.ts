@@ -76,4 +76,18 @@ export const createTheme = () =>
         text: { fontWeight: weight.bold },
       },
     },
+    seekBar: {
+      track: {
+        color: { backgroundColor: colors.line },
+        size: { borderRadius: radius.sm, height: size.seekTrack },
+      },
+      indicator: {
+        color: { backgroundColor: colors.text },
+        size: { borderRadius: radius.sm },
+      },
+      timeShift: {
+        color: { backgroundColor: colors.textMuted },
+        size: { borderRadius: radius.sm },
+      },
+    },
   });

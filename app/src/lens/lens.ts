@@ -54,3 +54,29 @@ export const describeLens = (lens: LensSettings): string[] => {
 
 export const couchNames = (people: Person[]): string =>
   people.length === 0 ? 'Nobody yet' : people.map((p) => p.name).join(', ');
+
+export interface CueSummary {
+  flashes: number;
+  loud: number;
+  scares: number;
+  /** Strongest intensity (1 to 5) among the moments the lens acts on; 0 when there are none. */
+  strongest: number;
+}
+
+/** Counts, by kind, the moments of a film that the lens acts on. */
+export const summarizeCues = (cues: Cue[], lens: LensSettings): CueSummary => {
+  const summary: CueSummary = { flashes: 0, loud: 0, scares: 0, strongest: 0 };
+  cues
+    .filter((c) => coversCue(c, lens))
+    .forEach((c) => {
+      if (c.type === 'flash') {
+        summary.flashes += 1;
+      } else if (c.type === 'loud') {
+        summary.loud += 1;
+      } else {
+        summary.scares += 1;
+      }
+      summary.strongest = Math.max(summary.strongest, Math.round(c.intensity));
+    });
+  return summary;
+};

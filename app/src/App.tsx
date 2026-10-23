@@ -183,9 +183,9 @@ const App = () => {
           )}
           {route === 'titles' && (
             <TitleScreen
-              key={JSON.stringify(lens)}
               couchNames={couchNames(people)}
               lens={lens}
+              initialFolder={title?.folder}
               onChangeCouch={() => setRoute('couch')}
               onPick={pick}
             />

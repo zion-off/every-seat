@@ -109,8 +109,10 @@ export const FocusRing = ({ progress, radius }: RingProps) => {
 type Props = Omit<PressableProps, 'style' | 'children'> & {
   /** Size and margins of the visible box. */
   style?: StyleProp<ViewStyle>;
-  /** Fill, padding and clipping of the visible box. */
-  contentStyle?: StyleProp<ViewStyle>;
+  /** Fill, padding and clipping of the visible box; may depend on focus. */
+  contentStyle?:
+    | StyleProp<ViewStyle>
+    | ((focused: boolean) => StyleProp<ViewStyle>);
   radius?: number;
   scale?: number;
   children: ReactNode | ((focused: boolean) => ReactNode);
@@ -148,7 +150,13 @@ const Focusable = forwardRef<View, Props>(
         <Animated.View style={[style, motionState.grow]}>
           <FocusRing progress={motionState.progress} radius={radius} />
           <View
-            style={[styles.content, { borderRadius: radius }, contentStyle]}>
+            style={[
+              styles.content,
+              { borderRadius: radius },
+              typeof contentStyle === 'function'
+                ? contentStyle(motionState.focused)
+                : contentStyle,
+            ]}>
             {typeof children === 'function'
               ? children(motionState.focused)
               : children}
