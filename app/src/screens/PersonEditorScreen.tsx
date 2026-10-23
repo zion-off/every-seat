@@ -147,41 +147,41 @@ const NameField = ({ value, onChange, onSubmit, inputRef }: NameFieldProps) => {
   );
 };
 
+/** Removing someone asks once, calmly, with focus on the safe choice. */
 const Confirm = ({
   name,
-  onKeep,
+  onCancel,
   onRemove,
 }: {
   name: string;
-  onKeep: () => void;
+  onCancel: () => void;
   onRemove: () => void;
 }) => {
-  const keepRef = useRef<View>(null);
-  useFocusOnMount(keepRef);
+  const cancelRef = useRef<View>(null);
+  useFocusOnMount(cancelRef);
   return (
     <>
       <Text style={styles.title} accessibilityRole="header">
         {`Remove ${name}?`}
       </Text>
       <Text style={styles.lead}>
-        They leave the household and their comfort settings are forgotten. You
-        can add them again any time.
+        {`${name} and their comfort settings leave the household. You can add them again any time.`}
       </Text>
       <View style={[styles.actions, styles.actionsConfirm]}>
         <Button
-          ref={keepRef}
-          label="Keep"
-          variant="primary"
+          ref={cancelRef}
+          label="Cancel"
+          variant="secondary"
           size="lg"
-          accessibilityLabel={`Keep ${name}`}
-          onPress={onKeep}
+          accessibilityLabel={`Cancel and keep ${name}`}
+          onPress={onCancel}
         />
         <View style={styles.actionGap} />
         <Button
-          label="Yes, remove"
+          label="Remove"
           variant="secondary"
           size="lg"
-          accessibilityLabel={`Yes, remove ${name} from the household`}
+          accessibilityLabel={`Remove ${name} from the household`}
           onPress={onRemove}
         />
       </View>
@@ -262,7 +262,7 @@ const PersonEditorScreen = ({
           {confirming && person ? (
             <Confirm
               name={person.name}
-              onKeep={() => setConfirming(false)}
+              onCancel={() => setConfirming(false)}
               onRemove={onDelete}
             />
           ) : (
@@ -315,10 +315,10 @@ const PersonEditorScreen = ({
                   <>
                     <View style={styles.actionGap} />
                     <Button
-                      label="Delete"
+                      label="Remove"
                       variant="secondary"
                       size="lg"
-                      accessibilityLabel={`Delete ${person.name}`}
+                      accessibilityLabel={`Remove ${person.name} from the household`}
                       onPress={() => setConfirming(true)}
                     />
                   </>
@@ -336,11 +336,11 @@ const styles = StyleSheet.create({
   layout: {
     flex: 1,
     paddingHorizontal: safe.x,
-    paddingVertical: safe.y,
-    justifyContent: 'center',
+    paddingTop: safe.top,
+    paddingBottom: safe.y,
   },
   column: {
-    width: size.column,
+    width: size.readable,
   },
   title: {
     ...type.display,
@@ -364,8 +364,7 @@ const styles = StyleSheet.create({
   },
   fieldFrame: {
     height: size.field,
-    width: size.readable,
-    alignSelf: 'flex-start',
+    alignSelf: 'stretch',
   },
   raised: {
     zIndex: layer.raised,
@@ -375,6 +374,8 @@ const styles = StyleSheet.create({
     ...type.title,
     flex: 1,
     paddingHorizontal: space.md,
+    paddingVertical: 0,
+    textAlignVertical: 'center',
     color: colors.text,
     backgroundColor: colors.surface,
     borderWidth: size.border,
@@ -450,7 +451,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   actionsConfirm: {
-    marginTop: space.lg,
+    marginTop: space.xl,
   },
   actionsTop: {
     marginTop: space.sm,
