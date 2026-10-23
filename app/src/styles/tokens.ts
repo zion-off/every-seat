@@ -121,4 +121,9 @@ export const size = {
   meterLevel: dp(96),
   tick: { width: dp(20), height: dp(10), stroke: dp(4) },
   panel: dp(760),
+  field: dp(72),
+  switchW: dp(88),
+  switchH: dp(48),
+  knob: dp(32),
+  stateWord: dp(72),
 };
