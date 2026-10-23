@@ -4,52 +4,75 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#101418" />
+    <meta name="theme-color" content="#0d111c" />
     <title>Every Seat · Audio description</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <main>
-      <h1>Audio description</h1>
-      <p id="status" role="status">Connecting…</p>
+    <div class="page">
+      <header>
+        <svg class="mark" viewBox="0 0 60 12" aria-hidden="true" focusable="false">
+          <rect x="0" y="2" width="9" height="10" rx="3" />
+          <rect x="12.75" y="2" width="9" height="10" rx="3" />
+          <rect x="25.5" y="2" width="9" height="10" rx="3" />
+          <rect class="lit" x="38.25" y="2" width="9" height="10" rx="3" />
+          <rect x="51" y="2" width="9" height="10" rx="3" />
+        </svg>
+        <p>Every Seat</p>
+      </header>
 
-      <button id="start" type="button" class="primary">Start audio description</button>
-      <p id="start-hint" class="hint">
-        Turn the phone's volume up first. Tapping Start lets this page play sound, and it follows
-        the film on the TV from then on.
-      </p>
+      <main>
+        <h1 id="title">Audio description</h1>
+        <p id="lead" class="lead">Audio description for the film on the TV, spoken from this phone.</p>
+        <p id="status" role="status">Connecting…</p>
 
-      <p id="banner" role="alert" hidden>Sound was interrupted. Tap anywhere to carry on.</p>
+        <ul id="settings" class="settings" aria-label="Before you start">
+          <li>Ringer on</li>
+          <li>Volume up</li>
+          <li>Auto-Lock off</li>
+        </ul>
 
-      <section id="live" hidden aria-label="Current description">
-        <p id="position"></p>
-        <blockquote id="caption"></blockquote>
-        <p class="label">AI-generated description</p>
-      </section>
+        <section id="live" hidden aria-label="Now">
+          <p id="position"></p>
+          <p id="now"></p>
+          <p id="caption" aria-live="polite" aria-atomic="true"></p>
+          <p id="ai-label" class="label" hidden>AI-generated description</p>
+        </section>
+      </main>
 
-      <section id="controls" hidden aria-label="Timing">
-        <label for="offset">Sound timing: <output id="offset-value">on time</output></label>
-        <input id="offset" type="range" min="-500" max="500" step="10" value="0" />
-        <p class="hint">
-          If the description comes too early, move the slider to Later. If it comes too late, move
-          it to Earlier.
-        </p>
-        <div class="row">
-          <button id="earlier" type="button">10 ms earlier</button>
-          <button id="later" type="button">10 ms later</button>
+      <footer>
+        <button id="start" type="button" class="primary" aria-label="Start audio description">
+          Start
+        </button>
+        <div id="banner" hidden>
+          <p role="alert" id="banner-text">Audio stopped. This can happen after a call or a lock.</p>
+          <button id="resume" type="button" class="primary">Tap to resume audio</button>
         </div>
-        <div class="row">
-          <button id="resync" type="button">Resync</button>
-          <button id="beep" type="button">Test sound</button>
-        </div>
-      </section>
 
-      <details>
-        <summary>Timing details</summary>
-        <dl id="details"></dl>
-      </details>
-    </main>
+        <details id="controls" hidden>
+          <summary>Timing</summary>
+          <div class="timing">
+            <label for="offset">Sound timing: <output id="offset-value">on time</output></label>
+            <input id="offset" type="range" min="-500" max="500" step="10" value="0" />
+            <p class="hint">
+              If the description comes too early, move the slider to Later. If it comes too late,
+              move it to Earlier.
+            </p>
+            <div class="row">
+              <button id="earlier" type="button">10 ms earlier</button>
+              <button id="later" type="button">10 ms later</button>
+            </div>
+            <div class="row">
+              <button id="resync" type="button">Resync</button>
+              <button id="beep" type="button">Test sound</button>
+            </div>
+            <h2>Details</h2>
+            <dl id="details"></dl>
+          </div>
+        </details>
+      </footer>
+    </div>
     <script type="module" src="main.js"></script>
   </body>
 </html>

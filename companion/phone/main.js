@@ -17,12 +17,16 @@ function el(id) {
   return found;
 }
 const ui = {
+  title: el("title"),
+  lead: el("lead"),
+  settings: el("settings"),
   status: el("status"),
   start: /** @type {HTMLButtonElement} */ (el("start")),
-  startHint: el("start-hint"),
   banner: el("banner"),
   live: el("live"),
   position: el("position"),
+  now: el("now"),
+  aiLabel: el("ai-label"),
   caption: el("caption"),
   controls: el("controls"),
   offset: /** @type {HTMLInputElement} */ (el("offset")),
@@ -227,32 +231,39 @@ function render() {
   const { ctx, player } = state;
   const started = ctx !== undefined;
   ui.start.hidden = started;
-  ui.startHint.hidden = started;
+  ui.lead.hidden = started;
+  ui.settings.hidden = started;
   ui.controls.hidden = !started;
   ui.banner.hidden = !(started && ctx.state !== "running");
 
   const mediaNow = relayTime.ready ? tv.mediaTimeAt(relayTime.now()) : undefined;
   const playing = player?.playingEntry;
+  const film = state.name ?? state.title;
+  ui.title.textContent = started && film ? film : "Audio description";
   let text;
-  if (!state.relayOpen) text = "Connecting to the companion…";
-  else if (mediaNow === undefined) text = "Waiting for the TV to start a film.";
-  else if (state.clipsLoaded && state.clips.length === 0) {
-    text = `No audio description for ${state.name ?? state.title} yet.`;
-  } else if (!started) text = `Ready for ${state.name ?? state.title}. Tap Start to hear descriptions.`;
-  else if (tv.stale) text = "No clock from the TV. Descriptions resume when it plays again.";
+  if (!state.relayOpen) text = started ? "Lost the connection. Reconnecting…" : "Connecting…";
+  else if (mediaNow === undefined) text = "Connected. Waiting for the TV to start a film.";
+  else if (state.clipsLoaded && state.clips.length === 0) text = `No audio description for ${film} yet.`;
+  else if (!started) text = `Connected. ${film} is ready.`;
+  else if (tv.stale) text = "The TV has gone quiet. Descriptions continue when it plays again.";
   else if (!tv.playing && tv.last?.rate === 0) text = "The TV is paused.";
   else if (!tv.playing) text = "The TV is not playing at normal speed, so descriptions are off.";
-  else text = `Following ${state.name ?? state.title} on the TV.`;
+  else text = "Following the TV.";
   if (ui.status.textContent !== text) ui.status.textContent = text;
 
   ui.live.hidden = !started || mediaNow === undefined;
   if (mediaNow !== undefined) {
     const next = player?.nextEntry(mediaNow);
-    ui.position.textContent =
-      `TV at ${clockText(mediaNow)}` +
-      (!playing && next ? ` · next description in ${Math.max(0, Math.round(next.clip.start - mediaNow))} s` : "");
+    const paused = !tv.playing && tv.last?.rate === 0;
+    ui.position.textContent = `TV at ${clockText(mediaNow)}, ${paused ? "paused" : "playing"}`;
+    let now = "No more descriptions";
+    if (playing) now = "Speaking now";
+    else if (next) now = `Next description in ${Math.max(0, Math.round(next.clip.start - mediaNow))} s`;
+    if (ui.now.textContent !== now) ui.now.textContent = now;
+    ui.live.toggleAttribute("data-speaking", Boolean(playing));
     const caption = playing?.clip.text ?? "";
     if (ui.caption.textContent !== caption) ui.caption.textContent = caption;
+    ui.aiLabel.hidden = !caption;
   }
 
   const rows = [
@@ -298,6 +309,7 @@ function connect() {
 
 ui.start.addEventListener("click", () => void start());
 ui.offset.addEventListener("input", () => setOffset(Number(ui.offset.value)));
+el("resume").addEventListener("click", resumeAudio);
 el("earlier").addEventListener("click", () => setOffset(state.userOffsetMs - 10));
 el("later").addEventListener("click", () => setOffset(state.userOffsetMs + 10));
 el("resync").addEventListener("click", () => {
