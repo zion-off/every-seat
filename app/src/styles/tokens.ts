@@ -16,7 +16,7 @@ export const colors = {
   onAccent: '#1a1206',
   scrim: 'rgba(13, 17, 28, 0.72)',
   scrimStrong: 'rgba(13, 17, 28, 0.94)',
-  glow: 'rgba(255, 190, 92, 0.12)',
+  glow: 'rgba(255, 190, 92, 0.05)',
   black: '#000000',
   transparent: 'transparent',
 };
@@ -72,11 +72,11 @@ export const motion = {
 };
 
 export const focus = {
-  scaleTile: 1.08,
-  scaleControl: 1.06,
-  ringWidth: dp(4),
-  ringOffset: dp(6),
-  haloSpread: dp(24),
+  scaleTile: 1.05,
+  scaleControl: 1.04,
+  ringWidth: dp(3),
+  ringOffset: dp(4),
+  haloSpread: dp(14),
 };
 
 export const layer = {

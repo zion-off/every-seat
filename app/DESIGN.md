@@ -5,7 +5,7 @@ Every screen of the Fire TV app follows this sheet. All values live in one file,
 ## Principles
 
 1. **Ten-foot reading.** The viewer sits across the room. Body text is at least 24 px, titles at least 40 px, and every text/background pair meets WCAG AA (4.5:1 for text, 3:1 for large text and graphics).
-2. **Focus is the interface.** There is no pointer. The focused element must be unmistakable from the sofa: it grows, gets an amber outline and a soft glow. Focus is never lost and never trapped, and Back always leaves.
+2. **Focus is the interface.** There is no pointer. The focused element must be unmistakable from the sofa: it grows slightly, gets a crisp amber outline and a faint glow. Focus is never lost and never trapped, and Back always leaves.
 3. **Content first.** Films are shown as pictures with a credit, not as boxes of text. The focused film is explained in a hero area above the row: what it contains for the people on the couch.
 4. **Calm.** Dark, low-glare surfaces. One accent. Few, quiet movements. Nothing flashes, pulses or loops on screen; this is an app for people who are sensitive to exactly that.
 
@@ -28,7 +28,7 @@ Derived from the logo: five dark navy armchairs on a deep navy field, one chair 
 | `onAccent` | `#1a1206` | text on an amber fill (11:1) |
 | `scrim` | `rgba(13,17,28,0.72)` | picture overlays that stay see-through |
 | `scrimStrong` | `rgba(13,17,28,0.94)` | panels over the picture that carry text |
-| `glow` | `rgba(255,190,92,0.12)` | one layer of the focus halo; six are stacked to fade out over 24 px |
+| `glow` | `rgba(255,190,92,0.05)` | one layer of the focus halo; six are stacked to fade out over 14 px |
 
 The heat ramp for the seek bar goes from pale amber to ember: `#ffd899`, `#ffbe5c`, `#e8973a`, `#e0612f`, `#d94040`, each with a lighter "played" tone. Intensity is also written as a number and a word wherever it matters, never by colour alone.
 
@@ -54,9 +54,9 @@ One family, the platform font (no bundled font). Weights 400 and 700 only.
 
 Every focusable element is a `Focusable` (or a themed `Button`, which wraps the same behaviour).
 
-- Scale to `1.08` for tiles and `1.06` for buttons, chips and the seek bar, 150 ms.
-- A 4 px amber outline sits 6 px outside the element, drawn on its own layer so it can fade without changing layout.
-- A soft amber halo (`glow`) sits behind the outline.
+- Scale to `1.05` for tiles and `1.04` for buttons, chips and the seek bar, 150 ms.
+- A 3 px amber outline sits 4 px outside the element, drawn on its own layer so it can fade without changing layout.
+- A faint amber halo (`glow`) sits behind the outline and fades out within 14 px.
 - Resting elements have a quiet `line` outline or none; they never use amber, so amber always means "here".
 - A selected (not focused) element shows a filled amber check or dot, never an outline.
 - Layouts leave 16 px of room around every focusable for the outline and scale.
