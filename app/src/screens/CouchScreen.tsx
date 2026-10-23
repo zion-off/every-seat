@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Backdrop from '../components/Backdrop';
 import Button from '../components/Button';
-import CouchPicker from '../components/CouchPicker';
+import CouchGrid from '../components/CouchGrid';
 import Focusable from '../components/Focusable';
 import { LensSettings } from '../engine/types';
 import { useHousehold } from '../lens/household';
@@ -17,6 +17,17 @@ type Props = {
   onAbout: () => void;
   onAdd: () => void;
   onEdit: (id: string) => void;
+  /** The person whose card takes focus on arrival, such as the one just edited. */
+  focusId?: string;
+};
+
+const summaryLine = (empty: boolean, active: string[]) => {
+  if (empty) {
+    return 'Or continue to the films without comfort settings.';
+  }
+  return active.length > 0
+    ? `For this couch: ${active.join(' · ')}`
+    : 'No comfort settings for this couch: films play as they are.';
 };
 
 const CouchScreen = ({
@@ -27,10 +38,12 @@ const CouchScreen = ({
   onAbout,
   onAdd,
   onEdit,
+  focusId,
 }: Props) => {
   const empty = useHousehold().length === 0;
   const active = describeLens(lens);
   const continueRef = useRef<View>(null);
+  const aboutRef = useRef<View>(null);
   return (
     <Backdrop>
       <View style={styles.layout}>
@@ -39,6 +52,7 @@ const CouchScreen = ({
             Who's on the couch?
           </Text>
           <Focusable
+            ref={aboutRef}
             accessible
             accessibilityRole="button"
             accessibilityLabel="About Every Seat and the not-a-medical-device notice"
@@ -57,22 +71,20 @@ const CouchScreen = ({
         </View>
         <Text style={styles.hint}>
           {empty
-            ? 'Nobody is here yet. Add the people who watch, and the comfort settings each of them likes.'
+            ? 'Add the people who watch here, with the comfort settings each of them likes.'
             : 'Choose everyone watching. The most protective setting of each kind applies to the whole couch.'}
         </Text>
-        <CouchPicker
+        <CouchGrid
           selected={selected}
           onToggle={onToggle}
-          layout="grid"
-          below={continueRef}
-          autoFocus
           onAdd={onAdd}
           onEdit={onEdit}
+          above={aboutRef}
+          below={continueRef}
+          focusId={focusId}
         />
         <Text style={styles.summary} accessibilityLiveRegion="polite">
-          {active.length > 0
-            ? `For this couch: ${active.join(' · ')}`
-            : 'No comfort settings for this couch: films play as they are.'}
+          {summaryLine(empty, active)}
         </Text>
         <View style={styles.actions}>
           <Button
@@ -92,9 +104,9 @@ const CouchScreen = ({
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    justifyContent: 'center',
     paddingHorizontal: safe.x,
-    paddingVertical: safe.y,
+    paddingTop: safe.top,
+    paddingBottom: safe.y,
   },
   header: {
     flexDirection: 'row',
@@ -115,7 +127,6 @@ const styles = StyleSheet.create({
   summary: {
     ...type.body,
     color: colors.text,
-    marginTop: space.xs,
     marginBottom: space.md,
   },
   actions: {

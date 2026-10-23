@@ -31,12 +31,7 @@ const CouchPanel = ({ selected, onToggle, onClose }: Props) => (
       <Text style={styles.title}>Who's on the couch?</Text>
     </View>
     <Text style={styles.hint}>Changes apply right away.</Text>
-    <CouchPicker
-      selected={selected}
-      onToggle={onToggle}
-      layout="list"
-      autoFocus
-    />
+    <CouchPicker selected={selected} onToggle={onToggle} autoFocus />
     <View style={styles.done}>
       <Button
         label="Done"

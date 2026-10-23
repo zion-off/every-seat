@@ -1,6 +1,5 @@
-import React, { RefObject, useRef } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { describeLens } from '../lens/lens';
 import { Person } from '../lens/people';
 import {
   colors,
@@ -11,119 +10,70 @@ import {
   type,
   weight,
 } from '../styles/tokens';
-import { useDownTo } from '../utils/focusRoutes';
 import Avatar from './Avatar';
+import Check from './Check';
 import Focusable from './Focusable';
+import { summary } from './PersonCard';
 
 type Props = {
   person: Person;
   selected: boolean;
   onPress: () => void;
-  /** A card in the couch grid, or a slimmer row for the side panel. */
-  variant: 'card' | 'row';
   /** Lines of settings text; the full text is always in the spoken label. */
   lines?: number;
-  /** Space after the tile, so a row of tiles keeps its gaps without leaving the container. */
-  marginRight?: number;
   autoFocus?: boolean;
-  /** When set, Down from this tile goes to that control instead of the nearest one. */
-  downTo?: RefObject<View>;
 };
 
-const summary = (person: Person): string => {
-  const parts = describeLens(person.settings);
-  return parts.length > 0 ? parts.join(' · ') : 'No comfort settings';
-};
-
+/** A person as a slim row in the side panel over the film. */
 const PersonTile = ({
   person,
   selected,
   onPress,
-  variant,
   lines = 2,
-  marginRight = 0,
   autoFocus,
-  downTo,
-}: Props) => {
-  const card = variant === 'card';
-  const ref = useRef<View>(null);
-  useDownTo(ref, downTo);
-  const avatar = <Avatar name={person.name} selected={selected} />;
-  const box = (
-    <View style={[styles.box, selected && styles.boxSelected]}>
-      {selected && <View style={styles.tick} />}
+}: Props) => (
+  <Focusable
+    accessible
+    accessibilityRole="checkbox"
+    accessibilityState={{ checked: selected }}
+    accessibilityLabel={`${person.name}. ${summary(person)}. ${
+      selected ? 'On the couch' : 'Not on the couch'
+    }`}
+    hasTVPreferredFocus={autoFocus}
+    onPress={onPress}
+    radius={radius.md}
+    scale={focus.scaleControl}
+    style={styles.row}
+    contentStyle={(focused) => [
+      styles.surface,
+      selected && styles.surfaceSelected,
+      focused && styles.surfaceFocused,
+    ]}>
+    <View style={styles.head}>
+      <Avatar name={person.name} selected={selected} />
+      <View style={styles.text}>
+        <Text style={styles.name} numberOfLines={1}>
+          {person.name}
+        </Text>
+        <Text style={styles.detail} numberOfLines={lines}>
+          {summary(person)}
+        </Text>
+      </View>
+      <Check on={selected} />
     </View>
-  );
-  return (
-    <Focusable
-      ref={ref}
-      accessible
-      accessibilityRole="checkbox"
-      accessibilityState={{ checked: selected }}
-      accessibilityLabel={`${person.name}. ${summary(person)}. ${
-        selected ? 'On the couch' : 'Not on the couch'
-      }`}
-      hasTVPreferredFocus={autoFocus}
-      onPress={onPress}
-      radius={card ? radius.lg : radius.md}
-      scale={card ? focus.scaleTile : focus.scaleControl}
-      style={[card ? styles.card : styles.row, { marginRight }]}
-      contentStyle={(focused) => [
-        styles.surface,
-        card ? styles.surfaceCard : styles.surfaceRow,
-        selected && styles.surfaceSelected,
-        focused && styles.surfaceFocused,
-      ]}>
-      {card ? (
-        <>
-          <View style={styles.cardHead}>
-            {avatar}
-            {box}
-          </View>
-          <Text style={styles.name} numberOfLines={1}>
-            {person.name}
-          </Text>
-          <Text style={styles.detail} numberOfLines={lines}>
-            {summary(person)}
-          </Text>
-        </>
-      ) : (
-        <View style={styles.rowHead}>
-          {avatar}
-          <View style={styles.rowText}>
-            <Text style={styles.name} numberOfLines={1}>
-              {person.name}
-            </Text>
-            <Text style={styles.detail} numberOfLines={lines}>
-              {summary(person)}
-            </Text>
-          </View>
-          {box}
-        </View>
-      )}
-    </Focusable>
-  );
-};
+  </Focusable>
+);
 
 const styles = StyleSheet.create({
-  card: {
-    width: size.tileW,
-    marginBottom: space.sm,
-  },
   row: {
     alignSelf: 'stretch',
     marginBottom: space.sm,
   },
   surface: {
+    padding: space.sm,
     backgroundColor: colors.surface,
     borderWidth: size.border,
     borderColor: colors.line,
-  },
-  surfaceCard: {
-    padding: space.md,
-  },
-  surfaceRow: {
-    padding: space.sm,
   },
   surfaceSelected: {
     backgroundColor: colors.surfaceRaised,
@@ -131,17 +81,11 @@ const styles = StyleSheet.create({
   surfaceFocused: {
     backgroundColor: colors.surfaceFocused,
   },
-  cardHead: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: space.sm,
-  },
-  rowHead: {
+  head: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  rowText: {
+  text: {
     flex: 1,
     marginHorizontal: space.sm,
   },
@@ -153,27 +97,6 @@ const styles = StyleSheet.create({
   detail: {
     ...type.small,
     color: colors.textMuted,
-  },
-  box: {
-    width: size.check,
-    height: size.check,
-    borderRadius: radius.pill,
-    borderWidth: size.border * 2,
-    borderColor: colors.textMuted,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  boxSelected: {
-    borderColor: colors.accent,
-    backgroundColor: colors.accent,
-  },
-  tick: {
-    width: size.tick.width,
-    height: size.tick.height,
-    borderLeftWidth: size.tick.stroke,
-    borderBottomWidth: size.tick.stroke,
-    borderColor: colors.onAccent,
-    transform: [{ rotate: '-45deg' }, { translateY: -size.tick.height / 4 }],
   },
 });
 
