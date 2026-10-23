@@ -1,4 +1,34 @@
 {
+  "1": {
+    "write": [
+      [
+        {
+          "tile": 1,
+          "text": "Sintel fights an old man in the snow."
+        }
+      ],
+      [
+        {
+          "tile": 2,
+          "text": "Dark rock shapes fade slowly into view."
+        }
+      ],
+      [
+        {
+          "tile": 3,
+          "text": "Snowy mountain peaks glide past under a pale sky."
+        },
+        {
+          "tile": 6,
+          "text": "A thin haze drifts between the white ridges."
+        },
+        {
+          "tile": 8,
+          "text": "Blue ice glows along the base of a snowy ridge."
+        }
+      ]
+    ]
+  },
   "2": {
     "write": [
       "Sintel fights soldiers with a sword. She is knocked down, gets up, and continues fighting."
@@ -34,6 +64,16 @@
   },
   "8": {
     "write": [
+      [
+        {
+          "tile": 6,
+          "text": "Sintel reaches the cave mouth and stops."
+        },
+        {
+          "tile": 1,
+          "text": "Sintel climbs a rocky slope in rising wind."
+        }
+      ],
       [
         {
           "tile": 1,
@@ -131,6 +171,28 @@
   },
   "15": {
     "write": [
+      [
+        {
+          "tile": 1,
+          "text": "Sintel runs through a desert."
+        },
+        {
+          "tile": 6,
+          "text": "She enters a bamboo forest."
+        },
+        {
+          "tile": 6,
+          "text": "Tall bamboo sways around her as she slows."
+        },
+        {
+          "tile": 7,
+          "text": "Sintel stands on a hill with a spear."
+        },
+        {
+          "tile": 12,
+          "text": "A dust cloud rises behind her."
+        }
+      ],
       [
         {
           "tile": 1,
@@ -301,6 +363,12 @@
   },
   "30": {
     "write": [
+      [
+        {
+          "tile": 2,
+          "text": "Sintel walks slowly along a narrow ridge above the valley while cold wind pulls at her cloak and loose stones slide away from under her boots as she looks for a safe path down."
+        }
+      ],
       [
         {
           "tile": 6,
