@@ -26,6 +26,8 @@ node_modules/
 *.m4s
 *.wav
 *.mp3
+*.m4a
+!generated/ad/**/*.m4a
 *.npz
 !*.mp4/
 !*.mov/

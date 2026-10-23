@@ -31,7 +31,7 @@ Every setting has a default that works on a laptop. Set them as environment vari
 | `EVERYSEAT_API_KEY` | unset | When set, `/mcp`, `/converse` and `/relay` require it as `Authorization: Bearer <key>`, `X-API-Key: <key>`, or (relay only) `?key=<key>`. A bad key gets a bare `401` with no `WWW-Authenticate` header. |
 | `EVERYSEAT_SANDBOX_PORT` | `8788` | Port of the second origin that hosts comfort cards. Must differ from `EVERYSEAT_PORT`. |
 | `EVERYSEAT_WEB_DIR` | `web/dist` | Built page to serve at `/`. Skipped when the directory doesn't exist. |
-| `EVERYSEAT_AD_DIR` | `../build/ad` | Directory whose `<title>/` folders hold the audio description clips served under `/ad/`. |
+| `EVERYSEAT_AD_DIR` | `../generated/ad` and `../build/ad` | Directories (separated by `:`) whose `<title>/` folders hold the audio description clips served under `/ad/`. The first directory with the file wins. |
 | `EVERYSEAT_CONVERSE_MODEL` | `us.amazon.nova-2-lite-v1:0` | Bedrock model for `/converse`. Only Amazon Nova model ids are accepted. |
 | `AWS_PROFILE`, `AWS_REGION` | unset, `us-east-1` | AWS credentials and region for `/converse`. Without a credential source `/converse` answers `503`. |
 | `EVERYSEAT_HOUSEHOLD` | `demo` | Household the MCP tools act on. |
@@ -84,7 +84,7 @@ When every tool call succeeds the reply is the tools' own spoken summaries, so a
 
 ## Phone page
 
-`/phone/` follows the film on the TV and plays its audio description through the phone's speaker or headphones, so the people who want it hear it and everyone else on the couch does not. The description cues come from `everyseat describe` (see the pipeline README); each one names a voiced clip, and the companion serves the clips under `/ad/`.
+`/phone/` follows the film on the TV and plays its audio description through the phone's speaker or headphones, so the people who want it hear it and everyone else on the couch does not. The description cues come from `everyseat describe` (see the pipeline README); each one names a voiced clip, and the companion serves the clips under `/ad/`, from `generated/ad` first and then `build/ad`. `tools/media/export_ad.py <title>` turns `build/ad/<title>/*.wav` into small mono AAC files in `generated/ad/<title>/` and points the cue file at them.
 
 1. Start the companion so the phone can reach it: `EVERYSEAT_HOST=0.0.0.0 npm start`. The startup log lists the addresses, for example `phone page: http://192.168.1.20:8787/phone/`. On macOS `ipconfig getifaddr en0` gives the same address, and the first start asks whether `node` may accept incoming connections: choose Allow.
 2. Open that address on a phone on the same Wi-Fi. Pages from a private network address and `.local` names are accepted; with `EVERYSEAT_API_KEY` set, add `?key=<key>`. `?household=<id>` joins another household.

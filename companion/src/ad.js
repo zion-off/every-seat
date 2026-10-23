@@ -63,7 +63,7 @@ const reportSchema = z.strictObject({
  */
 export function mountAd(app, { config, catalog, requireKey }) {
   app.use("/phone", express.static(config.phoneDir));
-  app.use("/ad", requireKey, express.static(config.adDir, { index: false }));
+  for (const dir of config.adDirs) app.use("/ad", requireKey, express.static(dir, { index: false }));
 
   app.get("/api/ad/:title", requireKey, (req, res) => {
     const title = catalog.get(String(req.params.title));

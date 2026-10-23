@@ -62,8 +62,10 @@ export function loadConfig(env = process.env) {
     webDir: env.EVERYSEAT_WEB_DIR ?? path.join(companionRoot, "web", "dist"),
     /** The phone page for audio description, served at `/phone/`. */
     phoneDir: path.join(companionRoot, "phone"),
-    /** Voiced description clips, served at `/ad/`; `everyseat describe --clips-dir` writes here. */
-    adDir: env.EVERYSEAT_AD_DIR ?? path.join(repoRoot, "build", "ad"),
+    /** Voiced description clips, served at `/ad/`: the first directory holding a file wins. */
+    adDirs: env.EVERYSEAT_AD_DIR
+      ? env.EVERYSEAT_AD_DIR.split(path.delimiter)
+      : [path.join(repoRoot, "generated", "ad"), path.join(repoRoot, "build", "ad")],
   };
 }
 
