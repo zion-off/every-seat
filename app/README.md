@@ -52,14 +52,14 @@ and the `paths` block.
 - `src/engine` — the lens types, the mapping from a lens to the library's preferences and audio
   rendition, and the hook that owns the library's controller for a film.
 - `src/media` — Shaka player setup and the hook that owns the video element and its Vega adapter.
-- `src/lens` — the people and their comfort settings, the combined couch lens, and the seek bar
-  heat segments built from the cue list.
+- `src/lens` — the people and their comfort settings, the demo household, the combined couch lens,
+  and the seek bar heat segments built from the cue list.
 - `src/components` — the couch picker and panel, the player controls, the heads-up card, and the
   comfort badges and volume meter.
 - `src/screens` — the notice, couch, film picker and player screens.
 - `src/relay` — the companion relay client.
 - `src/deeplink.ts` — `everyseat://lens` links.
-- `src/notice.ts`, `src/storage.ts` — the notice text and the first-run flag.
+- `src/notice.ts`, `src/storage.ts` — the notice text, the first-run flag and the stored household.
 - `src/catalog.ts` — the films on offer.
 - `src/styles` — colors and the UI theme.
 - `src/w3cmedia` — Shaka glue from the Vega video sample; the `dist`, `polyfills` and
@@ -85,10 +85,19 @@ and the `paths` block.
 
 ## Couch, films and seek bar
 
-- The first screen asks who is on the couch. People and their comfort settings are a local seed
-  list in `src/lens/people.ts` (the companion's default household). The most protective setting of
-  each kind across the couch applies to everyone. People the companion names that the TV does not
-  know yet are added to the screen, which then uses smaller tiles and wraps.
+- The household starts empty and is set up with the remote. On a first run the app offers "Set up
+  your household" (add the first person) or "Use the demo household" (the four people in
+  `../fixtures/demo-household.json`, bundled through a Metro `watchFolders` entry). Nothing else
+  in the app names anyone.
+- The couch screen asks who is on the couch. After the people comes an "Add person" tile (up to 7
+  people), and each person has a small "Edit" control under the tile, reached with Down. Select on a
+  person's tile still puts them on the couch. The editor takes a name with the Vega on-screen
+  keyboard (a plain `TextInput`: focusing it opens the keyboard, and Done closes it), four switches
+  (flashes, loud sounds, scares, audio description) and Save, Cancel and Delete, which asks first.
+  The most protective setting of each kind across the couch applies to everyone.
+- The household is kept in AsyncStorage and survives an app restart. Reinstalling the app clears
+  it; to test persistence, relaunch without reinstalling (`vega device terminate-app --app-name
+  com.everyseat.app.main`, then `vega device launch-app --appName com.everyseat.app.main`).
 - The film picker is a Kepler UI carousel. Each film shows how many moments are marked for the
   current couch.
 - The seek bar draws a marker for every moment the couch lens covers. Pressing Left or Right moves a
@@ -104,15 +113,23 @@ and the `paths` block.
   introduces itself as the TV for the `demo` household, and answers the relay's pings. Messages are
   newline-delimited JSON; long ones can arrive in pieces, so the client buffers until a newline. A
   dead or silent link is dropped and reopened with a backoff of 1 s up to 10 s.
-- A `lens` message names tonight's couch with each person's settings. People already on the screen
-  take the new settings, new names are added, and the couch becomes exactly those people, on any
-  screen. The player applies the change at once: the seek-bar markers, the couch chip and the film
+- A `lens` message names tonight's couch with each person's settings. The people it names take the
+  new settings for tonight and the couch becomes exactly those people, on any screen; names the TV
+  does not know are ignored. The player applies the change at once: the seek-bar markers, the couch chip and the film
   picker counts repaint together, and the player brings its controls up so the change is seen.
 - An open heads-up card follows the new lens. If the lens no longer warns about that moment, the
   card closes without softening it and focus goes back to where it was. If a warning is added
   after the card's window has started the card shows for the time that is left; if it is added
   after the deadline the moment is softened straight away. If the warning stays on, the card, its
   focus and its countdown are not touched.
+
+## Household sync
+
+- The household is a `household` relay message: everyone with their settings and an `updatedAt` in
+  milliseconds; the latest writer wins. Every edit on the TV is saved and sent; one from the
+  companion (the `remember_preference` tool) replaces the TV's list if it is newer and clears any
+  settings that were set for tonight only. On every connection the TV offers its household, and
+  the relay replays its own latest household and then the current lens to a TV that connects late.
 
 ## Clock for phones
 
