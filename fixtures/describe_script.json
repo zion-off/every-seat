@@ -141,7 +141,7 @@
           "text": "She enters a bamboo forest."
         },
         {
-          "at_s": 381.9,
+          "at_s": 380.7,
           "text": "Tall bamboo sways around her as she slows."
         },
         {
@@ -311,8 +311,12 @@
       ],
       [
         {
-          "at_s": 745.0,
+          "at_s": 754.6,
           "text": "Sintel steps into a snowy clearing."
+        },
+        {
+          "at_s": 765.0,
+          "text": "A tall dark tower rises beyond the trees."
         }
       ]
     ]
