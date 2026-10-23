@@ -241,8 +241,8 @@
     173.65
    ],
    "slot_s": 7.667,
-   "duration_s": 2.0,
-   "text": "Sintel grips the wall and climbs.",
+   "duration_s": 2.038,
+   "text": "Sintel cradles the baby dragon.",
    "rate_percent": 100,
    "attempts": [
     {
@@ -250,7 +250,8 @@
      "duration_s": 2.0,
      "rate": 100
     }
-   ]
+   ],
+   "overridden": true
   },
   {
    "cue": "sintel-ad-10",
@@ -3269,6 +3270,17 @@
    "near_s": 647.7,
    "status": "no match",
    "reason": "no item within 1.5 s"
+  },
+  {
+   "near_s": 173.8,
+   "cue": "sintel-ad-9",
+   "start": 173.833,
+   "old_text": "Sintel grips the wall and climbs.",
+   "status": "replaced",
+   "new_text": "Sintel cradles the baby dragon.",
+   "duration_s": 2.038,
+   "slot_s": 7.667,
+   "words": 5
   }
  ]
 }

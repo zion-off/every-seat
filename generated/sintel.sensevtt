@@ -32,8 +32,8 @@ sintel-ad-8
 {"id":"sintel-ad-8","type":"ad","start":156.583,"end":158.542,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-8.m4a","duration_s":1.95},"preview":"Sintel runs through a ruined town.","evidence":{"text":"Sintel runs through a ruined town.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":5,"window_end":181.542}}
 
 sintel-ad-9
-00:02:53.833 --> 00:02:55.833
-{"id":"sintel-ad-9","type":"ad","start":173.833,"end":175.833,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-9.m4a","duration_s":2.0},"preview":"Sintel grips the wall and climbs.","evidence":{"text":"Sintel grips the wall and climbs.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":5,"window_end":181.542}}
+00:02:53.833 --> 00:02:55.875
+{"id":"sintel-ad-9","type":"ad","start":173.833,"end":175.875,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-9.m4a","duration_s":2.0375},"preview":"Sintel cradles the baby dragon.","evidence":{"text":"Sintel cradles the baby dragon.","words":5,"voice":"polly neural Joanna","rate_percent":100,"window":5,"window_end":181.542,"override":true}}
 
 sintel-ad-10
 00:03:34.208 --> 00:03:36.708
