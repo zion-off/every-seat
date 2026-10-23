@@ -4,205 +4,213 @@ NOTE sensevtt-header
 {"version":1,"title":"sintel","analyzer":"everyseat 0.1.0 describe (us.amazon.nova-pro-v1:0, polly neural Joanna)","source_sha256":"97f1dbc66231df42ad49bd8c29aa174b8f48933058e47e7157d4ba63d93a8efa","fps":24,"iris":{"verdict":"NOT_RUN"}}
 
 sintel-ad-1
-00:00:27.042 --> 00:00:30.375
-{"id":"sintel-ad-1","type":"ad","start":27.042,"end":30.375,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-1.wav","duration_s":3.3125},"preview":"Sintel engages in a fierce battle with multiple opponents.","evidence":{"text":"Sintel engages in a fierce battle with multiple opponents.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":2,"window_end":53.625}}
+00:00:00.708 --> 00:00:02.875
+{"id":"sintel-ad-1","type":"ad","start":0.708,"end":2.875,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-1.wav","duration_s":2.1375},"preview":"Sintel fights an old man in the snow.","evidence":{"text":"Sintel fights an old man in the snow.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":1,"window_end":27.042}}
 
 sintel-ad-2
-00:00:43.292 --> 00:00:46.167
-{"id":"sintel-ad-2","type":"ad","start":43.292,"end":46.167,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-2.wav","duration_s":2.85},"preview":"Sintel knocks an opponent off a cliff into the snow.","evidence":{"text":"Sintel knocks an opponent off a cliff into the snow.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":2,"window_end":53.625}}
+00:00:09.500 --> 00:00:11.917
+{"id":"sintel-ad-2","type":"ad","start":9.5,"end":11.917,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-2.wav","duration_s":2.4125},"preview":"Sintel continues the fight with the old man.","evidence":{"text":"Sintel continues the fight with the old man.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":1,"window_end":27.042}}
 
 sintel-ad-3
-00:00:53.625 --> 00:00:56.000
-{"id":"sintel-ad-3","type":"ad","start":53.625,"end":56.0,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-3.wav","duration_s":2.35},"preview":"Sintel strikes an opponent with her spear.","evidence":{"text":"Sintel strikes an opponent with her spear.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":3,"window_end":80.167}}
+00:00:27.250 --> 00:00:30.000
+{"id":"sintel-ad-3","type":"ad","start":27.25,"end":30.0,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-3.wav","duration_s":2.725},"preview":"Sintel and the old man engage in a fierce battle.","evidence":{"text":"Sintel and the old man engage in a fierce battle.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":2,"window_end":53.625}}
 
 sintel-ad-4
-00:01:00.625 --> 00:01:03.042
-{"id":"sintel-ad-4","type":"ad","start":60.625,"end":63.042,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-4.wav","duration_s":2.4},"preview":"Sintel dodges an attack from an opponent.","evidence":{"text":"Sintel dodges an attack from an opponent.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":3,"window_end":80.167}}
+00:00:43.500 --> 00:00:46.083
+{"id":"sintel-ad-4","type":"ad","start":43.5,"end":46.083,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-4.wav","duration_s":2.575},"preview":"Sintel knocks the old man down with her spear.","evidence":{"text":"Sintel knocks the old man down with her spear.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":2,"window_end":53.625}}
 
 sintel-ad-5
-00:01:14.042 --> 00:01:17.292
-{"id":"sintel-ad-5","type":"ad","start":74.042,"end":77.292,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-5.wav","duration_s":3.225},"preview":"Sintel lies on the ground, holding a bloodied spear.","evidence":{"text":"Sintel lies on the ground, holding a bloodied spear.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":3,"window_end":80.167}}
+00:00:55.833 --> 00:00:59.167
+{"id":"sintel-ad-5","type":"ad","start":55.833,"end":59.167,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-5.wav","duration_s":3.3},"preview":"Sintel disarms the old man, who stumbles backward.","evidence":{"text":"Sintel disarms the old man, who stumbles backward.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":3,"window_end":80.167}}
 
 sintel-ad-6
-00:02:36.375 --> 00:02:38.667
-{"id":"sintel-ad-6","type":"ad","start":156.375,"end":158.667,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-6.wav","duration_s":2.2875},"preview":"Sintel jumps from a rooftop to another.","evidence":{"text":"Sintel jumps from a rooftop to another.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":5,"window_end":181.542}}
+00:01:00.833 --> 00:01:03.750
+{"id":"sintel-ad-6","type":"ad","start":60.833,"end":63.75,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-6.wav","duration_s":2.9125},"preview":"Sintel pins the old man to the ground with her spear.","evidence":{"text":"Sintel pins the old man to the ground with her spear.","words":11,"voice":"polly neural Joanna","rate_percent":100,"window":3,"window_end":80.167}}
 
 sintel-ad-7
-00:02:42.083 --> 00:02:44.833
-{"id":"sintel-ad-7","type":"ad","start":162.083,"end":164.833,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-7.wav","duration_s":2.725},"preview":"Sintel lands on a rooftop and rolls to her feet.","evidence":{"text":"Sintel lands on a rooftop and rolls to her feet.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":5,"window_end":181.542}}
+00:01:04.917 --> 00:01:08.583
+{"id":"sintel-ad-7","type":"ad","start":64.917,"end":68.583,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-7.wav","duration_s":3.6625},"preview":"The old man struggles beneath Sintel, who maintains her grip.","evidence":{"text":"The old man struggles beneath Sintel, who maintains her grip.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":3,"window_end":80.167}}
 
 sintel-ad-8
-00:02:56.417 --> 00:02:59.250
-{"id":"sintel-ad-8","type":"ad","start":176.417,"end":179.25,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-8.wav","duration_s":2.8125},"preview":"Sintel stands on a rooftop, looking around.","evidence":{"text":"Sintel stands on a rooftop, looking around.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":5,"window_end":181.542}}
+00:01:20.375 --> 00:01:23.667
+{"id":"sintel-ad-8","type":"ad","start":80.375,"end":83.667,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-8.wav","duration_s":3.2625},"preview":"Sintel lies on the snowy ground, holding her spear.","evidence":{"text":"Sintel lies on the snowy ground, holding her spear.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":4,"window_end":106.75}}
 
 sintel-ad-9
-00:03:01.542 --> 00:03:04.583
-{"id":"sintel-ad-9","type":"ad","start":181.542,"end":184.583,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-9.wav","duration_s":3.0375},"preview":"Sintel crouches on a rooftop, holding a spear.","evidence":{"text":"Sintel crouches on a rooftop, holding a spear.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":6,"window_end":206.75}}
+00:01:26.042 --> 00:01:28.083
+{"id":"sintel-ad-9","type":"ad","start":86.042,"end":88.083,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-9.wav","duration_s":2.025},"preview":"A large, ornate sword appears.","evidence":{"text":"A large, ornate sword appears.","words":5,"voice":"polly neural Joanna","rate_percent":100,"window":4,"window_end":106.75}}
 
 sintel-ad-10
-00:03:11.875 --> 00:03:15.542
-{"id":"sintel-ad-10","type":"ad","start":191.875,"end":195.542,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-10.wav","duration_s":3.6625},"preview":"Sintel stands on a rooftop, looking down at a small dragon.","evidence":{"text":"Sintel stands on a rooftop, looking down at a small dragon.","words":11,"voice":"polly neural Joanna","rate_percent":100,"window":6,"window_end":206.75}}
+00:01:41.417 --> 00:01:43.833
+{"id":"sintel-ad-10","type":"ad","start":101.417,"end":103.833,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-10.wav","duration_s":2.3875},"preview":"Sintel stands in a cave with a fire pit.","evidence":{"text":"Sintel stands in a cave with a fire pit.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":4,"window_end":106.75}}
 
 sintel-ad-11
-00:03:23.125 --> 00:03:26.625
-{"id":"sintel-ad-11","type":"ad","start":203.125,"end":206.625,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-11.wav","duration_s":3.4875},"preview":"Sintel jumps from one rooftop to another, spear in hand.","evidence":{"text":"Sintel jumps from one rooftop to another, spear in hand.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":6,"window_end":206.75}}
+00:02:36.583 --> 00:02:38.875
+{"id":"sintel-ad-11","type":"ad","start":156.583,"end":158.875,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-11.wav","duration_s":2.2875},"preview":"Sintel jumps from a rooftop to another.","evidence":{"text":"Sintel jumps from a rooftop to another.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":5,"window_end":181.542}}
 
 sintel-ad-12
-00:03:34.000 --> 00:03:36.125
-{"id":"sintel-ad-12","type":"ad","start":214.0,"end":216.125,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-12.wav","duration_s":2.1125},"preview":"Sintel holds Scales in her arms.","evidence":{"text":"Sintel holds Scales in her arms.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":7,"window_end":227.75}}
+00:02:56.625 --> 00:02:59.458
+{"id":"sintel-ad-12","type":"ad","start":176.625,"end":179.458,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-12.wav","duration_s":2.8125},"preview":"Sintel stands on a rooftop, looking around.","evidence":{"text":"Sintel stands on a rooftop, looking around.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":5,"window_end":181.542}}
 
 sintel-ad-13
-00:03:44.125 --> 00:03:46.167
-{"id":"sintel-ad-13","type":"ad","start":224.125,"end":226.167,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-13.wav","duration_s":2.0375},"preview":"Sintel lies down without her spear.","evidence":{"text":"Sintel lies down without her spear.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":7,"window_end":227.75}}
+00:03:01.750 --> 00:03:04.792
+{"id":"sintel-ad-13","type":"ad","start":181.75,"end":184.792,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-13.wav","duration_s":3.0375},"preview":"Sintel crouches on a rooftop, holding a spear.","evidence":{"text":"Sintel crouches on a rooftop, holding a spear.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":6,"window_end":206.75}}
 
 sintel-ad-14
-00:03:52.750 --> 00:03:59.417
-{"id":"sintel-ad-14","type":"ad","start":232.75,"end":239.417,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-14.wav","duration_s":6.6425},"preview":"Sintel and Scales move through a dark, ruined building. Sintel holds Scales close as they navigate the debris.","evidence":{"text":"Sintel and Scales move through a dark, ruined building. Sintel holds Scales close as they navigate the debris.","words":18,"voice":"polly neural Joanna","rate_percent":100,"window":8,"window_end":249.833}}
+00:03:10.000 --> 00:03:12.667
+{"id":"sintel-ad-14","type":"ad","start":190.0,"end":192.667,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-14.wav","duration_s":2.6375},"preview":"Sintel looks down at a small dragon on the ground.","evidence":{"text":"Sintel looks down at a small dragon on the ground.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":6,"window_end":206.75}}
 
 sintel-ad-15
-00:04:14.375 --> 00:04:17.375
-{"id":"sintel-ad-15","type":"ad","start":254.375,"end":257.375,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-15.wav","duration_s":2.9875},"preview":"Sintel jumps from a rooftop into a bustling market.","evidence":{"text":"Sintel jumps from a rooftop into a bustling market.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":9,"window_end":264.75}}
+00:03:23.333 --> 00:03:26.083
+{"id":"sintel-ad-15","type":"ad","start":203.333,"end":206.083,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-15.wav","duration_s":2.725},"preview":"Sintel and the dragon walk through a ruined area.","evidence":{"text":"Sintel and the dragon walk through a ruined area.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":6,"window_end":206.75}}
 
 sintel-ad-16
-00:04:28.750 --> 00:04:31.833
-{"id":"sintel-ad-16","type":"ad","start":268.75,"end":271.833,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-16.wav","duration_s":3.0625},"preview":"Sintel runs and jumps over debris in the ruined building.","evidence":{"text":"Sintel runs and jumps over debris in the ruined building.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":10,"window_end":286.125}}
+00:03:34.208 --> 00:03:36.583
+{"id":"sintel-ad-16","type":"ad","start":214.208,"end":216.583,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-16.wav","duration_s":2.35},"preview":"Sintel holds Scales in a dark cave.","evidence":{"text":"Sintel holds Scales in a dark cave.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":7,"window_end":227.75}}
 
 sintel-ad-17
-00:04:33.250 --> 00:04:37.000
-{"id":"sintel-ad-17","type":"ad","start":273.25,"end":277.0,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-17.wav","duration_s":3.7375},"preview":"Scales flies above Sintel, navigating the ruined structure.","evidence":{"text":"Scales flies above Sintel, navigating the ruined structure.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":10,"window_end":286.125}}
+00:03:52.958 --> 00:03:55.958
+{"id":"sintel-ad-17","type":"ad","start":232.958,"end":235.958,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-17.wav","duration_s":2.9625},"preview":"Sintel holds Scales in a dark, ruined area.","evidence":{"text":"Sintel holds Scales in a dark, ruined area.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":8,"window_end":249.833}}
 
 sintel-ad-18
-00:04:46.125 --> 00:04:48.375
-{"id":"sintel-ad-18","type":"ad","start":286.125,"end":288.375,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-18.wav","duration_s":2.2375},"preview":"Sintel leaps from rooftop to rooftop.","evidence":{"text":"Sintel leaps from rooftop to rooftop.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":11,"window_end":303.5}}
+00:04:04.292 --> 00:04:07.708
+{"id":"sintel-ad-18","type":"ad","start":244.292,"end":247.708,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-18.wav","duration_s":3.3875},"preview":"Sintel looks around the chaotic, debris-filled environment.","evidence":{"text":"Sintel looks around the chaotic, debris-filled environment.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":8,"window_end":249.833}}
 
 sintel-ad-19
-00:04:49.333 --> 00:04:52.583
-{"id":"sintel-ad-19","type":"ad","start":289.333,"end":292.583,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-19.wav","duration_s":3.2375},"preview":"Scales glides smoothly above Sintel, guiding her path.","evidence":{"text":"Scales glides smoothly above Sintel, guiding her path.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":11,"window_end":303.5}}
+00:04:14.583 --> 00:04:17.708
+{"id":"sintel-ad-19","type":"ad","start":254.583,"end":257.708,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-19.wav","duration_s":3.1125},"preview":"Sintel jumps off a wooden structure, spear in hand.","evidence":{"text":"Sintel jumps off a wooden structure, spear in hand.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":9,"window_end":264.75}}
 
 sintel-ad-20
-00:05:08.000 --> 00:05:11.125
-{"id":"sintel-ad-20","type":"ad","start":308.0,"end":311.125,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-20.wav","duration_s":3.1},"preview":"Sintel stands on a ruined structure, looking around.","evidence":{"text":"Sintel stands on a ruined structure, looking around.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":12,"window_end":323.125}}
+00:04:35.833 --> 00:04:39.125
+{"id":"sintel-ad-20","type":"ad","start":275.833,"end":279.125,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-20.wav","duration_s":3.2625},"preview":"Scales flies above Sintel as she runs across rooftops.","evidence":{"text":"Scales flies above Sintel as she runs across rooftops.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":10,"window_end":286.125}}
 
 sintel-ad-21
-00:05:15.583 --> 00:05:19.083
-{"id":"sintel-ad-21","type":"ad","start":315.583,"end":319.083,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-21.wav","duration_s":3.5},"preview":"Scales flies above Sintel, guiding her path through the ruins.","evidence":{"text":"Scales flies above Sintel, guiding her path through the ruins.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":12,"window_end":323.125}}
+00:04:49.542 --> 00:04:51.667
+{"id":"sintel-ad-21","type":"ad","start":289.542,"end":291.667,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-21.wav","duration_s":2.125},"preview":"Sintel runs across a ruined area.","evidence":{"text":"Sintel runs across a ruined area.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":11,"window_end":303.5}}
 
 sintel-ad-22
-00:05:23.125 --> 00:05:26.292
-{"id":"sintel-ad-22","type":"ad","start":323.125,"end":326.292,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-22.wav","duration_s":3.1625},"preview":"Sintel grips Scales tightly as he soars through the ruins.","evidence":{"text":"Sintel grips Scales tightly as he soars through the ruins.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":13,"window_end":338.25}}
+00:05:08.208 --> 00:05:10.708
+{"id":"sintel-ad-22","type":"ad","start":308.208,"end":310.708,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-22.wav","duration_s":2.5},"preview":"Sintel looks up at Scales flying above her.","evidence":{"text":"Sintel looks up at Scales flying above her.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":12,"window_end":323.125}}
 
 sintel-ad-23
-00:05:32.542 --> 00:05:35.417
-{"id":"sintel-ad-23","type":"ad","start":332.542,"end":335.417,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-23.wav","duration_s":2.85},"preview":"The ruined city stretches out below them as they fly.","evidence":{"text":"The ruined city stretches out below them as they fly.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":13,"window_end":338.25}}
+00:05:15.167 --> 00:05:17.833
+{"id":"sintel-ad-23","type":"ad","start":315.167,"end":317.833,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-23.wav","duration_s":2.6625},"preview":"Scales flies above Sintel in the ruined area.","evidence":{"text":"Scales flies above Sintel in the ruined area.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":12,"window_end":323.125}}
 
 sintel-ad-24
-00:05:49.750 --> 00:05:52.125
-{"id":"sintel-ad-24","type":"ad","start":349.75,"end":352.125,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-24.wav","duration_s":2.3625},"preview":"Sintel runs across a desert landscape.","evidence":{"text":"Sintel runs across a desert landscape.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":14,"window_end":368.167}}
+00:05:23.333 --> 00:05:26.458
+{"id":"sintel-ad-24","type":"ad","start":323.333,"end":326.458,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-24.wav","duration_s":3.1},"preview":"Sintel reaches for Scales' tail as he flies above her.","evidence":{"text":"Sintel reaches for Scales' tail as he flies above her.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":13,"window_end":338.25}}
 
 sintel-ad-25
-00:05:53.333 --> 00:05:56.500
-{"id":"sintel-ad-25","type":"ad","start":353.333,"end":356.5,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-25.wav","duration_s":3.1625},"preview":"Sintel stands in a desert with a sunset in the background.","evidence":{"text":"Sintel stands in a desert with a sunset in the background.","words":11,"voice":"polly neural Joanna","rate_percent":100,"window":14,"window_end":368.167}}
+00:05:32.333 --> 00:05:35.708
+{"id":"sintel-ad-25","type":"ad","start":332.333,"end":335.708,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-25.wav","duration_s":3.35},"preview":"Sintel grabs Scales' tail but loses her grip and falls.","evidence":{"text":"Sintel grabs Scales' tail but loses her grip and falls.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":13,"window_end":338.25}}
 
 sintel-ad-26
-00:06:08.167 --> 00:06:10.458
-{"id":"sintel-ad-26","type":"ad","start":368.167,"end":370.458,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-26.wav","duration_s":2.2625},"preview":"Sintel runs through a bamboo forest.","evidence":{"text":"Sintel runs through a bamboo forest.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":15,"window_end":393.875}}
+00:05:42.708 --> 00:05:45.292
+{"id":"sintel-ad-26","type":"ad","start":342.708,"end":345.292,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-26.wav","duration_s":2.575},"preview":"Sintel stands in front of a ruined structure.","evidence":{"text":"Sintel stands in front of a ruined structure.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":14,"window_end":368.167}}
 
 sintel-ad-27
-00:06:22.917 --> 00:06:25.042
-{"id":"sintel-ad-27","type":"ad","start":382.917,"end":385.042,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-27.wav","duration_s":2.125},"preview":"Sintel stands on a hill with a spear.","evidence":{"text":"Sintel stands on a hill with a spear.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":15,"window_end":393.875}}
+00:05:51.667 --> 00:05:54.042
+{"id":"sintel-ad-27","type":"ad","start":351.667,"end":354.042,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-27.wav","duration_s":2.375},"preview":"Sintel runs across a sandy landscape.","evidence":{"text":"Sintel runs across a sandy landscape.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":14,"window_end":368.167}}
 
 sintel-ad-28
-00:06:36.917 --> 00:06:39.500
-{"id":"sintel-ad-28","type":"ad","start":396.917,"end":399.5,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-28.wav","duration_s":2.575},"preview":"A hooded figure with a spear raises his hands.","evidence":{"text":"A hooded figure with a spear raises his hands.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":16,"window_end":419.583}}
+00:06:20.750 --> 00:06:23.333
+{"id":"sintel-ad-28","type":"ad","start":380.75,"end":383.333,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-28.wav","duration_s":2.575},"preview":"Sintel runs through a dense bamboo forest.","evidence":{"text":"Sintel runs through a dense bamboo forest.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":15,"window_end":393.875}}
 
 sintel-ad-29
-00:06:55.083 --> 00:06:56.833
-{"id":"sintel-ad-29","type":"ad","start":415.083,"end":416.833,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-29.wav","duration_s":1.725},"preview":"The figure falls into the mist.","evidence":{"text":"The figure falls into the mist.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":16,"window_end":419.583}}
+00:06:34.083 --> 00:06:37.583
+{"id":"sintel-ad-29","type":"ad","start":394.083,"end":397.583,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-29.wav","duration_s":3.4875},"preview":"Sintel and the old man exchange blows in the snowy landscape.","evidence":{"text":"Sintel and the old man exchange blows in the snowy landscape.","words":11,"voice":"polly neural Joanna","rate_percent":100,"window":16,"window_end":419.583}}
 
 sintel-ad-30
-00:06:59.583 --> 00:07:02.208
-{"id":"sintel-ad-30","type":"ad","start":419.583,"end":422.208,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-30.wav","duration_s":2.6},"preview":"Sintel and a hooded figure engage in combat.","evidence":{"text":"Sintel and a hooded figure engage in combat.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":17,"window_end":445.333}}
+00:06:55.292 --> 00:06:58.208
+{"id":"sintel-ad-30","type":"ad","start":415.292,"end":418.208,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-30.wav","duration_s":2.9125},"preview":"Sintel attempts to strike the old man with her spear.","evidence":{"text":"Sintel attempts to strike the old man with her spear.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":16,"window_end":419.583}}
 
 sintel-ad-31
-00:07:14.917 --> 00:07:17.042
-{"id":"sintel-ad-31","type":"ad","start":434.917,"end":437.042,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-31.wav","duration_s":2.0875},"preview":"The hooded figure falls into a chasm.","evidence":{"text":"The hooded figure falls into a chasm.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":17,"window_end":445.333}}
+00:07:44.708 --> 00:07:47.833
+{"id":"sintel-ad-31","type":"ad","start":464.708,"end":467.833,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-31.wav","duration_s":3.125},"preview":"Sintel stands in a dark cave, holding a spear.","evidence":{"text":"Sintel stands in a dark cave, holding a spear.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":18,"window_end":487.625}}
 
 sintel-ad-32
-00:07:22.375 --> 00:07:25.000
-{"id":"sintel-ad-32","type":"ad","start":442.375,"end":445.0,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-32.wav","duration_s":2.6},"preview":"Sintel stands alone, holding her spear.","evidence":{"text":"Sintel stands alone, holding her spear.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":17,"window_end":445.333}}
+00:07:55.208 --> 00:07:57.958
+{"id":"sintel-ad-32","type":"ad","start":475.208,"end":477.958,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-32.wav","duration_s":2.7375},"preview":"Sintel looks down at glowing crystals on the ground.","evidence":{"text":"Sintel looks down at glowing crystals on the ground.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":18,"window_end":487.625}}
 
 sintel-ad-33
-00:08:07.625 --> 00:08:10.583
-{"id":"sintel-ad-33","type":"ad","start":487.625,"end":490.583,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-33.wav","duration_s":2.95},"preview":"Sintel stands in a dark cave with glowing crystals.","evidence":{"text":"Sintel stands in a dark cave with glowing crystals.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":19,"window_end":510.75}}
+00:08:03.917 --> 00:08:07.292
+{"id":"sintel-ad-33","type":"ad","start":483.917,"end":487.292,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-33.wav","duration_s":3.3375},"preview":"Sintel steps forward, her shadow cast on the crystals.","evidence":{"text":"Sintel steps forward, her shadow cast on the crystals.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":18,"window_end":487.625}}
 
 sintel-ad-34
-00:08:22.458 --> 00:08:25.958
-{"id":"sintel-ad-34","type":"ad","start":502.458,"end":505.958,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-34.wav","duration_s":3.475},"preview":"A large dragon lies on the ground, surrounded by bones.","evidence":{"text":"A large dragon lies on the ground, surrounded by bones.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":19,"window_end":510.75}}
+00:08:07.833 --> 00:08:10.792
+{"id":"sintel-ad-34","type":"ad","start":487.833,"end":490.792,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-34.wav","duration_s":2.925},"preview":"Sintel walks through a dark cave with glowing crystals.","evidence":{"text":"Sintel walks through a dark cave with glowing crystals.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":19,"window_end":510.75}}
 
 sintel-ad-35
-00:08:43.417 --> 00:08:46.667
-{"id":"sintel-ad-35","type":"ad","start":523.417,"end":526.667,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-35.wav","duration_s":3.2375},"preview":"Sintel discovers a small dragon lying on the cave floor.","evidence":{"text":"Sintel discovers a small dragon lying on the cave floor.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":20,"window_end":533.917}}
+00:08:22.667 --> 00:08:25.958
+{"id":"sintel-ad-35","type":"ad","start":502.667,"end":505.958,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-35.wav","duration_s":3.275},"preview":"Sintel encounters a large, injured dragon in the cave.","evidence":{"text":"Sintel encounters a large, injured dragon in the cave.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":19,"window_end":510.75}}
 
 sintel-ad-36
-00:08:53.917 --> 00:08:57.167
-{"id":"sintel-ad-36","type":"ad","start":533.917,"end":537.167,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-36.wav","duration_s":3.2375},"preview":"Sintel stands in a dark cave, holding her spear.","evidence":{"text":"Sintel stands in a dark cave, holding her spear.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":21,"window_end":557.083}}
+00:08:30.958 --> 00:08:33.875
+{"id":"sintel-ad-36","type":"ad","start":510.958,"end":513.875,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-36.wav","duration_s":2.9125},"preview":"Sintel stands before a large, injured dragon.","evidence":{"text":"Sintel stands before a large, injured dragon.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":20,"window_end":533.917}}
 
 sintel-ad-37
-00:09:03.583 --> 00:09:06.375
-{"id":"sintel-ad-37","type":"ad","start":543.583,"end":546.375,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-37.wav","duration_s":2.7625},"preview":"Sintel approaches the small dragon cautiously.","evidence":{"text":"Sintel approaches the small dragon cautiously.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":21,"window_end":557.083}}
+00:08:43.625 --> 00:08:46.417
+{"id":"sintel-ad-37","type":"ad","start":523.625,"end":526.417,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-37.wav","duration_s":2.7875},"preview":"Sintel looks concerned as she approaches the dragon.","evidence":{"text":"Sintel looks concerned as she approaches the dragon.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":20,"window_end":533.917}}
 
 sintel-ad-38
-00:09:27.375 --> 00:09:29.875
-{"id":"sintel-ad-38","type":"ad","start":567.375,"end":569.875,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-38.wav","duration_s":2.475},"preview":"Sintel gently touches the small dragon.","evidence":{"text":"Sintel gently touches the small dragon.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":22,"window_end":580.333}}
+00:08:56.542 --> 00:08:59.083
+{"id":"sintel-ad-38","type":"ad","start":536.542,"end":539.083,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-38.wav","duration_s":2.5375},"preview":"Sintel moves closer to the injured dragon.","evidence":{"text":"Sintel moves closer to the injured dragon.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":21,"window_end":557.083}}
 
 sintel-ad-39
-00:09:32.958 --> 00:09:36.000
-{"id":"sintel-ad-39","type":"ad","start":572.958,"end":576.0,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-39.wav","duration_s":3.025},"preview":"Sintel's expression changes as she looks at the dragon.","evidence":{"text":"Sintel's expression changes as she looks at the dragon.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":22,"window_end":580.333}}
+00:09:06.208 --> 00:09:08.708
+{"id":"sintel-ad-39","type":"ad","start":546.208,"end":548.708,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-39.wav","duration_s":2.475},"preview":"The dragon lies motionless on the cave floor.","evidence":{"text":"The dragon lies motionless on the cave floor.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":21,"window_end":557.083}}
 
 sintel-ad-40
-00:09:40.333 --> 00:09:43.083
-{"id":"sintel-ad-40","type":"ad","start":580.333,"end":583.083,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-40.wav","duration_s":2.725},"preview":"Sintel strikes the large dragon with her spear.","evidence":{"text":"Sintel strikes the large dragon with her spear.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":23,"window_end":600.708}}
+00:09:20.208 --> 00:09:23.167
+{"id":"sintel-ad-40","type":"ad","start":560.208,"end":563.167,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-40.wav","duration_s":2.9375},"preview":"Sintel charges at the huge dragon as it rears up.","evidence":{"text":"Sintel charges at the huge dragon as it rears up.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":22,"window_end":580.333,"override":true}}
 
 sintel-ad-41
-00:09:48.208 --> 00:09:51.583
-{"id":"sintel-ad-41","type":"ad","start":588.208,"end":591.583,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-41.wav","duration_s":3.3375},"preview":"The dragon retaliates, knocking Sintel to the ground.","evidence":{"text":"The dragon retaliates, knocking Sintel to the ground.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":23,"window_end":600.708}}
+00:09:27.583 --> 00:09:30.125
+{"id":"sintel-ad-41","type":"ad","start":567.583,"end":570.125,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-41.wav","duration_s":2.5375},"preview":"The dragon retaliates with a powerful strike.","evidence":{"text":"The dragon retaliates with a powerful strike.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":22,"window_end":580.333}}
 
 sintel-ad-42
-00:10:16.750 --> 00:10:19.875
-{"id":"sintel-ad-42","type":"ad","start":616.75,"end":619.875,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-42.wav","duration_s":3.1},"preview":"Sintel lies on the ground, looking up at the dragon.","evidence":{"text":"Sintel lies on the ground, looking up at the dragon.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":24,"window_end":621.083}}
+00:09:33.167 --> 00:09:35.958
+{"id":"sintel-ad-42","type":"ad","start":573.167,"end":575.958,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-42.wav","duration_s":2.7625},"preview":"Sintel dodges and prepares for another attack.","evidence":{"text":"Sintel dodges and prepares for another attack.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":22,"window_end":580.333}}
 
 sintel-ad-43
-00:10:30.333 --> 00:10:33.333
-{"id":"sintel-ad-43","type":"ad","start":630.333,"end":633.333,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-43.wav","duration_s":2.9625},"preview":"Sintel stands in a dark cave, looking around.","evidence":{"text":"Sintel stands in a dark cave, looking around.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":25,"window_end":658.875}}
+00:09:47.375 --> 00:09:49.917
+{"id":"sintel-ad-43","type":"ad","start":587.375,"end":589.917,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-43.wav","duration_s":2.5375},"preview":"The dragon's strike knocks Sintel off her feet.","evidence":{"text":"The dragon's strike knocks Sintel off her feet.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":23,"window_end":600.708}}
 
 sintel-ad-44
-00:10:47.458 --> 00:10:50.250
-{"id":"sintel-ad-44","type":"ad","start":647.458,"end":650.25,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-44.wav","duration_s":2.7875},"preview":"Sintel raises her spear, preparing to strike.","evidence":{"text":"Sintel raises her spear, preparing to strike.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":25,"window_end":658.875}}
+00:10:00.917 --> 00:10:03.667
+{"id":"sintel-ad-44","type":"ad","start":600.917,"end":603.667,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-44.wav","duration_s":2.725},"preview":"Sintel strikes the large dragon with her spear.","evidence":{"text":"Sintel strikes the large dragon with her spear.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":24,"window_end":621.083}}
 
 sintel-ad-45
-00:10:54.958 --> 00:10:57.542
-{"id":"sintel-ad-45","type":"ad","start":654.958,"end":657.542,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-45.wav","duration_s":2.575},"preview":"Sintel looks down, searching the cave floor.","evidence":{"text":"Sintel looks down, searching the cave floor.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":25,"window_end":658.875}}
+00:10:10.625 --> 00:10:13.000
+{"id":"sintel-ad-45","type":"ad","start":610.625,"end":613.0,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-45.wav","duration_s":2.35},"preview":"The dragon's tail swipes towards Sintel.","evidence":{"text":"The dragon's tail swipes towards Sintel.","words":6,"voice":"polly neural Joanna","rate_percent":100,"window":24,"window_end":621.083}}
 
 sintel-ad-46
-00:11:24.417 --> 00:11:27.208
-{"id":"sintel-ad-46","type":"ad","start":684.417,"end":687.208,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-46.wav","duration_s":2.7875},"preview":"Sintel stands up and continues searching the cave.","evidence":{"text":"Sintel stands up and continues searching the cave.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":26,"window_end":687.458}}
+00:10:30.542 --> 00:10:33.833
+{"id":"sintel-ad-46","type":"ad","start":630.542,"end":633.833,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-46.wav","duration_s":3.2625},"preview":"Sintel looks up, searching for something in the dark cave.","evidence":{"text":"Sintel looks up, searching for something in the dark cave.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":25,"window_end":658.875}}
 
 sintel-ad-47
-00:11:27.458 --> 00:11:31.250
-{"id":"sintel-ad-47","type":"ad","start":687.458,"end":691.25,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-47.wav","duration_s":3.7875},"preview":"Sintel stands on a cliff, looking out over a vast landscape.","evidence":{"text":"Sintel stands on a cliff, looking out over a vast landscape.","words":11,"voice":"polly neural Joanna","rate_percent":100,"window":27,"window_end":716.042}}
+00:10:47.667 --> 00:10:49.958
+{"id":"sintel-ad-47","type":"ad","start":647.667,"end":649.958,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-47.wav","duration_s":2.2875},"preview":"Sintel raises her hand toward the dragon.","evidence":{"text":"Sintel raises her hand toward the dragon.","words":7,"voice":"polly neural Joanna","rate_percent":100,"window":25,"window_end":658.875,"override":true}}
 
 sintel-ad-48
-00:11:40.292 --> 00:11:44.000
-{"id":"sintel-ad-48","type":"ad","start":700.292,"end":704.0,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-48.wav","duration_s":3.7},"preview":"Sintel walks through a dense forest, surrounded by tall trees.","evidence":{"text":"Sintel walks through a dense forest, surrounded by tall trees.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":27,"window_end":716.042}}
+00:10:59.083 --> 00:11:02.167
+{"id":"sintel-ad-48","type":"ad","start":659.083,"end":662.167,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-48.wav","duration_s":3.075},"preview":"Sintel stands in a dark cave, looking upwards.","evidence":{"text":"Sintel stands in a dark cave, looking upwards.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":26,"window_end":687.458}}
 
 sintel-ad-49
-00:11:50.708 --> 00:11:53.708
-{"id":"sintel-ad-49","type":"ad","start":710.708,"end":713.708,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-49.wav","duration_s":2.975},"preview":"Sintel approaches a small clearing with white flowers.","evidence":{"text":"Sintel approaches a small clearing with white flowers.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":27,"window_end":716.042}}
+00:11:06.417 --> 00:11:09.833
+{"id":"sintel-ad-49","type":"ad","start":666.417,"end":669.833,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-49.wav","duration_s":3.4125},"preview":"Sintel climbs a steep rock face with a determined expression.","evidence":{"text":"Sintel climbs a steep rock face with a determined expression.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":26,"window_end":687.458}}
 
 sintel-ad-50
-00:11:56.042 --> 00:12:00.042
-{"id":"sintel-ad-50","type":"ad","start":716.042,"end":720.042,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-50.wav","duration_s":3.9625},"preview":"Sintel walks, stops, lies down, and looks at the sky.","evidence":{"text":"Sintel walks, stops, lies down, and looks at the sky.","words":10,"voice":"polly neural Joanna","rate_percent":100,"window":28,"window_end":744.625}}
+00:11:24.625 --> 00:11:27.417
+{"id":"sintel-ad-50","type":"ad","start":684.625,"end":687.417,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-50.wav","duration_s":2.7875},"preview":"Sintel stands on ledge, dragon is behind her.","evidence":{"text":"Sintel stands on ledge, dragon is behind her.","words":8,"voice":"polly neural Joanna","rate_percent":100,"window":26,"window_end":687.458}}
 
 sintel-ad-51
-00:13:21.750 --> 00:13:25.417
-{"id":"sintel-ad-51","type":"ad","start":801.75,"end":805.417,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-51.wav","duration_s":3.65},"preview":"Sintel walks through bamboo forest, searching for her dragon.","evidence":{"text":"Sintel walks through bamboo forest, searching for her dragon.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":31,"window_end":830.333}}
+00:11:27.667 --> 00:11:31.750
+{"id":"sintel-ad-51","type":"ad","start":687.667,"end":691.75,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-51.wav","duration_s":4.0625},"preview":"Sintel stands on a rocky ledge, looking out over a vast landscape.","evidence":{"text":"Sintel stands on a rocky ledge, looking out over a vast landscape.","words":12,"voice":"polly neural Joanna","rate_percent":100,"window":27,"window_end":716.042}}
+
+sintel-ad-52
+00:11:40.500 --> 00:11:44.250
+{"id":"sintel-ad-52","type":"ad","start":700.5,"end":704.25,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-52.wav","duration_s":3.725},"preview":"Sintel walks along a narrow path between large roots and rocks.","evidence":{"text":"Sintel walks along a narrow path between large roots and rocks.","words":11,"voice":"polly neural Joanna","rate_percent":100,"window":27,"window_end":716.042}}
+
+sintel-ad-53
+00:11:50.250 --> 00:11:53.042
+{"id":"sintel-ad-53","type":"ad","start":710.25,"end":713.042,"anchor":"approx","intensity":1,"audio_ref":{"uri":"ad/sintel/sintel-ad-53.wav","duration_s":2.7875},"preview":"Sintel reaches a clearing with a few white flowers.","evidence":{"text":"Sintel reaches a clearing with a few white flowers.","words":9,"voice":"polly neural Joanna","rate_percent":100,"window":27,"window_end":716.042}}
