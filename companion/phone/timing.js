@@ -75,6 +75,14 @@ export class TvClock {
     /** @type {ClockMessage | undefined} */
     this.last = undefined;
     this.heardAt = 0;
+    /** True after the TV said it left the player, until it sends a clock for a film again. */
+    this.stopped = false;
+  }
+
+  /** The TV left the player: forget its timeline. */
+  stop() {
+    this.last = undefined;
+    this.stopped = true;
   }
 
   /** True when the TV has gone quiet, for example because it left the film or lost power. */
@@ -113,6 +121,7 @@ export class TvClock {
    */
   update(message) {
     const before = this.last;
+    this.stopped = false;
     this.last = message;
     this.heardAt = performance.now();
     if (!before) return "title";

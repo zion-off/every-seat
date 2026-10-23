@@ -25,7 +25,7 @@ export const phoneTitleId = (folder: string): string =>
  * Tells phones where the film is: on every play, pause, seek and stall, and every 2 s while the
  * player is open. The time is the clock of the frame on screen and the rate is 1 only while the
  * picture is moving, so a phone following it stops when the film stops. Returns a function that
- * sends a final stopped clock and ends the messages.
+ * sends a final clock with an empty title, meaning the TV has left the player, and ends the messages.
  */
 export const startClockMessages = (
   adapter: VegaAdapter,
@@ -64,6 +64,7 @@ export const startClockMessages = (
   return () => {
     off();
     clearInterval(timer);
-    relay.sendClock(controller.clock.now(), 0, title);
+    // An empty title tells phones the TV has left the player; a pause keeps the title.
+    relay.sendClock(0, 0, '');
   };
 };

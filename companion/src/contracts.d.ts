@@ -119,6 +119,7 @@ export interface ClockMessage {
   wallClock: number;
   /** Playback rate. */
   rate: number;
+  /** The film's id. Empty in the TV's last clock when it leaves the player, so phones stop following. */
   title: string;
 }
 

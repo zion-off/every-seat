@@ -123,6 +123,19 @@ function onMessage(message) {
     relayTime.receive(/** @type {{ c: number, s: number }} */ (message));
   } else if (message.t === "clock") {
     const clock = /** @type {import("./timing.js").ClockMessage} */ (message);
+    if (clock.title === "") {
+      // The TV left the player: stop speaking and wait for the next film.
+      tv.stop();
+      state.player?.reset();
+      state.title = undefined;
+      state.name = undefined;
+      state.clips = [];
+      state.clipsLoaded = false;
+      state.player?.setClips([]);
+      state.skewMs = undefined;
+      render();
+      return;
+    }
     const reason = tv.update(clock);
     state.skewMs = relayTime.ready ? clock.wallClock - relayTime.now() : undefined;
     if (clock.title !== state.title) void loadTitle(clock.title);
@@ -251,6 +264,7 @@ function render() {
   ui.title.textContent = started && film ? film : "Audio description";
   let text;
   if (!state.relayOpen) text = started ? "Lost the connection. Reconnecting…" : "Connecting…";
+  else if (tv.stopped) text = "The TV isn't playing a film right now.";
   else if (mediaNow === undefined) text = "Connected. Waiting for the TV to start a film.";
   else if (state.clipsLoaded && state.clips.length === 0) text = `No audio description for ${film} yet.`;
   else if (!started) text = `Connected. ${film} is ready.`;
