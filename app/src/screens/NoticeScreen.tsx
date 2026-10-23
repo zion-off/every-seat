@@ -1,10 +1,19 @@
-import { Button } from '@amazon-devices/kepler-ui-components';
 import { FocusManager } from '@amazon-devices/react-native-kepler';
 import React, { useEffect, useRef } from 'react';
 import { findNodeHandle, StyleSheet, Text, View } from 'react-native';
+import Backdrop from '../components/Backdrop';
+import Button from '../components/Button';
+import Mark from '../components/Mark';
 import { HOW_IT_WORKS, NOTICE_POINTS, NOTICE_TITLE } from '../notice';
-import { COLORS } from '../styles/palette';
-import { scaleUxToDp } from '../utils/pixelUtils';
+import {
+  colors,
+  radius,
+  safe,
+  size,
+  space,
+  type,
+  weight,
+} from '../styles/tokens';
 
 type Props = {
   /** The first-run notice must be accepted; About can also be left with Back. */
@@ -28,67 +37,72 @@ const NoticeScreen = ({ mode, onDone }: Props) => {
   }, []);
 
   return (
-    <View style={styles.root}>
-      <View style={styles.column}>
-        <Text style={styles.title} accessibilityRole="header">
-          {about ? 'About Every Seat' : 'Before you start'}
-        </Text>
-        {about && <Text style={styles.body}>{HOW_IT_WORKS}</Text>}
-        <Text style={styles.heading} accessibilityRole="header">
-          {NOTICE_TITLE}
-        </Text>
-        {NOTICE_POINTS.map((point) => (
-          <Text key={point} style={styles.body}>
-            {point}
+    <Backdrop>
+      <View style={styles.layout}>
+        <View style={styles.column}>
+          <Text style={styles.title} accessibilityRole="header">
+            {about ? 'About Every Seat' : 'Before you start'}
           </Text>
-        ))}
-        <View style={styles.action}>
-          <Button
-            ref={buttonRef}
-            label={about ? 'Back' : 'Got it'}
-            variant="primary"
-            size="lg"
-            accessibilityLabel={
-              about ? 'Back to who is on the couch' : 'Got it, continue'
-            }
-            onPress={onDone}
-          />
+          {about && <Text style={styles.body}>{HOW_IT_WORKS}</Text>}
+          <Text style={styles.heading} accessibilityRole="header">
+            {NOTICE_TITLE}
+          </Text>
+          {NOTICE_POINTS.map((point) => (
+            <Text key={point} style={styles.body}>
+              {point}
+            </Text>
+          ))}
+          <View style={styles.action}>
+            <Button
+              ref={buttonRef}
+              label={about ? 'Back' : 'Got it'}
+              variant="primary"
+              size="lg"
+              accessibilityLabel={
+                about ? 'Back to who is on the couch' : 'Got it, continue'
+              }
+              onPress={onDone}
+            />
+          </View>
         </View>
+        <Mark size={size.markHero} rounded={radius.lg} />
       </View>
-    </View>
+    </Backdrop>
   );
 };
 
 const styles = StyleSheet.create({
-  root: {
+  layout: {
     flex: 1,
-    backgroundColor: COLORS.BACKGROUND,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: safe.x,
+    paddingVertical: safe.y,
   },
   column: {
-    width: scaleUxToDp(1400),
+    width: size.column,
   },
   title: {
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(64),
-    fontWeight: '700',
-    marginBottom: scaleUxToDp(28),
+    ...type.display,
+    color: colors.text,
+    fontWeight: weight.bold,
+    marginBottom: space.md,
   },
   heading: {
-    color: COLORS.ACCENT,
-    fontSize: scaleUxToDp(42),
-    fontWeight: '700',
-    marginBottom: scaleUxToDp(20),
+    ...type.title,
+    color: colors.accent,
+    fontWeight: weight.bold,
+    marginBottom: space.sm,
   },
   body: {
-    color: COLORS.MUTED,
-    fontSize: scaleUxToDp(34),
-    lineHeight: scaleUxToDp(48),
-    marginBottom: scaleUxToDp(20),
+    ...type.body,
+    color: colors.textMuted,
+    marginBottom: space.sm,
   },
   action: {
-    marginTop: scaleUxToDp(28),
+    marginTop: space.xl,
+    marginLeft: space.xs,
     alignSelf: 'flex-start',
   },
 });
