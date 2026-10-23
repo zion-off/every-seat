@@ -3,9 +3,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import Backdrop from '../components/Backdrop';
 import Button from '../components/Button';
 import CouchPicker from '../components/CouchPicker';
+import Focusable from '../components/Focusable';
 import { LensSettings } from '../engine/types';
 import { describeLens } from '../lens/lens';
-import { colors, safe, space, type, weight } from '../styles/tokens';
+import { colors, radius, safe, space, type, weight } from '../styles/tokens';
 
 type Props = {
   selected: string[];
@@ -27,9 +28,27 @@ const CouchScreen = ({
   return (
     <Backdrop>
       <View style={styles.layout}>
-        <Text style={styles.title} accessibilityRole="header">
-          Who's on the couch?
-        </Text>
+        <View style={styles.header}>
+          <Text style={styles.title} accessibilityRole="header">
+            Who's on the couch?
+          </Text>
+          <Focusable
+            accessible
+            accessibilityRole="button"
+            accessibilityLabel="About Every Seat and the not-a-medical-device notice"
+            onPress={onAbout}
+            radius={radius.sm}
+            contentStyle={(focused) => [
+              styles.aboutFill,
+              focused && styles.aboutFillFocused,
+            ]}>
+            {(focused) => (
+              <Text style={[styles.about, focused && styles.aboutFocused]}>
+                About
+              </Text>
+            )}
+          </Focusable>
+        </View>
         <Text style={styles.hint}>
           Choose everyone watching. The most protective setting of each kind
           applies to the whole couch.
@@ -55,14 +74,6 @@ const CouchScreen = ({
             accessibilityLabel="Continue to the films"
             onPress={onContinue}
           />
-          <View style={styles.gap} />
-          <Button
-            label="About"
-            variant="secondary"
-            size="lg"
-            accessibilityLabel="About Every Seat and the not-a-medical-device notice"
-            onPress={onAbout}
-          />
         </View>
       </View>
     </Backdrop>
@@ -75,6 +86,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: safe.x,
     paddingVertical: safe.y,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   title: {
     ...type.display,
@@ -97,8 +113,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  gap: {
-    width: space.lg,
+  aboutFill: {
+    paddingVertical: space.xs,
+    paddingHorizontal: space.sm,
+  },
+  aboutFillFocused: {
+    backgroundColor: colors.surfaceFocused,
+  },
+  about: {
+    ...type.small,
+    color: colors.textMuted,
+  },
+  aboutFocused: {
+    color: colors.text,
   },
 });
 
