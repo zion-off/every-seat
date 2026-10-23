@@ -63,6 +63,8 @@ def _candidates(args: argparse.Namespace) -> int:
 def _analyze(args: argparse.Namespace) -> int:
     work_dir = args.work_dir or default_work_dir(args.video, args.start, args.duration)
     name = args.name or excerpt_name(args.video, args.start, args.duration)
+    if not args.title and not args.video:
+        raise ValueError("give the film or --title")
     title = args.title or re.sub(r"[^a-z0-9]+", "-", args.video.stem.lower()).strip("-")
     result = analyze(
         args.video,
@@ -90,10 +92,13 @@ def _analyze(args: argparse.Namespace) -> int:
 
 
 def _describe(args: argparse.Namespace) -> int:
+    from everyseat.describe.overrides import apply_overrides, load_overrides
     from everyseat.describe.run import describe, read_plot
     from everyseat.describe.voices import StubVoice
     from everyseat.describe.writers import StubWriter, load_script
 
+    if not args.title and not args.video:
+        raise ValueError("give the film or --title")
     title = args.title or re.sub(r"[^a-z0-9]+", "-", args.video.stem.lower()).strip("-")
     clips_dir = args.clips_dir / title
     if args.script and not args.dry_run:
@@ -117,6 +122,21 @@ def _describe(args: argparse.Namespace) -> int:
             raise ValueError(f"--cast takes NAME=WHO, got {entry!r}")
         cast.append(f"{name.strip()}: {who.strip()}")
     cues_path = args.cues or default_cues
+    overrides = load_overrides(args.overrides) if args.overrides else []
+    if args.apply_overrides_only:
+        if not overrides:
+            raise ValueError("--apply-overrides-only needs --overrides with at least one entry")
+        apply_overrides(
+            overrides,
+            cues_path,
+            clips_dir=clips_dir,
+            writer=writer,
+            voice=voice,
+            progress=lambda line: print(line, file=sys.stderr),
+        )
+        return 0
+    if not args.video or not args.subtitles:
+        raise ValueError("the film and --subtitles are needed unless --apply-overrides-only")
     result = describe(
         args.video,
         args.subtitles,
@@ -133,6 +153,15 @@ def _describe(args: argparse.Namespace) -> int:
         max_window_s=args.max_window,
         progress=lambda line: print(line, file=sys.stderr),
     )
+    if overrides:
+        apply_overrides(
+            overrides,
+            cues_path,
+            clips_dir=clips_dir,
+            writer=writer,
+            voice=voice,
+            progress=lambda line: print(line, file=sys.stderr),
+        )
     print(
         f"{result.cue_count} descriptions -> {result.sensevtt}\n"
         f"{len(result.clips)} clips in {clips_dir}; log {result.log}",
@@ -177,8 +206,8 @@ def main(argv: list[str] | None = None) -> int:
     des = commands.add_parser(
         "describe", help="write and voice audio descriptions for the dialogue-free stretches"
     )
-    des.add_argument("video", type=Path, help="the film")
-    des.add_argument("--subtitles", type=Path, required=True, help="SRT file with the dialogue")
+    des.add_argument("video", type=Path, nargs="?", help="the film")
+    des.add_argument("--subtitles", type=Path, help="SRT file with the dialogue")
     des.add_argument("--title", help="title slug for the cue file (default: from the file name)")
     des.add_argument("--dry-run", action="store_true", help="placeholder text and silent clips")
     des.add_argument(
@@ -186,6 +215,20 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         help="with --dry-run, a JSON file of answers per window that stand in for the model's, "
         "to exercise the review",
+    )
+    des.add_argument(
+        "--overrides",
+        type=Path,
+        metavar="FILE",
+        help='human corrections applied after generation: a JSON list of {"near_s": seconds, '
+        '"text": "..."} (replace the nearest item within 1.5 s, voiced and fitted again) or '
+        '{"near_s": seconds, "drop": true}',
+    )
+    des.add_argument(
+        "--apply-overrides-only",
+        action="store_true",
+        help="apply --overrides to the existing cue file and clips without generating anything "
+        "(the film and subtitles are not needed); only the changed items are voiced again",
     )
     des.add_argument("--model", choices=sorted(NOVA_MODELS), default="nova-pro")
     des.add_argument("--voice", default="Joanna", help="Polly neural voice")
