@@ -1,6 +1,6 @@
 """Type definitions mirroring the lens and relay JSON Schemas in `schemas/`."""
 
-from typing import Literal, TypedDict
+from typing import Literal, NotRequired, TypedDict
 
 FlashesSetting = Literal["soften", "off"]
 LoudSetting = Literal["cap", "off"]
@@ -41,6 +41,7 @@ class LensMessage(TypedDict):
     t: Literal["lens"]
     people: list[LensPerson]
     settings: LensSettings
+    updatedAt: NotRequired[int]
 
 
 class HouseholdMessage(TypedDict):

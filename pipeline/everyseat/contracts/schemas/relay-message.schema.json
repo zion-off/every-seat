@@ -75,7 +75,7 @@
       }
     },
     "lens": {
-      "description": "Companion to TV: the people on the couch and the combined lens.",
+      "description": "Either direction between the TV and the companion: the people on the couch and the combined lens. The latest `updatedAt` wins; the relay keeps it and replays it to a TV that connects later.",
       "type": "object",
       "additionalProperties": false,
       "required": ["t", "people", "settings"],
@@ -88,6 +88,11 @@
         "settings": {
           "description": "The combined, most protective lens.",
           "$ref": "lens.schema.json#/$defs/settings"
+        },
+        "updatedAt": {
+          "description": "When the couch was set, in milliseconds since the Unix epoch on the relay's clock. A lens without it is stamped by the relay when it arrives.",
+          "type": "integer",
+          "minimum": 0
         }
       }
     },

@@ -91,11 +91,16 @@ export interface PongMessage {
   t: "pong";
 }
 
-/** Companion to TV: the people on the couch and the combined lens. */
+/**
+ * Either direction between the TV and the companion: the people on the couch and the combined
+ * lens. The latest `updatedAt` (relay clock, ms since the epoch) wins; the relay keeps the latest
+ * and replays it to a TV that connects later, and stamps a lens that arrives without one.
+ */
 export interface LensMessage {
   t: "lens";
   people: LensPerson[];
   settings: LensSettings;
+  updatedAt?: number;
 }
 
 /**
