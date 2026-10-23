@@ -14,15 +14,6 @@ export interface TitleEntry {
 
 export const TITLES: TitleEntry[] = [
   {
-    folder: 'test_pattern',
-    name: 'Test pattern',
-    byline: 'One moment of each kind',
-    blurb:
-      'A short reel with a flash, a loud sound and a scare, made for trying the comfort settings.',
-    durationS: 120,
-    still: require('../assets/stills/test_pattern.jpg'),
-  },
-  {
     folder: 'elephants_dream',
     name: 'Elephants Dream',
     byline: 'Blender Foundation, 2006',
