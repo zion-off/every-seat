@@ -1,12 +1,10 @@
-"""Anchoring spoken items to the shots they describe.
+"""Anchoring spoken items to the pictures they describe.
 
-The writer says which contact-sheet frame each sentence is about; this module, not the writer,
-decides when the sentence is spoken: at that frame's time, pulled back to the start of its shot
-only when the shot began just before it (a long shot is not narrated before its action), after a
-small lag so the speech follows the picture, kept inside the window, with the clips kept apart.
+The writer says which numbered contact-sheet tile each sentence is about; this module, not the
+writer, decides when the sentence is spoken: at that tile's frame time plus a small lag, so the
+speech follows the picture and never leads it. The clips are kept apart and inside the window.
 """
 
-from bisect import bisect_right
 from dataclasses import dataclass
 
 from everyseat.describe.review import MIN_WORDS
@@ -15,7 +13,6 @@ from everyseat.describe.subtitles import Window
 CLIP_GAP_S = 0.3  # a clip ends at least this long before the next one starts
 WORDS_PER_SECOND = 2.5
 SAME_TIME_S = 0.0005
-SNAP_BACK_S = 0.5  # an item is pulled back to its shot's start only when it began this close
 LAG_S = 0.2  # speech starts this long after the picture it describes
 MIN_SLOT_S = 2.5  # an item with less time than this is dropped, not squeezed
 MAX_CLIP_S = 8.0  # one item never runs longer, however much quiet follows it
@@ -24,91 +21,59 @@ SECONDS_PER_ITEM = 5.0  # pace: at most one item per this much window
 
 @dataclass(frozen=True)
 class Item:
-    """One sentence or two, and the time of the frame it describes."""
+    """One sentence or two, the tile it describes and the time of that tile's frame."""
 
+    tile: int
     at_s: float
     text: str
 
 
 @dataclass(frozen=True)
 class Placed:
-    start: float  # the start of a shot, on the frame grid, inside the window
+    start: float  # the time of the tile's frame plus the lag, on the frame grid
     text: str
-    at_s: tuple[float, ...]  # the times the writer gave, one per merged item
+    at_s: tuple[float, ...]  # the frame times of the tiles, one per merged item
+    tiles: tuple[int, ...] = ()  # the tiles themselves; empty for a human text
 
 
 def on_grid(seconds: float, fps: int) -> float:
     return round(round(seconds * fps) / fps, 3)
 
 
-def shot_start(cuts: list[float], time: float, window: Window) -> float:
-    """The start of the shot that contains `time`, no earlier than the window's start."""
-    i = bisect_right(cuts, time + 1e-6)
-    return max(window.start, cuts[i - 1] if i else window.start)
+def place(items: list[Item], window: Window, fps: int) -> tuple[list[Placed], list[dict]]:
+    """Start each item `LAG_S` after its tile's frame, on the frame grid, and merge items on the
+    same tile.
 
-
-def anchor_time(
-    cuts: list[float], time: float, window: Window, fps: int
-) -> tuple[float, float, str]:
-    """When an item about the frame at `time` starts, the anchor before the lag and the reason.
-
-    The anchor is `time`, or its shot's start when that is within `SNAP_BACK_S` before it; the
-    item never moves earlier than that. The start is on the frame grid, after `LAG_S`, and inside
-    the window.
-    """
-    shot = shot_start(cuts, time, window)
-    if time - shot <= SNAP_BACK_S:
-        anchor, reason = shot, f"snapped to its shot start, {time - shot:.2f} s before"
-    else:
-        anchor, reason = time, f"kept at its frame: its shot began {time - shot:.1f} s earlier"
-    return max(window.start, on_grid(anchor + LAG_S, fps)), anchor, reason
-
-
-def place(
-    items: list[Item], window: Window, cuts: list[float], fps: int
-) -> tuple[list[Placed], list[dict]]:
-    """Snap each item to its shot, clamp to the window, sort and merge items on the same shot.
-
-    Returns the placed items and a decision for each thing that was done to an item.
+    Items arrive in tile order and a tile lies inside the window, so no item starts before its
+    picture or before the window. Returns the placed items and a decision for each thing that
+    was done to an item.
     """
     decisions: list[dict] = []
     placed: list[Placed] = []
-    for item in sorted(items, key=lambda i: i.at_s):
-        if item.at_s >= window.end:
-            decisions.append(
-                {
-                    "kind": "rejected",
-                    "at_s": item.at_s,
-                    "text": item.text,
-                    "reason": f"at {item.at_s:g} s, after the window ends at {window.end:g} s",
-                }
-            )
-            continue
-        time = item.at_s
-        if time < window.start:
-            decisions.append(
-                {
-                    "kind": "clamped",
-                    "at_s": item.at_s,
-                    "to": window.start,
-                    "reason": f"at {item.at_s:g} s, before the window starts at {window.start:g} s",
-                }
-            )
-            time = window.start
-        start, anchor, reason = anchor_time(cuts, time, window, fps)
-        if time == item.at_s:
-            kind = "snapped" if anchor != time else "kept"
-            decisions.append(
-                {"kind": kind, "at_s": item.at_s, "to": start, "reason": reason, "text": item.text}
-            )
+    for item in items:
+        start = on_grid(item.at_s + LAG_S, fps)
+        decisions.append(
+            {
+                "kind": "anchored",
+                "tile": item.tile,
+                "at_s": item.at_s,
+                "to": start,
+                "text": item.text,
+            }
+        )
         if placed and abs(placed[-1].start - start) <= SAME_TIME_S:
             last = placed[-1]
-            placed[-1] = Placed(start, f"{last.text} {item.text}", (*last.at_s, item.at_s))
+            placed[-1] = Placed(
+                start,
+                f"{last.text} {item.text}",
+                (*last.at_s, item.at_s),
+                (*last.tiles, item.tile),
+            )
             decisions.append(
-                {"kind": "merged", "at_s": item.at_s, "into": start, "reason": "same shot"}
+                {"kind": "merged", "tile": item.tile, "into": start, "reason": "same tile"}
             )
         else:
-            placed.append(Placed(start, item.text, (item.at_s,)))
+            placed.append(Placed(start, item.text, (item.at_s,), (item.tile,)))
     placed = _pace(placed, window, fps, decisions)
     return placed, decisions
 

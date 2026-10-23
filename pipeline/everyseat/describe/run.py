@@ -33,6 +33,7 @@ from everyseat.detectors.cuts import find_cuts
 MAX_SHORTENS = 3
 MAX_PLOT_CHARS = 2000
 NOTHING_TO_DESCRIBE = "nothing to describe"
+NO_DESCRIBABLE_TILE = "every frame of the window is black or one flat colour"
 FASTER_RATE_PERCENT = 110
 PREVIEW_CHARS = 140
 PROXY_WIDTH = 640  # contact sheets only: the descriptions never look at a full-size frame
@@ -49,6 +50,7 @@ class Fitted:
     rate_percent: int
     limit_s: float
     at_s: tuple[float, ...]
+    tiles: tuple[int, ...]
     attempts: list[dict] = field(default_factory=list)
     rejected: list[dict] = field(default_factory=list)  # answers the review turned down
 
@@ -152,7 +154,9 @@ def fit(
                 f"{speech.duration_s:.1f} s of speech does not fit {limit:.1f} s even at "
                 f"{rate}% after {shortened} rewrites"
             )
-    return Fitted(request.window, placed.start, text, speech, rate, limit, placed.at_s, attempts)
+    return Fitted(
+        request.window, placed.start, text, speech, rate, limit, placed.at_s, placed.tiles, attempts
+    )
 
 
 def fit_window(
@@ -164,20 +168,22 @@ def fit_window(
     fps: int,
     progress: Callable[[str], None],
 ) -> tuple[list[Fitted], Skipped | None, list[dict]]:
-    """Write the window's items, anchor them to their shots and fit each into its own slot.
+    """Write the window's items, start each after the tile it cites and fit each into its own slot.
 
     Items are fitted from the last to the first, so an item that has to go frees its slot for the
-    one before it. Skipped when nothing needs saying, the writer gives no acceptable answer or
-    no item is left.
+    one before it. Skipped when no tile has anything to see, nothing needs saying, the writer
+    gives no acceptable answer or no item is left.
     """
     window = request.window
+    if not any(tile.usable for tile in request.tiles):
+        return [], Skipped(window, NO_DESCRIBABLE_TILE), []
     try:
         items = writer.write(request)
     except Rejected as exc:
         return [], Skipped(window, str(exc)), []
     if items is None:
         return [], Skipped(window, NOTHING_TO_DESCRIBE), []
-    placed, decisions = anchor.place(items, window, request.cuts, fps)
+    placed, decisions = anchor.place(items, window, fps)
     for d in decisions:
         progress(f"    {_describe_decision(d)}")
     kept: list[Fitted] = []
@@ -207,14 +213,15 @@ def fit_window(
 
 def _describe_decision(d: dict) -> str:
     kind = d["kind"]
-    if kind in ("snapped", "kept"):
-        return f"{d['at_s']:g} s starts at {d['to']:g} s ({d['reason']}; lag {anchor.LAG_S:g} s)"
-    if kind == "clamped":
-        return f"clamped {d['at_s']:g} s to {d['to']:g} s: {d['reason']}"
+    if kind == "anchored":
+        return (
+            f"tile {d['tile']} ({d['at_s']:g} s) starts at {d['to']:g} s "
+            f"(frame time + lag {anchor.LAG_S:g} s)"
+        )
     if kind == "merged":
-        return f"merged the item at {d['at_s']:g} s into the one at {d['into']:g} s ({d['reason']})"
-    if kind == "rejected":
-        return f"rejected the item at {d['at_s']:g} s: {d['reason']}"
+        return (
+            f"merged the item on tile {d['tile']} into the one at {d['into']:g} s ({d['reason']})"
+        )
     return f"dropped the item at {d['start']:g} s: {d['reason']}"
 
 
@@ -293,11 +300,12 @@ def describe(
     fitted: list[Fitted] = []
     skipped: list[Skipped] = []
     item_decisions: list[dict] = []
+    sheet_log: list[dict] = []
     for window in windows:
         picture = shots.window_picture(proxy.path, cuts, window)
         (sheets_dir / f"window-{window.index:02d}.jpg").write_bytes(picture.jpeg)
         before, after = subtitles.around(lines, window)
-        review = Review([Earlier(f.start, f.text) for f in fitted], say)
+        review = Review([Earlier(f.start, f.text) for f in fitted], say, picture.tiles)
         request = Request(
             window=window,
             picture=picture.jpeg,
@@ -307,14 +315,16 @@ def describe(
             check=review.check,
             cast=cast or [],
             plot=plot,
-            times=picture.times,
-            cuts=cuts,
+            tiles=picture.tiles,
             note=say,
         )
         say(
             f"window {window.index}/{len(windows)}: {window.start:g}-{window.end:g} s "
-            f"({window.duration:.1f} s, {len(picture.times)} frames, up to {request.budget} words)"
+            f"({window.duration:.1f} s, {len(picture.tiles)} tiles, up to {request.budget} words)"
         )
+        for tile in picture.tiles:
+            say(f"    tile {tile.number}: {tile.measured()}")
+        sheet_log.append({"window": window.index, "tiles": [t.measured() for t in picture.tiles]})
         kept, skip, decisions = fit_window(
             request, writer, voice, review, fps=proxy.fps, progress=say
         )
@@ -364,7 +374,8 @@ def describe(
     log_path = cues_path.with_suffix(".run.json")
     log_path.write_text(
         json.dumps(
-            _log(writer, voice, fitted, skipped, cues, dry_run, plot, item_decisions), indent=1
+            _log(writer, voice, fitted, skipped, cues, dry_run, plot, item_decisions, sheet_log),
+            indent=1,
         )
         + "\n"
     )
@@ -386,6 +397,7 @@ def _log(
     dry_run: bool,
     plot: str,
     item_decisions: list[dict],
+    sheets: list[dict],
 ) -> dict:
     characters = sum(f.speech.characters for f in fitted)
     return {
@@ -414,6 +426,7 @@ def _log(
                 "window_start": f.window.start,
                 "window_end": f.window.end,
                 "start": f.start,
+                "tiles": list(f.tiles),
                 "at_s": list(f.at_s),
                 "slot_s": f.limit_s,
                 "duration_s": round(f.speech.duration_s, 3),
@@ -424,6 +437,7 @@ def _log(
             }
             for cue, f in zip(cues, fitted, strict=True)
         ],
+        "sheets": sheets,
         "item_decisions": item_decisions,
         "skipped": [s.log() for s in skipped],
     }

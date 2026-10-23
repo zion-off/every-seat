@@ -1,14 +1,15 @@
 """What a writer is asked, and the stand-in writer used for dry runs."""
 
 import json
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Protocol
 
 from everyseat.describe import DescribeError, Rejected
 from everyseat.describe.anchor import WORDS_PER_SECOND, Item
-from everyseat.describe.review import MIN_WORDS, Check, Earlier, gave_up
+from everyseat.describe.review import MIN_WORDS, Check, Earlier, Verdict, gave_up
+from everyseat.describe.shots import Tile
 from everyseat.describe.subtitles import Line, Window
 
 STUB_ITEMS = 3  # items a placeholder answer has at most
@@ -31,20 +32,54 @@ def word_budget(window: Window) -> int:
 @dataclass(frozen=True)
 class Request:
     window: Window
-    picture: bytes  # JPEG contact sheet, one tile per shot, labelled in seconds
+    picture: bytes  # JPEG contact sheet: numbered tiles, each labelled with its time in seconds
     before: list[Line]
     after: list[Line]
     earlier: list[Earlier]  # every description kept so far, oldest first
     check: Check  # every answer goes through it before it can be kept
     cast: list[str] = field(default_factory=list)
     plot: str = ""  # a short synopsis of the film, for recognising characters and places
-    times: list[float] = field(default_factory=list)  # the contact-sheet frame times
-    cuts: list[float] = field(default_factory=list)  # every shot cut of the film
+    tiles: list[Tile] = field(default_factory=list)  # the contact sheet, numbered from 1
     note: Callable[[str], None] = lambda _line: None  # where a writer reports what it does
 
     @property
     def budget(self) -> int:
         return word_budget(self.window)
+
+    def tile(self, number: int) -> Tile | None:
+        return self.tiles[number - 1] if 1 <= number <= len(self.tiles) else None
+
+
+@dataclass(frozen=True)
+class Cite:
+    """A sentence and the number of the tile it says it describes."""
+
+    tile: int
+    text: str
+
+
+def review_items(
+    request: Request, cites: Sequence[Cite], limit: int, step: str
+) -> tuple[list[Item], list[tuple[int, Verdict]]]:
+    """Every item of an answer through the review, each with the tile it cites and against the
+    tile of the item above it: the tiles must not go back.
+
+    Returns the items, each at the time of its tile's frame, which make an answer only when the
+    second list is empty, and the number (from 1) and the verdict of each item turned down.
+    """
+    items: list[Item] = []
+    bad: list[tuple[int, Verdict]] = []
+    above = None
+    for number, cite in enumerate(cites, 1):
+        verdict = request.check(cite.text, limit, step, tile=cite.tile, after=above)
+        tile = request.tile(cite.tile)
+        if tile:
+            above = cite.tile
+        if tile and verdict.ok:
+            items.append(Item(cite.tile, tile.time, verdict.text))
+        else:
+            bad.append((number, verdict))
+    return items, bad
 
 
 @dataclass
@@ -62,11 +97,11 @@ class Writer(Protocol):
     def cost_usd(self) -> float: ...
 
     def write(self, request: Request) -> list[Item] | None:
-        """The items for the window, each tied to the frame it describes, or None when nothing
-        essential is on screen.
+        """The items for the window, each tied to the numbered tile it describes, or None when
+        nothing essential is on screen.
 
-        Every item of an answer goes through `request.check`; a rejected answer is corrected, up
-        to `MAX_ANSWERS` answers, and `Rejected` is raised when none passes.
+        Every item of an answer goes through `request.check`, with its tile; a rejected answer is
+        corrected, up to `MAX_ANSWERS` answers, and `Rejected` is raised when none passes.
         """
         ...
 
@@ -85,12 +120,12 @@ class Script:
     """Answers a dry run gives in place of the placeholder text, by window number.
 
     `write[n]` holds the answers for window n in order. An answer is a list of items
-    `{"at_s": seconds, "text": "..."}`, a plain text (one item at the window start) or None for
-    "nothing to describe". `shorten[n]` holds the answers to the requests to shorten a text in
-    that window.
+    `{"tile": number, "text": "..."}`, a plain text (one item at the first tile with something
+    to see) or None for "nothing to describe". `shorten[n]` holds the answers to the requests to
+    shorten a text in that window.
     """
 
-    write: dict[int, list[list[Item] | str | None]] = field(default_factory=dict)
+    write: dict[int, list[list[Cite] | str | None]] = field(default_factory=dict)
     shorten: dict[int, list[str | None]] = field(default_factory=dict)
 
 
@@ -98,7 +133,7 @@ MODEL_ERROR = "<model_error>"  # prefix of a scripted answer in which the model 
 NO_SUBMIT = "<no_submit>"  # a scripted answer in which the model never calls the tool
 
 
-def _answer(given: object, where: str) -> list[Item] | str | None:
+def _answer(given: object, where: str) -> list[Cite] | str | None:
     if given is None or isinstance(given, str):
         return given
     if given == {"no_submit": True}:
@@ -107,9 +142,9 @@ def _answer(given: object, where: str) -> list[Item] | str | None:
         return f"{MODEL_ERROR}{given['model_error']}"
     if isinstance(given, list) and given:
         try:
-            return [Item(float(g["at_s"]), str(g["text"])) for g in given]
+            return [Cite(int(g["tile"]), str(g["text"])) for g in given]
         except (KeyError, TypeError, ValueError) as exc:
-            raise DescribeError(f'{where}: items are {{"at_s": seconds, "text": "..."}}') from exc
+            raise DescribeError(f'{where}: items are {{"tile": number, "text": "..."}}') from exc
     raise DescribeError(f"{where}: write answers are text, a list of items or null")
 
 
@@ -121,7 +156,7 @@ def load_script(path: Path) -> Script:
         raise DescribeError(f"cannot read the script {path}: {exc}") from exc
     if not isinstance(data, dict):
         raise DescribeError(f"{path}: expected an object keyed by window number")
-    write: dict[int, list[list[Item] | str | None]] = {}
+    write: dict[int, list[list[Cite] | str | None]] = {}
     shorten: dict[int, list[str | None]] = {}
     for key, entry in data.items():
         where = f"{path}: window {key!r}"
@@ -142,8 +177,8 @@ def load_script(path: Path) -> Script:
 
 
 class StubWriter:
-    """Placeholder items, one per shot of the window (at most `STUB_ITEMS`), each with a share of
-    the word budget; shortening keeps the first words.
+    """Placeholder items, one per describable tile of the window (at most `STUB_ITEMS`, spread
+    over the window), each with a share of the word budget; shortening keeps the first words.
 
     Windows named in the script get its answers instead, and each goes through the review like a
     model's answer, so every rejection path can be exercised without a model.
@@ -165,15 +200,19 @@ class StubWriter:
             return self._ask_items(request, queue)
         self.usage.calls += 1
         w = request.window
-        times = request.times[:: max(1, -(-len(request.times) // STUB_ITEMS))][:STUB_ITEMS]
-        share = max(MIN_WORDS, request.budget // len(times))
+        usable = [t for t in request.tiles if t.usable]
+        tiles = usable[:: max(1, -(-len(usable) // STUB_ITEMS))][:STUB_ITEMS]
+        if not tiles:
+            return None
+        share = max(MIN_WORDS, request.budget // len(tiles))
         items = []
-        for time in times:
+        for tile in tiles:
             lead = (
-                f"Placeholder description for {time:g} seconds in {w.start:g} to {w.end:g}.".split()
+                f"Placeholder description for {tile.time:g} seconds in "
+                f"{w.start:g} to {w.end:g}.".split()
             )
             padding = ["placeholder"] * max(0, share - len(lead))
-            items.append(Item(time, " ".join([*lead, *padding])))
+            items.append(Item(tile.number, tile.time, " ".join([*lead, *padding])))
         return items
 
     def shorten(
@@ -222,12 +261,12 @@ class StubWriter:
                 )
                 continue
             if isinstance(given, str):
-                given = [Item(request.window.start, given)]
-            checked = [(item, request.check(item.text, request.budget, "write")) for item in given]
-            bad = [v for _, v in checked if not v.ok]
+                first = next((t.number for t in request.tiles if t.usable), 1)
+                given = [Cite(first, given)]
+            items, bad = review_items(request, given, request.budget, "write")
             if not bad:
-                return [Item(item.at_s, v.text) for item, v in checked]
-            verdict = bad[-1]
+                return items
+            verdict = bad[-1][1]
         if verdict is None:
             raise Rejected(f"the script has no answer left for window {request.window.index}")
         raise gave_up(asked, verdict)

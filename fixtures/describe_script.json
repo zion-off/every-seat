@@ -36,11 +36,11 @@
     "write": [
       [
         {
-          "at_s": 233.0,
+          "tile": 1,
           "text": "Sintel climbs a rocky slope in rising wind."
         },
         {
-          "at_s": 248.5,
+          "tile": 6,
           "text": "Sintel reaches the cave mouth and stops."
         }
       ]
@@ -61,21 +61,21 @@
     "write": [
       [
         {
-          "at_s": 308.5,
+          "tile": 2,
           "text": "Sintel limps through tall grass."
         },
         {
-          "at_s": 312.0,
+          "tile": 4,
           "text": "The camera follows Scales over a stone wall."
         }
       ],
       [
         {
-          "at_s": 308.5,
+          "tile": 2,
           "text": "Sintel limps through tall grass."
         },
         {
-          "at_s": 312.0,
+          "tile": 4,
           "text": "Scales climbs over a stone wall."
         }
       ]
@@ -85,28 +85,28 @@
     "write": [
       [
         {
-          "at_s": 324.0,
-          "text": "Sintel stands at the edge of a rocky pit."
+          "tile": 1,
+          "text": "Sintel rides a dragon through a golden sky."
         },
         {
-          "at_s": 328.4,
-          "text": "She grips a rope and starts to climb."
+          "tile": 3,
+          "text": "A small dragon flaps up beside her."
         },
         {
-          "at_s": 330.6,
-          "text": "A rock slides loose under her hand."
+          "tile": 4,
+          "text": "Sintel gasps in sudden alarm."
         },
         {
-          "at_s": 332.2,
-          "text": "Scales flaps up beside her with a rope in its claws."
+          "tile": 5,
+          "text": "She hangs from the dragon's tail high above the ground."
         },
         {
-          "at_s": 335.4,
-          "text": "Sintel reaches a narrow ledge and rests."
+          "tile": 7,
+          "text": "A pale dragon spreads its wings and swoops toward her."
         },
         {
-          "at_s": 337.6,
-          "text": "She pulls herself over the edge."
+          "tile": 8,
+          "text": "Sintel stands in a ruined city, breathing hard."
         }
       ]
     ]
@@ -115,15 +115,15 @@
     "write": [
       [
         {
-          "at_s": 343.0,
+          "tile": 1,
           "text": "Sintel kneels beside a frozen stream."
         },
         {
-          "at_s": 351.6,
+          "tile": 5,
           "text": "She breaks the ice with her fist."
         },
         {
-          "at_s": 353.4,
+          "tile": 6,
           "text": "Scales drinks from the broken ice."
         }
       ]
@@ -133,23 +133,23 @@
     "write": [
       [
         {
-          "at_s": 366.0,
+          "tile": 1,
           "text": "Sintel runs through a desert."
         },
         {
-          "at_s": 380.7,
+          "tile": 6,
           "text": "She enters a bamboo forest."
         },
         {
-          "at_s": 380.7,
+          "tile": 6,
           "text": "Tall bamboo sways around her as she slows."
         },
         {
-          "at_s": 383.2,
+          "tile": 7,
           "text": "Sintel stands on a hill with a spear."
         },
         {
-          "at_s": 400.0,
+          "tile": 9,
           "text": "A dust cloud rises behind her."
         }
       ]
@@ -177,11 +177,11 @@
       },
       [
         {
-          "at_s": 466.7,
+          "tile": 2,
           "text": "Sintel climbs a steep stone stair."
         },
         {
-          "at_s": 475.2,
+          "tile": 5,
           "text": "She reaches a ledge above the clouds."
         }
       ]
@@ -213,11 +213,11 @@
       },
       [
         {
-          "at_s": 537.0,
+          "tile": 2,
           "text": "Sintel wades through knee-deep water."
         },
         {
-          "at_s": 544.0,
+          "tile": 7,
           "text": "A rope bridge sways above her."
         }
       ]
@@ -266,26 +266,30 @@
     "write": [
       [
         {
-          "at_s": 688.0,
+          "tile": 2,
           "text": "Old man retaliates with weapon."
         },
         {
-          "at_s": 701.0,
+          "tile": 7,
           "text": "Sintel runs bamboo forest quickly."
         }
       ],
       [
         {
-          "at_s": 688.0,
-          "text": "Sintel jumps into a new place."
+          "tile": 2,
+          "text": "Sintel sits on the edge of a cliff and looks down."
         },
         {
-          "at_s": 701.0,
-          "text": "The dragon's wings stir up a strong gust of wind."
+          "tile": 5,
+          "text": "She bows her head and stays very still."
         },
         {
-          "at_s": 711.0,
-          "text": "Sintel and the dragon battle above the clouds."
+          "tile": 7,
+          "text": "Tears run down her bruised face."
+        },
+        {
+          "tile": 12,
+          "text": "A worn leather strap lies in the dust."
         }
       ]
     ]
@@ -295,37 +299,11 @@
       "Sintel walks through a rocky landscape. She stops and looks around. Scales lies injured on the ground."
     ]
   },
-  "29": {
-    "write": [
-      [
-        {
-          "at_s": 745.0,
-          "text": "The scene transitions to white fog."
-        }
-      ],
-      [
-        {
-          "at_s": 745.0,
-          "text": "A lens with a circular design is visible."
-        }
-      ],
-      [
-        {
-          "at_s": 754.6,
-          "text": "Sintel steps into a snowy clearing."
-        },
-        {
-          "at_s": 765.0,
-          "text": "A tall dark tower rises beyond the trees."
-        }
-      ]
-    ]
-  },
   "30": {
     "write": [
       [
         {
-          "at_s": 774.0,
+          "tile": 6,
           "text": "Sintel walks slowly along a narrow ridge above the valley while cold wind pulls at her cloak and loose stones slide away from under her boots as she looks for a safe path down."
         }
       ]

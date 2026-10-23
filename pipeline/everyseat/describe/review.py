@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from typing import Protocol
 
 from everyseat.describe import Rejected
+from everyseat.describe.shots import Tile
 
 MIN_WORDS = 5  # a shorter text is a fragment, not a sentence
 # Share of a description's content words that one earlier description already has. On Sintel the
@@ -183,9 +184,21 @@ class Verdict:
 
 
 class Check(Protocol):
-    """What a writer calls with each answer: the answer, its word limit, and which step asked."""
+    """What a writer calls with each answer: the answer, its word limit, and which step asked.
 
-    def __call__(self, text: str, limit: int, step: str = "write") -> Verdict: ...
+    An item of a window also says which tile it cites and, when an item came before it, the
+    highest tile that one cited.
+    """
+
+    def __call__(
+        self,
+        text: str,
+        limit: int,
+        step: str = "write",
+        *,
+        tile: int | None = None,
+        after: int | None = None,
+    ) -> Verdict: ...
 
 
 def gave_up(answers: int, last: Verdict) -> Rejected:
@@ -201,19 +214,36 @@ def excerpt(text: str, size: int = EXCERPT_CHARS) -> str:
 class Review:
     """The rules for the descriptions of one window, against what was already said in the film.
     Every decision is kept in `decisions` and passed to `say`.
+
+    `tiles` are the numbered stills of the window's contact sheet; an item that cites one must
+    cite a tile that exists, has something to see and does not come before the previous item's.
     """
 
     def __init__(
-        self, earlier: Sequence[Earlier], say: Callable[[str], None] | None = None
+        self,
+        earlier: Sequence[Earlier],
+        say: Callable[[str], None] | None = None,
+        tiles: Sequence[Tile] = (),
     ) -> None:
         self.earlier = list(earlier)
         self.say = say or (lambda _line: None)
+        self.tiles = {t.number: t for t in tiles}
         self.decisions: list[dict] = []
         self._answers: dict[str, int] = {}
 
-    def check(self, text: str, limit: int, step: str = "write") -> Verdict:
+    def check(
+        self,
+        text: str,
+        limit: int,
+        step: str = "write",
+        *,
+        tile: int | None = None,
+        after: int | None = None,
+    ) -> Verdict:
         plain = clean(text)
         problems = self._problems(plain, limit)
+        if tile is not None:
+            problems = [*self._tile_problems(tile, after), *problems]
         verdict = Verdict(plain, tuple(problems))
         number = self._answers[step] = self._answers.get(step, 0) + 1
         self.decisions.append(
@@ -221,6 +251,7 @@ class Review:
                 "step": step,
                 "answer": number,
                 "accepted": verdict.ok,
+                **({"tile": tile} if tile is not None else {}),
                 "text": plain,
                 "problems": [{"kind": p.kind, "detail": p.detail} for p in problems],
             }
@@ -229,8 +260,43 @@ class Review:
             label = f"accepted ({len(plain.split())} words)"
         else:
             label = f"rejected - {verdict.summary}"
-        self.say(f'    {step} {number}: {label}: "{excerpt(plain)}"')
+        cited = f" [tile {tile}]" if tile is not None else ""
+        self.say(f'    {step} {number}{cited}: {label}: "{excerpt(plain)}"')
         return verdict
+
+    def _tile_problems(self, number: int, after: int | None) -> list[Problem]:
+        tile = self.tiles.get(number)
+        if tile is None:
+            last = max(self.tiles, default=0)
+            return [
+                Problem(
+                    "tile",
+                    f"tile {number} is not on the sheet",
+                    f"tile {number} is not on the contact sheet, which has tiles 1 to {last}. "
+                    "Cite the number of a tile that shows what the sentence says.",
+                )
+            ]
+        problems = []
+        if not tile.usable:
+            problems.append(
+                Problem(
+                    "tile",
+                    f"tile {number} at {tile.time:.1f} s is not describable, {tile.problem}",
+                    f"tile {number} ({tile.time:.1f} s) is {tile.problem}, so nothing can be "
+                    "described from it. Cite the first tile where what you describe is actually "
+                    "on screen, or set nothing_to_describe.",
+                )
+            )
+        if after is not None and number < after:
+            problems.append(
+                Problem(
+                    "order",
+                    f"tile {number} after tile {after}",
+                    f"tile {number} comes before tile {after}, which the item above cites. Give "
+                    "the items in the order of the tiles, never going back to an earlier one.",
+                )
+            )
+        return problems
 
     def _problems(self, plain: str, limit: int) -> list[Problem]:
         count = len(plain.split())

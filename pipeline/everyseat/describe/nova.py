@@ -1,7 +1,5 @@
 """The description writer on Amazon Nova Pro: a Strands agent that answers through a tool."""
 
-from collections.abc import Callable
-
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from strands import Agent, tool
 from strands.agent.conversation_manager import NullConversationManager
@@ -10,15 +8,17 @@ from strands.hooks import BeforeModelCallEvent, HookProvider, HookRegistry
 from everyseat.agent import model
 from everyseat.describe import Rejected, anchor
 from everyseat.describe.anchor import Item
-from everyseat.describe.review import Check, Verdict, gave_up
+from everyseat.describe.review import Verdict, gave_up
 from everyseat.describe.writers import (
     MAX_ANSWERS,
     NO_SUBMIT_REASON,
     NO_SUBMIT_REPLY,
     NO_SUBMIT_RETRIES,
+    Cite,
     Request,
     Usage,
     model_error_reason,
+    review_items,
 )
 from everyseat.detectors import sheet
 
@@ -30,14 +30,20 @@ EARLIER_SHOWN = 8  # the model is shown this many of the latest descriptions; th
 SYSTEM_INSTRUCTIONS = """\
 You write audio description for a blind or low-vision viewer of an animated short film. Each
 description is spoken aloud in a quiet stretch between lines of dialogue, so it must be short.
-A stretch can last up to 30 seconds and cover several shots, and each sentence is spoken when its
-shot begins, so you answer with a list of items, each tied to the frame it describes.
+A stretch can last up to 30 seconds and cover several shots, so you answer with a list of items,
+each tied to the numbered tile of the contact sheet that shows what it describes.
 
 Rules:
-- Each item is {at_s, text}: at_s is the time label of the contact-sheet frame the text is about,
-  and text is one complete sentence (5 to 20 words, never more than 8 seconds when spoken) that
-  says only what is visible in that frame's shot. Never describe in an item what happens in a
-  later shot.
+- Each item is {tile, text}: tile is the NUMBER of a contact-sheet tile, and text is one complete
+  sentence (5 to 20 words, never more than 8 seconds when spoken) that says only what is
+  visible in that tile's picture. The sentence is spoken a moment after the time of that tile,
+  so cite the FIRST tile in which what you describe can be seen: never an earlier one, never a
+  tile that shows something else. Never describe in an item what happens in a later tile.
+- Cite tiles in order: the tile of each item is the same as or later than the tile of the item
+  above it.
+- A tile that is black, nearly blank or only a title or credits has nothing to describe and
+  cannot be cited. A stretch may open with black or a title: describe only from the first tile
+  that shows a picture, and say nothing about what the story background says comes next.
 - Be sparse. Pick the 1 to 3 most important moments of the window, not every shot, and let the
   film breathe between them. Never more than one item per 5 seconds of window. Skip shots
   where nothing essential happens, and skip fights between the same characters that only
@@ -67,7 +73,8 @@ Rules:
   happens.
 - If nothing essential is visible in the window, say so by setting nothing_to_describe.
 
-You are shown a contact sheet of stills from the window, one for each cut, each labelled with
+You are shown a contact sheet of numbered stills from the window: one at the start of each shot
+and at least one every 3 seconds inside a long shot. Each tile is labelled with its number and
 its time in seconds from the start of the film. Answer only by calling submit_description once.
 If it returns an error, correct the description as the error says and call it again.
 """
@@ -76,7 +83,7 @@ If it returns an error, correct the description as the error says and call it ag
 class DraftItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    at_s: float = Field(ge=0)
+    tile: int | None = None  # required for a description of a window, not for a rewrite
     text: str = Field(max_length=400)
 
 
@@ -87,36 +94,42 @@ class Draft(BaseModel):
     nothing_to_describe: bool = False
 
 
-SUBMIT_SCHEMA = {
-    "json": {
-        "type": "object",
-        "properties": {
-            "items": {
-                "type": "array",
-                "description": "Items in time order, one per shot that matters.",
+def _submit_schema(tiled: bool) -> dict:
+    properties: dict = {
+        "text": {
+            "type": "string",
+            "description": "One short plain sentence for that tile.",
+        }
+    }
+    if tiled:
+        properties = {
+            "tile": {
+                "type": "integer",
+                "description": "Number of the contact-sheet tile the text describes: the first "
+                "tile in which it can be seen.",
+            },
+            **properties,
+        }
+    return {
+        "json": {
+            "type": "object",
+            "properties": {
                 "items": {
-                    "type": "object",
-                    "properties": {
-                        "at_s": {
-                            "type": "number",
-                            "description": "Time label (seconds) of the contact-sheet frame "
-                            "the text describes.",
-                        },
-                        "text": {
-                            "type": "string",
-                            "description": "One short plain sentence for that shot.",
-                        },
+                    "type": "array",
+                    "description": "Items in tile order, one per moment that matters.",
+                    "items": {
+                        "type": "object",
+                        "properties": properties,
+                        "required": ["tile", "text"] if tiled else ["text"],
                     },
-                    "required": ["at_s", "text"],
+                },
+                "nothing_to_describe": {
+                    "type": "boolean",
+                    "description": "True when nothing essential is visible in the window.",
                 },
             },
-            "nothing_to_describe": {
-                "type": "boolean",
-                "description": "True when nothing essential is visible in the window.",
-            },
-        },
+        }
     }
-}
 
 
 class _CallLimit(HookProvider):
@@ -150,10 +163,19 @@ def request_text(request: Request) -> str:
         f"Quiet window: {_time(w.start)} to {_time(w.end)} ({w.duration:.1f} s).",
         f"Word limit: at most {request.budget} words in all, shared by the items. Give 1 to "
         f"{min(3, anchor.max_items(w))} items, at least 5 words each.",
-        "Frame labels on the contact sheet (use these as at_s): "
-        + ", ".join(_time(t) for t in request.times)
+        "Tiles on the contact sheet, numbered from 1 in reading order (left to right, then "
+        "down). Cite a tile by its number as `tile`: "
+        + ", ".join(f"{t.number} = {_time(t.time)}" for t in request.tiles)
         + ".",
     ]
+    blank = [t for t in request.tiles if not t.usable]
+    if blank:
+        parts.append(
+            "Tiles that cannot be cited, because they are black or one flat colour and there is "
+            "nothing to describe in them: "
+            + ", ".join(f"{t.number} ({_time(t.time)}, {t.problem})" for t in blank)
+            + ". An item that cites one is rejected."
+        )
     if request.plot:
         parts.append(
             "Story background, only for recognising characters and places and keeping their "
@@ -188,42 +210,44 @@ class NovaWriter:
             {"text": request_text(request)},
             {"image": {"format": "jpeg", "source": {"bytes": request.picture}}},
         ]
-        return self._ask(content, request.budget, request.check, "write", request.note)
+        return self._ask(content, request.budget, request, "write", tiled=True)
 
     def shorten(
         self, request: Request, text: str, target_words: int, start_s: float, slot_s: float
     ) -> str:
         message = (
-            f"The description below is spoken from {_time(start_s)} s and has {slot_s:.1f} s, "
+            f"The description below is spoken from {_time(start_s)} and has {slot_s:.1f} s, "
             "and it is too long for that.\n\n"
             f'Description: "{text}"\n\n'
             f"Rewrite it in at most {target_words} words. Keep the most essential things, in the "
-            "same order, in the same style. Call submit_description with one item whose at_s is "
-            f"{_time(start_s)} and whose text is the shorter version."
+            "same order, in the same style. Call submit_description with one item whose text is "
+            "the shorter version; it needs no tile."
         )
-        shorter = self._ask(
-            [{"text": message}], target_words, request.check, "shorten", request.note
-        )
+        shorter = self._ask([{"text": message}], target_words, request, "shorten", tiled=False)
         if not shorter:
             raise Rejected("the model dropped a description it was asked to shorten")
         return " ".join(item.text for item in shorter)
 
     def _ask(
-        self, content: list, limit: int, check: Check, step: str, note: Callable[[str], None]
+        self, content: list, limit: int, request: Request, step: str, *, tiled: bool
     ) -> list[Item] | None:
+        """One conversation with the model about a window. A description cites tiles (`tiled`);
+        a rewrite of one has none, and its items carry no tile or time.
+        """
         answers: list[list[Item] | None] = []
         rejected: list[Verdict] = []
+        note = request.note
 
-        @tool(inputSchema=SUBMIT_SCHEMA)
+        @tool(inputSchema=_submit_schema(tiled))
         def submit_description(
             items: list[dict] | None = None, nothing_to_describe: bool = False
         ) -> str:
             """Submit the description of the window as a list of items.
 
             Args:
-                items: Items in time order. Each is an object {"at_s": number, "text": string}:
-                    at_s is the time label of the contact-sheet frame it describes (seconds)
-                    and text is one short plain sentence.
+                items: Items in tile order. Each is an object {"tile": number, "text": string}:
+                    tile is the number of the contact-sheet tile it describes and text is one
+                    short plain sentence.
                 nothing_to_describe: True when nothing essential is visible in the window.
             """
             try:
@@ -242,12 +266,23 @@ class NovaWriter:
                 return "ok"
             if not given.items:
                 return "error: give at least one item, or set nothing_to_describe."
-            checked = [(item, check(item.text, limit, step)) for item in given.items]
-            bad = [(n, v) for n, (_, v) in enumerate(checked, 1) if not v.ok]
+            if tiled:
+                untiled = [n for n, item in enumerate(given.items, 1) if item.tile is None]
+                if untiled:
+                    return "error: " + " ".join(
+                        f"item {n}: give the number of the contact-sheet tile it describes as tile."
+                        for n in untiled
+                    )
+                cites = [Cite(item.tile or 0, item.text) for item in given.items]
+                accepted, bad = review_items(request, cites, limit, step)
+            else:
+                verdicts = [request.check(item.text, limit, step) for item in given.items]
+                accepted = [Item(0, 0.0, v.text) for v in verdicts]
+                bad = [(n, v) for n, v in enumerate(verdicts, 1) if not v.ok]
             if bad:
                 rejected.append(bad[-1][1])
                 return "error: " + " ".join(f"item {n}: {v.feedback[7:]}" for n, v in bad)
-            answers.append([Item(item.at_s, v.text) for item, v in checked])
+            answers.append(accepted)
             return "ok"
 
         watch = _CallLimit(MAX_MODEL_CALLS)
