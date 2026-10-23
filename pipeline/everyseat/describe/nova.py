@@ -297,7 +297,7 @@ class NovaWriter:
         failure: list[str] = []
 
         def run(message: object) -> None:
-            # One window must never end the film: a failed call is handled like no submission.
+            # One window must never end the film: a failed call is handled like no answer.
             try:
                 agent(message)
             except Exception as exc:  # strands raises many kinds, e.g. MaxTokensReachedException
