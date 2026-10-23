@@ -43,10 +43,10 @@
   .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
   .legend .open { background: transparent !important; border: 1.5px dashed var(--muted); }
   ul.moments { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
-  .moment { display: grid; grid-template-columns: 4.6em 1fr; gap: 2px 12px; padding: 10px 12px; background: var(--panel); border-radius: 12px; border-left: 4px solid var(--line); }
-  .moment.flash { border-left-color: var(--flash); }
-  .moment.loud { border-left-color: var(--loud); }
-  .moment.scare { border-left-color: var(--scare); }
+  .moment { display: grid; grid-template-columns: 4.6em 1fr; gap: 2px 12px; padding: 10px 12px; background: var(--panel); border-radius: 12px; }
+  .moment.flash time { color: var(--flash); }
+  .moment.loud time { color: var(--loud); }
+  .moment.scare time { color: var(--scare); }
   .moment time { grid-row: span 2; font-size: 20px; font-variant-numeric: tabular-nums; font-weight: 600; }
   .moment .what { font-weight: 600; }
   .moment .what span { font-weight: 400; color: var(--muted); }
