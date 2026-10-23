@@ -98,6 +98,18 @@ export interface LensMessage {
   settings: LensSettings;
 }
 
+/**
+ * Either direction between the TV and the companion: everyone in the household with their
+ * comfort settings (at most 7). The latest `updatedAt` wins; the relay keeps the latest and
+ * replays it to a TV that connects later.
+ */
+export interface HouseholdMessage {
+  t: "household";
+  people: LensPerson[];
+  /** Milliseconds since the Unix epoch when the list was last changed. */
+  updatedAt: number;
+}
+
 /** TV to phone: sent on play, pause, seek, rate change, and every 2 s. */
 export interface ClockMessage {
   t: "clock";
@@ -129,6 +141,7 @@ export type RelayMessage =
   | PingMessage
   | PongMessage
   | LensMessage
+  | HouseholdMessage
   | ClockMessage
   | SyncRequestMessage
   | SyncReplyMessage;

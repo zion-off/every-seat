@@ -7,7 +7,7 @@
   "required": ["t"],
   "properties": {
     "t": {
-      "enum": ["hello", "ping", "pong", "lens", "clock", "sync?", "sync!"]
+      "enum": ["hello", "ping", "pong", "lens", "household", "clock", "sync?", "sync!"]
     }
   },
   "allOf": [
@@ -26,6 +26,10 @@
     {
       "if": { "type": "object", "required": ["t"], "properties": { "t": { "const": "lens" } } },
       "then": { "$ref": "#/$defs/lens" }
+    },
+    {
+      "if": { "type": "object", "required": ["t"], "properties": { "t": { "const": "household" } } },
+      "then": { "$ref": "#/$defs/household" }
     },
     {
       "if": { "type": "object", "required": ["t"], "properties": { "t": { "const": "clock" } } },
@@ -84,6 +88,25 @@
         "settings": {
           "description": "The combined, most protective lens.",
           "$ref": "lens.schema.json#/$defs/settings"
+        }
+      }
+    },
+    "household": {
+      "description": "Either direction between the TV and the companion: everyone in the household with their comfort settings. The latest `updatedAt` wins; the relay keeps it and replays it to a TV that connects later.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t", "people", "updatedAt"],
+      "properties": {
+        "t": { "const": "household" },
+        "people": {
+          "type": "array",
+          "maxItems": 7,
+          "items": { "$ref": "lens.schema.json#/$defs/person" }
+        },
+        "updatedAt": {
+          "description": "When the list was last changed, in milliseconds since the Unix epoch.",
+          "type": "integer",
+          "minimum": 0
         }
       }
     },

@@ -43,6 +43,12 @@ class LensMessage(TypedDict):
     settings: LensSettings
 
 
+class HouseholdMessage(TypedDict):
+    t: Literal["household"]
+    people: list[LensPerson]
+    updatedAt: int
+
+
 class ClockMessage(TypedDict):
     t: Literal["clock"]
     mediaTime: float
@@ -67,6 +73,7 @@ RelayMessage = (
     | PingMessage
     | PongMessage
     | LensMessage
+    | HouseholdMessage
     | ClockMessage
     | SyncRequestMessage
     | SyncReplyMessage
