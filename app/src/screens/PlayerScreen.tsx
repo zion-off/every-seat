@@ -17,6 +17,7 @@ import { cuesUrl, manifestUrl } from '../config';
 import { audioLabelFor } from '../engine/comfort';
 import { LensSettings } from '../engine/types';
 import { useController } from '../engine/useController';
+import { useHousehold } from '../lens/household';
 import { usePlayer } from '../media/usePlayer';
 import { startClockMessages } from '../relay/clockMessages';
 import { RelayContext } from '../relay/RelayContext';
@@ -56,6 +57,8 @@ const PlayerScreen = ({
   );
   const controller = useController(adapter, lens);
   const relay = useContext(RelayContext);
+  const household = useHousehold();
+  const people = household.filter((p) => selected.includes(p.id));
   const [cues, setCues] = useState<Cue[] | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const focusBeforePanel = useRef<number | undefined>();
@@ -172,6 +175,7 @@ const PlayerScreen = ({
           cues={cues ?? []}
           lens={lens}
           couchLabel={couchLabel}
+          people={people}
           durationMs={durationMs}
           locked={panelOpen}
           chipRef={chipRef}

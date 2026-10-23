@@ -12,6 +12,7 @@ import {
   type,
   weight,
 } from '../styles/tokens';
+import Avatar from './Avatar';
 import Focusable from './Focusable';
 
 type Props = {
@@ -55,13 +56,7 @@ const PersonTile = ({
     FocusManager.setNextFocus(from, to, 'down');
     return () => FocusManager.clearNextFocus(from, 'down');
   }, [downTo]);
-  const avatar = (
-    <View style={[styles.avatar, selected && styles.avatarSelected]}>
-      <Text style={[styles.initial, selected && styles.initialSelected]}>
-        {person.name.charAt(0)}
-      </Text>
-    </View>
-  );
+  const avatar = <Avatar name={person.name} selected={selected} />;
   const box = (
     <View style={[styles.box, selected && styles.boxSelected]}>
       {selected && <View style={styles.tick} />}
@@ -157,25 +152,6 @@ const styles = StyleSheet.create({
   rowText: {
     flex: 1,
     marginHorizontal: space.sm,
-  },
-  avatar: {
-    width: size.avatar,
-    height: size.avatar,
-    borderRadius: radius.pill,
-    backgroundColor: colors.background,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarSelected: {
-    backgroundColor: colors.accent,
-  },
-  initial: {
-    ...type.title,
-    color: colors.text,
-    fontWeight: weight.bold,
-  },
-  initialSelected: {
-    color: colors.onAccent,
   },
   name: {
     ...type.title,

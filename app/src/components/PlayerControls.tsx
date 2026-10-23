@@ -6,6 +6,7 @@ import { Cue, SenseController, VegaAdapter } from 'react-native-sensevtt';
 import { formatClock } from '../catalog';
 import { LensSettings } from '../engine/types';
 import { buildHeatmap } from '../lens/heatmap';
+import { Person } from '../lens/people';
 import {
   colors,
   heat,
@@ -17,6 +18,7 @@ import {
   type,
   weight,
 } from '../styles/tokens';
+import Avatar from './Avatar';
 import Focusable from './Focusable';
 
 const HIDE_AFTER_MS = 6000;
@@ -33,6 +35,8 @@ type Props = {
   cues: Cue[];
   lens: LensSettings;
   couchLabel: string;
+  /** Who is on the couch, shown as a row of initials. */
+  people: Person[];
   durationMs: number;
   /** While true (a panel is open over the film) the controls stay on screen. */
   locked: boolean;
@@ -56,6 +60,7 @@ const PlayerControls = ({
   cues,
   lens,
   couchLabel,
+  people,
   durationMs,
   locked,
   chipRef,
@@ -236,14 +241,20 @@ const PlayerControls = ({
             accessibilityRole="button"
             accessibilityLabel={`On the couch: ${couchLabel}. Change who is on the couch`}
             onPress={onOpenCouch}
+            radius={radius.md}
             style={styles.chip}
             contentStyle={(focused) => [
-              styles.chipFill,
-              focused && styles.chipFocused,
+              styles.couch,
+              focused && styles.couchFocused,
             ]}>
-            <Text style={styles.chipText} numberOfLines={1}>
-              Couch: {couchLabel}
+            <Text style={styles.couchLabel}>
+              {people.length > 0 ? 'On the couch' : 'Nobody on the couch yet'}
             </Text>
+            {people.map((person) => (
+              <View key={person.id} style={styles.person}>
+                <Avatar name={person.name} selected small />
+              </View>
+            ))}
           </Focusable>
         </View>
       </View>
@@ -300,21 +311,21 @@ const styles = StyleSheet.create({
   chip: {
     maxWidth: size.chip,
   },
-  chipFill: {
-    justifyContent: 'center',
-    minHeight: size.pill,
-    paddingHorizontal: space.md,
-    backgroundColor: colors.surfaceRaised,
-    borderWidth: size.border,
-    borderColor: colors.line,
+  couch: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: space.sm,
+    paddingVertical: space.xs,
   },
-  chipFocused: {
+  couchFocused: {
     backgroundColor: colors.surfaceFocused,
   },
-  chipText: {
-    ...type.body,
-    color: colors.text,
-    fontWeight: weight.bold,
+  couchLabel: {
+    ...type.small,
+    color: colors.textMuted,
+  },
+  person: {
+    marginLeft: space.xs,
   },
 });
 
