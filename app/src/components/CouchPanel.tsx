@@ -1,12 +1,17 @@
-import { Button } from '@amazon-devices/kepler-ui-components';
 import { TVFocusGuideView } from '@amazon-devices/react-native-kepler';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { COLORS } from '../styles/palette';
-import { scaleUxToDp } from '../utils/pixelUtils';
+import {
+  colors,
+  layer,
+  safe,
+  size,
+  space,
+  type,
+  weight,
+} from '../styles/tokens';
+import Button from './Button';
 import CouchPicker from './CouchPicker';
-
-export const COUCH_PANEL_Z_INDEX = 40;
 
 type Props = {
   selected: string[];
@@ -29,7 +34,7 @@ const CouchPanel = ({ selected, onToggle, onClose }: Props) => (
     <CouchPicker
       selected={selected}
       onToggle={onToggle}
-      layout="column"
+      layout="list"
       autoFocus
     />
     <View style={styles.done}>
@@ -50,26 +55,29 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     bottom: 0,
-    width: scaleUxToDp(680),
-    paddingTop: scaleUxToDp(60),
-    paddingLeft: scaleUxToDp(50),
-    backgroundColor: 'rgba(15, 20, 28, 0.96)',
-    zIndex: COUCH_PANEL_Z_INDEX,
+    width: size.panel,
+    paddingTop: safe.y,
+    paddingLeft: space.xl,
+    paddingRight: safe.x,
+    backgroundColor: colors.scrimStrong,
+    borderLeftWidth: size.border,
+    borderLeftColor: colors.line,
+    zIndex: layer.panel,
   },
   title: {
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(48),
-    fontWeight: '700',
+    ...type.title,
+    color: colors.text,
+    fontWeight: weight.bold,
   },
   hint: {
-    color: COLORS.MUTED,
-    fontSize: scaleUxToDp(28),
-    marginTop: scaleUxToDp(8),
-    marginBottom: scaleUxToDp(24),
+    ...type.body,
+    color: colors.textMuted,
+    marginTop: space.xs,
+    marginBottom: space.md,
   },
   done: {
-    alignSelf: 'flex-start',
-    marginTop: scaleUxToDp(6),
+    marginTop: space.xs,
+    paddingLeft: space.xs,
   },
 });
 

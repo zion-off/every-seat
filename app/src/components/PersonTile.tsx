@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { FocusManager } from '@amazon-devices/react-native-kepler';
+import React, { RefObject, useEffect, useRef } from 'react';
+import { findNodeHandle, StyleSheet, Text, View } from 'react-native';
 import { describeLens } from '../lens/lens';
 import { Person } from '../lens/people';
-import { COLORS } from '../styles/palette';
-import { scaleUxToDp } from '../utils/pixelUtils';
+import {
+  colors,
+  focus,
+  radius,
+  size,
+  space,
+  type,
+  weight,
+} from '../styles/tokens';
+import Focusable from './Focusable';
 
 type Props = {
   person: Person;
   selected: boolean;
   onPress: () => void;
-  compact?: boolean;
-  /** Smaller tiles for a row, used when the household is too big for one line of full ones. */
-  dense?: boolean;
+  /** A card in the couch grid, or a slimmer row for the side panel. */
+  variant: 'card' | 'row';
+  /** Lines of settings text; the full text is always in the spoken label. */
+  lines?: number;
+  /** Space after the tile, so a row of tiles keeps its gaps without leaving the container. */
+  marginRight?: number;
   autoFocus?: boolean;
+  /** When set, Down from this tile goes to that control instead of the nearest one. */
+  downTo?: RefObject<View>;
 };
 
 const summary = (person: Person): string => {
@@ -24,15 +38,38 @@ const PersonTile = ({
   person,
   selected,
   onPress,
-  compact,
-  dense,
+  variant,
+  lines = 2,
+  marginRight = 0,
   autoFocus,
+  downTo,
 }: Props) => {
-  const [focused, setFocused] = useState(false);
-  const short = compact || dense;
-  const lines = describeLens(person.settings);
+  const card = variant === 'card';
+  const ref = useRef<View>(null);
+  useEffect(() => {
+    const from = ref.current && findNodeHandle(ref.current);
+    const to = downTo?.current && findNodeHandle(downTo.current);
+    if (!from || !to) {
+      return undefined;
+    }
+    FocusManager.setNextFocus(from, to, 'down');
+    return () => FocusManager.clearNextFocus(from, 'down');
+  }, [downTo]);
+  const avatar = (
+    <View style={[styles.avatar, selected && styles.avatarSelected]}>
+      <Text style={[styles.initial, selected && styles.initialSelected]}>
+        {person.name.charAt(0)}
+      </Text>
+    </View>
+  );
+  const box = (
+    <View style={[styles.box, selected && styles.boxSelected]}>
+      {selected && <View style={styles.tick} />}
+    </View>
+  );
   return (
-    <Pressable
+    <Focusable
+      ref={ref}
       accessible
       accessibilityRole="checkbox"
       accessibilityState={{ checked: selected }}
@@ -41,146 +78,134 @@ const PersonTile = ({
       }`}
       hasTVPreferredFocus={autoFocus}
       onPress={onPress}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
-      style={[
-        styles.tile,
-        short ? styles.tileCompact : styles.tileFull,
-        dense && styles.tileDense,
-        selected && styles.tileSelected,
-        focused && styles.tileFocused,
+      radius={card ? radius.lg : radius.md}
+      scale={card ? focus.scaleTile : focus.scaleControl}
+      style={[card ? styles.card : styles.row, { marginRight }]}
+      contentStyle={(focused) => [
+        styles.surface,
+        card ? styles.surfaceCard : styles.surfaceRow,
+        selected && styles.surfaceSelected,
+        focused && styles.surfaceFocused,
       ]}>
-      <View style={[styles.head, short && styles.headCompact]}>
-        <View style={[styles.avatar, selected && styles.avatarSelected]}>
-          <Text style={[styles.initial, selected && styles.initialSelected]}>
-            {person.name.charAt(0)}
+      {card ? (
+        <>
+          <View style={styles.cardHead}>
+            {avatar}
+            {box}
+          </View>
+          <Text style={styles.name} numberOfLines={1}>
+            {person.name}
           </Text>
-        </View>
-        <Text style={styles.name} numberOfLines={1}>
-          {person.name}
-        </Text>
-        <View style={[styles.box, selected && styles.boxSelected]}>
-          {selected && <View style={styles.tick} />}
-        </View>
-      </View>
-      {short ? (
-        <Text
-          style={[styles.detail, styles.detailCompact]}
-          numberOfLines={dense ? 3 : 2}>
-          {summary(person)}
-        </Text>
+          <Text style={styles.detail} numberOfLines={lines}>
+            {summary(person)}
+          </Text>
+        </>
       ) : (
-        <View style={styles.lines}>
-          {lines.length === 0 ? (
-            <Text style={styles.detail}>No comfort settings</Text>
-          ) : (
-            lines.map((line) => (
-              <Text key={line} style={styles.detail}>
-                {line}
-              </Text>
-            ))
-          )}
+        <View style={styles.rowHead}>
+          {avatar}
+          <View style={styles.rowText}>
+            <Text style={styles.name} numberOfLines={1}>
+              {person.name}
+            </Text>
+            <Text style={styles.detail} numberOfLines={lines}>
+              {summary(person)}
+            </Text>
+          </View>
+          {box}
         </View>
       )}
-    </Pressable>
+    </Focusable>
   );
 };
 
 const styles = StyleSheet.create({
-  tile: {
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: scaleUxToDp(20),
-    borderWidth: scaleUxToDp(6),
-    borderColor: COLORS.TRANSPARENT,
-    padding: scaleUxToDp(28),
+  card: {
+    width: size.tileW,
+    marginBottom: space.lg,
   },
-  tileFull: {
-    width: scaleUxToDp(430),
-    height: scaleUxToDp(340),
+  row: {
+    alignSelf: 'stretch',
+    marginBottom: space.sm,
   },
-  tileCompact: {
-    width: scaleUxToDp(560),
-    height: scaleUxToDp(174),
-    marginBottom: scaleUxToDp(10),
-    paddingVertical: scaleUxToDp(16),
+  surface: {
+    backgroundColor: colors.surface,
+    borderWidth: size.border,
+    borderColor: colors.line,
   },
-  tileDense: {
-    width: scaleUxToDp(430),
-    height: scaleUxToDp(190),
-    marginBottom: 0,
+  surfaceCard: {
+    padding: space.md,
   },
-  tileSelected: {
-    backgroundColor: COLORS.SURFACE_FOCUSED,
+  surfaceRow: {
+    padding: space.sm,
   },
-  tileFocused: {
-    borderColor: COLORS.TEXT,
+  surfaceSelected: {
+    backgroundColor: colors.surfaceRaised,
   },
-  head: {
+  surfaceFocused: {
+    backgroundColor: colors.surfaceFocused,
+  },
+  cardHead: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: scaleUxToDp(14),
+    justifyContent: 'space-between',
+    marginBottom: space.sm,
   },
-  headCompact: {
-    marginBottom: scaleUxToDp(4),
+  rowHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rowText: {
+    flex: 1,
+    marginHorizontal: space.sm,
   },
   avatar: {
-    width: scaleUxToDp(64),
-    height: scaleUxToDp(64),
-    borderRadius: scaleUxToDp(32),
-    backgroundColor: COLORS.BACKGROUND,
+    width: size.avatar,
+    height: size.avatar,
+    borderRadius: radius.pill,
+    backgroundColor: colors.background,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: scaleUxToDp(18),
   },
   avatarSelected: {
-    backgroundColor: COLORS.ACCENT,
+    backgroundColor: colors.accent,
   },
   initial: {
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(34),
-    fontWeight: '700',
+    ...type.title,
+    color: colors.text,
+    fontWeight: weight.bold,
   },
   initialSelected: {
-    color: COLORS.BLACK,
+    color: colors.onAccent,
   },
   name: {
-    flex: 1,
-    color: COLORS.TEXT,
-    fontSize: scaleUxToDp(40),
-    fontWeight: '700',
+    ...type.title,
+    color: colors.text,
+    fontWeight: weight.bold,
+  },
+  detail: {
+    ...type.small,
+    color: colors.textMuted,
   },
   box: {
-    width: scaleUxToDp(44),
-    height: scaleUxToDp(44),
-    borderRadius: scaleUxToDp(10),
-    borderWidth: scaleUxToDp(4),
-    borderColor: COLORS.MUTED,
+    width: size.check,
+    height: size.check,
+    borderRadius: radius.pill,
+    borderWidth: size.border * 2,
+    borderColor: colors.textMuted,
     alignItems: 'center',
     justifyContent: 'center',
   },
   boxSelected: {
-    borderColor: COLORS.ACCENT,
-    backgroundColor: COLORS.ACCENT,
+    borderColor: colors.accent,
+    backgroundColor: colors.accent,
   },
   tick: {
-    width: scaleUxToDp(22),
-    height: scaleUxToDp(12),
-    borderLeftWidth: scaleUxToDp(5),
-    borderBottomWidth: scaleUxToDp(5),
-    borderColor: COLORS.BLACK,
-    transform: [{ rotate: '-45deg' }, { translateY: -scaleUxToDp(2) }],
-  },
-  lines: {
-    flex: 1,
-  },
-  detail: {
-    color: COLORS.MUTED,
-    fontSize: scaleUxToDp(27),
-    lineHeight: scaleUxToDp(36),
-  },
-  detailCompact: {
-    fontSize: scaleUxToDp(24),
-    lineHeight: scaleUxToDp(30),
+    width: size.tick.width,
+    height: size.tick.height,
+    borderLeftWidth: size.tick.stroke,
+    borderBottomWidth: size.tick.stroke,
+    borderColor: colors.onAccent,
+    transform: [{ rotate: '-45deg' }, { translateY: -size.tick.height / 4 }],
   },
 });
 

@@ -1,54 +1,64 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useHousehold } from '../lens/household';
-import { scaleUxToDp } from '../utils/pixelUtils';
+import { size, space } from '../styles/tokens';
 import PersonTile from './PersonTile';
 
 type Props = {
   selected: string[];
   onToggle: (id: string) => void;
-  layout: 'row' | 'column';
+  /** A grid of cards for the couch screen, or a column of rows for the side panel. */
+  layout: 'grid' | 'list';
   autoFocus?: boolean;
+  /** Where Down leads from the last row of the grid; without it, the nearest control below. */
+  below?: RefObject<View>;
 };
 
+/** More rows than this and the side panel shows one line of settings per person. */
+const ROOMY_LIST = 4;
+
 /** Multi-select over the household; the first tile takes focus when `autoFocus` is set. */
-const CouchPicker = ({ selected, onToggle, layout, autoFocus }: Props) => {
+const CouchPicker = ({
+  selected,
+  onToggle,
+  layout,
+  autoFocus,
+  below,
+}: Props) => {
   const household = useHousehold();
-  const dense = layout === 'row' && household.length > 4;
+  const grid = layout === 'grid';
+  const lastRow =
+    household.length - (household.length % size.columns || size.columns);
   return (
-    <View style={layout === 'row' ? styles.row : styles.column}>
+    <View style={grid ? styles.grid : styles.list}>
       {household.map((person, i) => (
-        <View
+        <PersonTile
           key={person.id}
-          style={layout === 'row' ? styles.cell : undefined}>
-          <PersonTile
-            person={person}
-            selected={selected.includes(person.id)}
-            onPress={() => onToggle(person.id)}
-            compact={layout === 'column'}
-            dense={dense}
-            autoFocus={autoFocus && i === 0}
-          />
-        </View>
+          person={person}
+          selected={selected.includes(person.id)}
+          onPress={() => onToggle(person.id)}
+          variant={grid ? 'card' : 'row'}
+          lines={grid || household.length <= ROOMY_LIST ? 2 : 1}
+          marginRight={
+            grid && i % size.columns !== size.columns - 1 ? space.lg : 0
+          }
+          autoFocus={autoFocus && i === 0}
+          downTo={grid && i >= lastRow ? below : undefined}
+        />
       ))}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  // Names the companion adds make more tiles than fit on one line, so the row wraps.
-  row: {
+  // Names the companion adds make more tiles than fit on one line, so the grid wraps.
+  grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
-    maxWidth: '100%',
-  },
-  cell: {
-    marginHorizontal: scaleUxToDp(12),
-    marginBottom: scaleUxToDp(20),
-  },
-  column: {
     alignItems: 'flex-start',
+  },
+  list: {
+    alignSelf: 'stretch',
   },
 });
 
