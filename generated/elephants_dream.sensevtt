@@ -1,0 +1,32 @@
+WEBVTT
+
+NOTE sensevtt-header
+{"version":1,"title":"elephants-dream","analyzer":"everyseat 0.1.0 (us.amazon.nova-pro-v1:0)","source_sha256":"6fc295e0e92835316ec95929ccfc664b05ed2434f673e6f5e684f98f7558a547","fps":24,"iris":{"verdict":"FAIL","max_luminance_swing":0.3283}}
+
+elephants-dream-loud-6
+00:02:48.625 --> 00:02:50.250
+{"id":"elephants-dream-loud-6","type":"loud","start":168.625,"end":170.25,"anchor":"onset","intensity":4,"lead_s":5,"preview":"A sudden, very loud noise.","evidence":{"baseline_db":-41.4,"peak_db":-12.5,"jump_db":28.9,"rise_db":41.6,"cut_offset_s":-0.15,"cuts_next_2s":1,"next_cut_s":1.47,"reasoning":"jump_db is 28.9, which is above 15, and peak_db is -12.5, which is above -20."}}
+
+elephants-dream-loud-16
+00:05:07.792 --> 00:05:10.792
+{"id":"elephants-dream-loud-16","type":"loud","start":307.792,"end":310.792,"anchor":"onset","intensity":5,"lead_s":5,"preview":"A sudden, very loud noise.","evidence":{"baseline_db":-46.3,"peak_db":-6.4,"jump_db":39.9,"rise_db":32.3,"cut_offset_s":-0.18,"cuts_next_2s":1,"next_cut_s":0.62,"reasoning":"jump_db is 39.9, which is above 15, and peak_db is -6.4, which is above -20."}}
+
+ed-flash-1
+00:06:17.500 --> 00:06:20.000
+{"id":"ed-flash-1","type":"flash","start":377.5,"end":380.0,"anchor":"iris","intensity":4,"pre_s":1.5,"post_s":1.0,"preview":"Rapid bright flashing for a few seconds.","evidence":{"source":"hand"}}
+
+ed-flash-2
+00:06:25.250 --> 00:06:25.792
+{"id":"ed-flash-2","type":"flash","start":385.25,"end":385.792,"anchor":"cut","intensity":3,"pre_s":1.5,"post_s":1.0,"preview":"A sudden bright white flash.","evidence":{"source":"hand"}}
+
+elephants-dream-loud-22
+00:07:01.250 --> 00:07:04.250
+{"id":"elephants-dream-loud-22","type":"loud","start":421.25,"end":424.25,"anchor":"onset","intensity":5,"lead_s":2.2,"preview":"A sudden, very loud noise.","evidence":{"baseline_db":-43.6,"peak_db":-12.6,"jump_db":31.0,"rise_db":28.0,"cut_offset_s":-0.44,"cuts_next_2s":0,"next_cut_s":2.06,"reasoning":"jump_db is 31.0, which is above 15, and peak_db is -12.6, which is above -20."}}
+
+elephants-dream-loud-23
+00:07:08.000 --> 00:07:09.000
+{"id":"elephants-dream-loud-23","type":"loud","start":428.0,"end":429.0,"anchor":"onset","intensity":4,"lead_s":3.7,"preview":"A sudden, very loud noise.","evidence":{"baseline_db":-38.3,"peak_db":-10.5,"jump_db":27.8,"rise_db":28.7,"cut_offset_s":-0.04,"cuts_next_2s":1,"next_cut_s":null,"reasoning":"jump_db is 27.8, which is above 15, and peak_db is -10.5, which is above -20."}}
+
+elephants-dream-loud-28
+00:08:51.875 --> 00:08:55.417
+{"id":"elephants-dream-loud-28","type":"loud","start":531.875,"end":535.417,"anchor":"onset","intensity":4,"lead_s":5,"preview":"A sudden, very loud noise.","evidence":{"baseline_db":-45.9,"peak_db":-16.3,"jump_db":29.5,"rise_db":21.6,"cut_offset_s":-0.41,"cuts_next_2s":1,"next_cut_s":1.17,"reasoning":"jump_db is 29.5, which is above 15, and peak_db is -16.3, which is above -20.","merged_from":["c56","c57"]}}

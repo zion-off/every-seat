@@ -1,0 +1,28 @@
+WEBVTT
+
+NOTE sensevtt-header
+{"version":1,"title":"tears-of-steel","analyzer":"everyseat 0.1.0 (us.amazon.nova-pro-v1:0)","source_sha256":"efa9062d9cdb7a338e40ad530dfdf234806743f29ae6a1a136b97ece4e588e8f","fps":24,"iris":{"verdict":"PASS_WITH_WARNING","max_luminance_swing":0.165}}
+
+tears-of-steel-flash-1
+00:05:08.000 --> 00:05:09.292
+{"id":"tears-of-steel-flash-1","type":"flash","start":308.0,"end":309.292,"anchor":"iris","intensity":2,"pre_s":1.5,"post_s":1.0,"preview":"Brief, rapid flashing.","evidence":{"worst":"warning","channels":["luminance"],"max_transitions":6,"peak_swing":0.1104,"flagged_frames":23,"reasoning":"Flashing is visible in the frames."}}
+
+tears-of-steel-flash-2
+00:06:56.250 --> 00:06:57.333
+{"id":"tears-of-steel-flash-2","type":"flash","start":416.25,"end":417.333,"anchor":"iris","intensity":2,"pre_s":1.5,"post_s":1.0,"preview":"Brief, rapid flashing.","evidence":{"worst":"warning","channels":["luminance"],"max_transitions":5,"peak_swing":0.1137,"flagged_frames":17,"reasoning":"Flashing is visible in the frames."}}
+
+tears-of-steel-loud-16
+00:07:43.208 --> 00:07:46.208
+{"id":"tears-of-steel-loud-16","type":"loud","start":463.208,"end":466.208,"anchor":"onset","intensity":5,"lead_s":5,"preview":"A sudden, very loud crash.","evidence":{"baseline_db":-50.3,"peak_db":-7.2,"jump_db":43.1,"rise_db":16.8,"cut_offset_s":null,"cuts_next_2s":1,"next_cut_s":1.63,"reasoning":"jump_db=43.1, peak_db=-7.2"}}
+
+tos-scare-1
+00:07:43.208 --> 00:07:46.208
+{"id":"tos-scare-1","type":"scare","start":463.208,"end":466.208,"anchor":"onset","intensity":4,"lead_s":5,"preview":"A sudden crash, then something large bursts in.","evidence":{"onset_jump_db":43.0,"picture_lag_s":1.3,"source":"hand","timing":"the cloud analysis's loud onset"}}
+
+tears-of-steel-flash-3
+00:07:44.833 --> 00:07:45.833
+{"id":"tears-of-steel-flash-3","type":"flash","start":464.833,"end":465.833,"anchor":"iris","intensity":2,"pre_s":1.5,"post_s":1.0,"preview":"Brief, rapid flashing.","evidence":{"worst":"warning","channels":["luminance"],"max_transitions":4,"peak_swing":0.1248,"flagged_frames":7,"reasoning":"Flashing is visible in the frames."}}
+
+tears-of-steel-flash-4
+00:08:11.583 --> 00:08:12.792
+{"id":"tears-of-steel-flash-4","type":"flash","start":491.583,"end":492.792,"anchor":"iris","intensity":2,"pre_s":1.5,"post_s":1.0,"preview":"Brief, rapid flashing.","evidence":{"worst":"warning","channels":["luminance"],"max_transitions":6,"peak_swing":0.165,"flagged_frames":18,"reasoning":"Flashing is visible in the frames."}}

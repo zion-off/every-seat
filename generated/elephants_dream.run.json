@@ -1,0 +1,966 @@
+{
+ "version": 1,
+ "ok": true,
+ "model": "us.amazon.nova-pro-v1:0",
+ "usage": {
+  "input_tokens": 264892,
+  "output_tokens": 7031,
+  "cost_usd": 0.234413,
+  "usd_per_million_tokens": {
+   "input": 0.8,
+   "output": 3.2
+  }
+ },
+ "model_calls": 11,
+ "tool_calls": 133,
+ "repair_rounds": 0,
+ "elapsed_s": 94.3,
+ "source": {
+  "file": "elephants-dream.mov",
+  "start_s": 0.0,
+  "duration_s": 653.792,
+  "fps": 24,
+  "measured_fps": 23.393,
+  "width": 720,
+  "height": 404
+ },
+ "candidates": 59,
+ "inspections": [
+  {
+   "start_s": 21.5,
+   "end_s": 26.5,
+   "tiles": 8
+  },
+  {
+   "start_s": 15.875,
+   "end_s": 20.875,
+   "tiles": 8
+  },
+  {
+   "start_s": 25.458,
+   "end_s": 30.458,
+   "tiles": 8
+  },
+  {
+   "start_s": 62.625,
+   "end_s": 68.625,
+   "tiles": 8
+  },
+  {
+   "start_s": 43.875,
+   "end_s": 50.875,
+   "tiles": 8
+  },
+  {
+   "start_s": 52.75,
+   "end_s": 58.75,
+   "tiles": 8
+  },
+  {
+   "start_s": 65.0,
+   "end_s": 70.0,
+   "tiles": 8
+  },
+  {
+   "start_s": 91.667,
+   "end_s": 98.667,
+   "tiles": 8
+  },
+  {
+   "start_s": 171.083,
+   "end_s": 178.833,
+   "tiles": 8
+  },
+  {
+   "start_s": 177.833,
+   "end_s": 185.25,
+   "tiles": 8
+  },
+  {
+   "start_s": 149.708,
+   "end_s": 165.875,
+   "tiles": 12
+  },
+  {
+   "start_s": 163.958,
+   "end_s": 173.25,
+   "tiles": 12
+  },
+  {
+   "start_s": 188.75,
+   "end_s": 195.75,
+   "tiles": 8
+  },
+  {
+   "start_s": 195.25,
+   "end_s": 204.083,
+   "tiles": 8
+  },
+  {
+   "start_s": 212.125,
+   "end_s": 219.25,
+   "tiles": 8
+  },
+  {
+   "start_s": 219.25,
+   "end_s": 225.208,
+   "tiles": 8
+  },
+  {
+   "start_s": 230.25,
+   "end_s": 237.542,
+   "tiles": 8
+  }
+ ],
+ "skipped": {
+  "c4": "Flash warning with mild intensity, no visible flashing.",
+  "c35": "Flash warning with mild intensity, no visible flashing.",
+  "c36": "Flash warning with mild intensity, no visible flashing.",
+  "c37": "Flash warning with mild intensity, no visible flashing.",
+  "c38": "Flash warning with mild intensity, no visible flashing.",
+  "c40": "Flash warning with mild intensity, no visible flashing.",
+  "c41": "Flash warning with mild intensity, no visible flashing.",
+  "c1": "jump_db is 21.7, which is below 15, or peak_db is -22.8, which is below -20.",
+  "c2": "jump_db is 16.3, which is below 15, or peak_db is -20.6, which is below -20.",
+  "c8": "jump_db is 15.4, which is below 15, or peak_db is -20.4, which is below -20.",
+  "c10": "jump_db is 25.9, which is below 15, or peak_db is -34.6, which is below -20.",
+  "c11": "jump_db is 22.5, which is below 15, or peak_db is -31.9, which is below -20.",
+  "c12": "jump_db is 20.2, which is below 15, or peak_db is -30.5, which is below -20.",
+  "c13": "jump_db is 26.7, which is below 15, or peak_db is -23, which is below -20.",
+  "c14": "jump_db is 18.3, which is below 15, or peak_db is -26.5, which is below -20.",
+  "c15": "jump_db is 21.9, which is below 15, or peak_db is -26.5, which is below -20.",
+  "c16": "jump_db is 24.4, which is below 15, or peak_db is -24.4, which is below -20.",
+  "c18": "jump_db is 19.1, which is below 15, or peak_db is -28, which is below -20.",
+  "c23": "jump_db is 45.4, which is below 15, or peak_db is -21.1, which is below -20.",
+  "c24": "jump_db is 25.5, which is below 15, or peak_db is -24.2, which is below -20.",
+  "c25": "jump_db is 25.1, which is below 15, or peak_db is -21, which is below -20.",
+  "c26": "jump_db is 15, which is below 15, or peak_db is -38.9, which is below -20.",
+  "c33": "jump_db is 22.6, which is below 15, or peak_db is -20.7, which is below -20.",
+  "c43": "jump_db is 19.1, which is below 15, or peak_db is -25.3, which is below -20.",
+  "c46": "jump_db is 20.4, which is below 15, or peak_db is -20.4, which is below -20.",
+  "c53": "jump_db is 32.5, which is below 15, or peak_db is -21.8, which is below -20.",
+  "c58": "jump_db is 20.3, which is below 15, or peak_db is -21.7, which is below -20."
+ },
+ "cues": [
+  {
+   "candidate": "c3",
+   "id": "elephants-dream-loud-1",
+   "type": "loud",
+   "start": 26.458,
+   "end": 29.458,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -33.0,
+    "peak_db": -13.0,
+    "jump_db": 20.0,
+    "rise_db": 15.7,
+    "cut_offset_s": null,
+    "cuts_next_2s": 3,
+    "next_cut_s": 0.81,
+    "reasoning": "jump_db is 20.0, which is above 15, and peak_db is -13.0, which is above -20."
+   }
+  },
+  {
+   "candidate": "c5",
+   "id": "elephants-dream-loud-2",
+   "type": "loud",
+   "start": 46.875,
+   "end": 48.0,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -35.3,
+    "peak_db": -15.5,
+    "jump_db": 19.8,
+    "rise_db": 16.3,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 19.8, which is above 15, and peak_db is -15.5, which is above -20."
+   }
+  },
+  {
+   "candidate": "c6",
+   "id": "elephants-dream-loud-3",
+   "type": "loud",
+   "start": 55.75,
+   "end": 56.75,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -36.7,
+    "peak_db": -19.8,
+    "jump_db": 16.9,
+    "rise_db": 15.4,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 16.9, which is above 15, and peak_db is -19.8, which is above -20."
+   }
+  },
+  {
+   "candidate": "c7",
+   "id": "elephants-dream-loud-4",
+   "type": "loud",
+   "start": 65.625,
+   "end": 66.625,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -38.5,
+    "peak_db": -16.1,
+    "jump_db": 22.5,
+    "rise_db": 17.1,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 22.5, which is above 15, and peak_db is -16.1, which is above -20."
+   }
+  },
+  {
+   "candidate": "c9",
+   "id": "elephants-dream-loud-5",
+   "type": "loud",
+   "start": 94.667,
+   "end": 95.667,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -34.4,
+    "peak_db": -17.2,
+    "jump_db": 17.2,
+    "rise_db": 15.2,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 17.2, which is above 15, and peak_db is -17.2, which is above -20."
+   }
+  },
+  {
+   "candidate": "c17",
+   "id": "elephants-dream-loud-6",
+   "type": "loud",
+   "start": 168.625,
+   "end": 170.25,
+   "anchor": "onset",
+   "intensity": 4,
+   "lead_s": 5,
+   "preview": "A sudden, very loud noise.",
+   "evidence": {
+    "baseline_db": -41.4,
+    "peak_db": -12.5,
+    "jump_db": 28.9,
+    "rise_db": 41.6,
+    "cut_offset_s": -0.15,
+    "cuts_next_2s": 1,
+    "next_cut_s": 1.47,
+    "reasoning": "jump_db is 28.9, which is above 15, and peak_db is -12.5, which is above -20."
+   }
+  },
+  {
+   "candidate": "c19",
+   "id": "elephants-dream-loud-7",
+   "type": "loud",
+   "start": 174.833,
+   "end": 175.833,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 4.5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -30.5,
+    "peak_db": -13.7,
+    "jump_db": 16.8,
+    "rise_db": 31.3,
+    "cut_offset_s": -0.5,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 16.8, which is above 15, and peak_db is -13.7, which is above -20."
+   }
+  },
+  {
+   "candidate": "c20",
+   "id": "elephants-dream-loud-8",
+   "type": "loud",
+   "start": 180.0,
+   "end": 181.0,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 4.1,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -27.7,
+    "peak_db": -12.5,
+    "jump_db": 15.2,
+    "rise_db": 15.9,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": 2.48,
+    "reasoning": "jump_db is 15.2, which is above 15, and peak_db is -12.5, which is above -20."
+   }
+  },
+  {
+   "candidate": "c21",
+   "id": "elephants-dream-loud-9",
+   "type": "loud",
+   "start": 184.0,
+   "end": 185.25,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 3.0,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -36.3,
+    "peak_db": -15.6,
+    "jump_db": 20.8,
+    "rise_db": 16.5,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 20.8, which is above 15, and peak_db is -15.6, which is above -20."
+   }
+  },
+  {
+   "candidate": "c22",
+   "id": "elephants-dream-loud-10",
+   "type": "loud",
+   "start": 191.75,
+   "end": 192.75,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -37.1,
+    "peak_db": -18.6,
+    "jump_db": 18.5,
+    "rise_db": 15.1,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": 2.66,
+    "reasoning": "jump_db is 18.5, which is above 15, and peak_db is -18.6, which is above -20."
+   }
+  },
+  {
+   "candidate": "c27",
+   "id": "elephants-dream-loud-11",
+   "type": "loud",
+   "start": 233.25,
+   "end": 234.542,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -40.0,
+    "peak_db": -19.2,
+    "jump_db": 20.8,
+    "rise_db": 18.2,
+    "cut_offset_s": -0.1,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 20.8, which is above 15, and peak_db is -19.2, which is above -20."
+   }
+  },
+  {
+   "candidate": "c28+c29",
+   "id": "elephants-dream-loud-12",
+   "type": "loud",
+   "start": 245.792,
+   "end": 250.292,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -33.1,
+    "peak_db": -13.3,
+    "jump_db": 19.8,
+    "rise_db": 23.6,
+    "cut_offset_s": null,
+    "cuts_next_2s": 2,
+    "next_cut_s": 0.71,
+    "reasoning": "jump_db is 19.8, which is above 15, and peak_db is -13.3, which is above -20.",
+    "merged_from": [
+     "c28",
+     "c29"
+    ]
+   }
+  },
+  {
+   "candidate": "c30",
+   "id": "elephants-dream-loud-13",
+   "type": "loud",
+   "start": 269.667,
+   "end": 270.792,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -37.8,
+    "peak_db": -15.8,
+    "jump_db": 22.0,
+    "rise_db": 20.0,
+    "cut_offset_s": -0.33,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 22.0, which is above 15, and peak_db is -15.8, which is above -20."
+   }
+  },
+  {
+   "candidate": "c31",
+   "id": "elephants-dream-loud-14",
+   "type": "loud",
+   "start": 279.5,
+   "end": 280.5,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -26.0,
+    "peak_db": -10.0,
+    "jump_db": 16.0,
+    "rise_db": 20.0,
+    "cut_offset_s": null,
+    "cuts_next_2s": 1,
+    "next_cut_s": 0.63,
+    "reasoning": "jump_db is 16.0, which is above 15, and peak_db is -10.0, which is above -20."
+   }
+  },
+  {
+   "candidate": "c32",
+   "id": "elephants-dream-loud-15",
+   "type": "loud",
+   "start": 287.667,
+   "end": 288.667,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -34.6,
+    "peak_db": -14.6,
+    "jump_db": 20.0,
+    "rise_db": 26.1,
+    "cut_offset_s": -0.56,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 20.0, which is above 15, and peak_db is -14.6, which is above -20."
+   }
+  },
+  {
+   "candidate": "c34",
+   "id": "elephants-dream-loud-16",
+   "type": "loud",
+   "start": 307.792,
+   "end": 310.792,
+   "anchor": "onset",
+   "intensity": 5,
+   "lead_s": 5,
+   "preview": "A sudden, very loud noise.",
+   "evidence": {
+    "baseline_db": -46.3,
+    "peak_db": -6.4,
+    "jump_db": 39.9,
+    "rise_db": 32.3,
+    "cut_offset_s": -0.18,
+    "cuts_next_2s": 1,
+    "next_cut_s": 0.62,
+    "reasoning": "jump_db is 39.9, which is above 15, and peak_db is -6.4, which is above -20."
+   }
+  },
+  {
+   "candidate": "c39",
+   "id": "elephants-dream-loud-17",
+   "type": "loud",
+   "start": 345.167,
+   "end": 346.167,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -31.1,
+    "peak_db": -13.2,
+    "jump_db": 17.9,
+    "rise_db": 15.7,
+    "cut_offset_s": 0.25,
+    "cuts_next_2s": 8,
+    "next_cut_s": 0.25,
+    "reasoning": "jump_db is 17.9, which is above 15, and peak_db is -13.2, which is above -20."
+   }
+  },
+  {
+   "candidate": "c42",
+   "id": "elephants-dream-loud-18",
+   "type": "loud",
+   "start": 359.708,
+   "end": 361.25,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -45.3,
+    "peak_db": -17.6,
+    "jump_db": 27.7,
+    "rise_db": 23.3,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 27.7, which is above 15, and peak_db is -17.6, which is above -20."
+   }
+  },
+  {
+   "candidate": "c44",
+   "id": "elephants-dream-loud-19",
+   "type": "loud",
+   "start": 369.0,
+   "end": 370.0,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -32.4,
+    "peak_db": -16.2,
+    "jump_db": 16.2,
+    "rise_db": 22.8,
+    "cut_offset_s": null,
+    "cuts_next_2s": 2,
+    "next_cut_s": 0.8,
+    "reasoning": "jump_db is 16.2, which is above 15, and peak_db is -16.2, which is above -20."
+   }
+  },
+  {
+   "candidate": "c45",
+   "id": "elephants-dream-loud-20",
+   "type": "loud",
+   "start": 373.75,
+   "end": 375.042,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 3.7,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -43.7,
+    "peak_db": -18.9,
+    "jump_db": 24.8,
+    "rise_db": 18.0,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 24.8, which is above 15, and peak_db is -18.9, which is above -20."
+   }
+  },
+  {
+   "candidate": "c47",
+   "id": "elephants-dream-flash-1",
+   "type": "flash",
+   "start": 377.458,
+   "end": 380.458,
+   "anchor": "iris",
+   "intensity": 5,
+   "pre_s": 1.5,
+   "post_s": 1.0,
+   "preview": "Rapid, bright flashing for a few seconds.",
+   "evidence": {
+    "worst": "flash_fail",
+    "channels": [
+     "luminance"
+    ],
+    "max_transitions": 7,
+    "peak_swing": 0.3283,
+    "flagged_frames": 54,
+    "reasoning": "Flash failure with peak_swing above 0.3 and max_transitions of 7."
+   }
+  },
+  {
+   "candidate": "c48",
+   "id": "elephants-dream-loud-21",
+   "type": "loud",
+   "start": 417.958,
+   "end": 418.958,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -29.5,
+    "peak_db": -11.0,
+    "jump_db": 18.5,
+    "rise_db": 18.8,
+    "cut_offset_s": null,
+    "cuts_next_2s": 2,
+    "next_cut_s": 1.24,
+    "reasoning": "jump_db is 18.5, which is above 15, and peak_db is -11.0, which is above -20."
+   }
+  },
+  {
+   "candidate": "c49",
+   "id": "elephants-dream-loud-22",
+   "type": "loud",
+   "start": 421.25,
+   "end": 424.25,
+   "anchor": "onset",
+   "intensity": 5,
+   "lead_s": 2.2,
+   "preview": "A sudden, very loud noise.",
+   "evidence": {
+    "baseline_db": -43.6,
+    "peak_db": -12.6,
+    "jump_db": 31.0,
+    "rise_db": 28.0,
+    "cut_offset_s": -0.44,
+    "cuts_next_2s": 0,
+    "next_cut_s": 2.06,
+    "reasoning": "jump_db is 31.0, which is above 15, and peak_db is -12.6, which is above -20."
+   }
+  },
+  {
+   "candidate": "c50",
+   "id": "elephants-dream-loud-23",
+   "type": "loud",
+   "start": 428.0,
+   "end": 429.0,
+   "anchor": "onset",
+   "intensity": 4,
+   "lead_s": 3.7,
+   "preview": "A sudden, very loud noise.",
+   "evidence": {
+    "baseline_db": -38.3,
+    "peak_db": -10.5,
+    "jump_db": 27.8,
+    "rise_db": 28.7,
+    "cut_offset_s": -0.04,
+    "cuts_next_2s": 1,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 27.8, which is above 15, and peak_db is -10.5, which is above -20."
+   }
+  },
+  {
+   "candidate": "c51",
+   "id": "elephants-dream-loud-24",
+   "type": "loud",
+   "start": 431.75,
+   "end": 433.5,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 2.7,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -40.9,
+    "peak_db": -18.9,
+    "jump_db": 22.0,
+    "rise_db": 22.2,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 22.0, which is above 15, and peak_db is -18.9, which is above -20."
+   }
+  },
+  {
+   "candidate": "c52",
+   "id": "elephants-dream-loud-25",
+   "type": "loud",
+   "start": 444.542,
+   "end": 447.542,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -40.0,
+    "peak_db": -18.9,
+    "jump_db": 21.1,
+    "rise_db": 16.4,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 21.1, which is above 15, and peak_db is -18.9, which is above -20."
+   }
+  },
+  {
+   "candidate": "c54",
+   "id": "elephants-dream-loud-26",
+   "type": "loud",
+   "start": 466.125,
+   "end": 467.125,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -39.3,
+    "peak_db": -17.0,
+    "jump_db": 22.4,
+    "rise_db": 17.0,
+    "cut_offset_s": null,
+    "cuts_next_2s": 1,
+    "next_cut_s": 0.75,
+    "reasoning": "jump_db is 22.4, which is above 15, and peak_db is -17.0, which is above -20."
+   }
+  },
+  {
+   "candidate": "c55",
+   "id": "elephants-dream-loud-27",
+   "type": "loud",
+   "start": 503.167,
+   "end": 504.167,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -22.9,
+    "peak_db": -6.1,
+    "jump_db": 16.8,
+    "rise_db": 15.2,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 16.8, which is above 15, and peak_db is -6.1, which is above -20."
+   }
+  },
+  {
+   "candidate": "c56+c57",
+   "id": "elephants-dream-loud-28",
+   "type": "loud",
+   "start": 531.875,
+   "end": 535.417,
+   "anchor": "onset",
+   "intensity": 4,
+   "lead_s": 5,
+   "preview": "A sudden, very loud noise.",
+   "evidence": {
+    "baseline_db": -45.9,
+    "peak_db": -16.3,
+    "jump_db": 29.5,
+    "rise_db": 21.6,
+    "cut_offset_s": -0.41,
+    "cuts_next_2s": 1,
+    "next_cut_s": 1.17,
+    "reasoning": "jump_db is 29.5, which is above 15, and peak_db is -16.3, which is above -20.",
+    "merged_from": [
+     "c56",
+     "c57"
+    ]
+   }
+  },
+  {
+   "candidate": "c59",
+   "id": "elephants-dream-loud-29",
+   "type": "loud",
+   "start": 568.417,
+   "end": 571.417,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden loud noise.",
+   "evidence": {
+    "baseline_db": -38.0,
+    "peak_db": -15.1,
+    "jump_db": 22.9,
+    "rise_db": 18.0,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db is 22.9, which is above 15, and peak_db is -15.1, which is above -20."
+   }
+  }
+ ],
+ "open_problems": [],
+ "final_message": "<response> All the recorded cues have been validated and meet the requirements. The task is now complete. </response>",
+ "curation": {
+  "rule": "kept flash cues anchored by the flash analyzer and loud cues rated 4 or 5; dropped lower-rated loud cues; added hand cues",
+  "kept": [
+   "elephants-dream-loud-6",
+   "elephants-dream-loud-16",
+   "elephants-dream-loud-22",
+   "elephants-dream-loud-23",
+   "elephants-dream-loud-28"
+  ],
+  "dropped": [
+   {
+    "id": "elephants-dream-loud-1",
+    "type": "loud",
+    "start": 26.458,
+    "intensity": 3
+   },
+   {
+    "id": "elephants-dream-loud-2",
+    "type": "loud",
+    "start": 46.875,
+    "intensity": 3
+   },
+   {
+    "id": "elephants-dream-loud-3",
+    "type": "loud",
+    "start": 55.75,
+    "intensity": 2
+   },
+   {
+    "id": "elephants-dream-loud-4",
+    "type": "loud",
+    "start": 65.625,
+    "intensity": 3
+   },
+   {
+    "id": "elephants-dream-loud-5",
+    "type": "loud",
+    "start": 94.667,
+    "intensity": 2
+   },
+   {
+    "id": "elephants-dream-loud-7",
+    "type": "loud",
+    "start": 174.833,
+    "intensity": 2
+   },
+   {
+    "id": "elephants-dream-loud-8",
+    "type": "loud",
+    "start": 180.0,
+    "intensity": 2
+   },
+   {
+    "id": "elephants-dream-loud-9",
+    "type": "loud",
+    "start": 184.0,
+    "intensity": 3
+   },
+   {
+    "id": "elephants-dream-loud-10",
+    "type": "loud",
+    "start": 191.75,
+    "intensity": 2
+   },
+   {
+    "id": "elephants-dream-loud-11",
+    "type": "loud",
+    "start": 233.25,
+    "intensity": 3
+   },
+   {
+    "id": "elephants-dream-loud-12",
+    "type": "loud",
+    "start": 245.792,
+    "intensity": 3
+   },
+   {
+    "id": "elephants-dream-loud-13",
+    "type": "loud",
+    "start": 269.667,
+    "intensity": 3
+   },
+   {
+    "id": "elephants-dream-loud-14",
+    "type": "loud",
+    "start": 279.5,
+    "intensity": 2
+   },
+   {
+    "id": "elephants-dream-loud-15",
+    "type": "loud",
+    "start": 287.667,
+    "intensity": 3
+   },
+   {
+    "id": "elephants-dream-loud-17",
+    "type": "loud",
+    "start": 345.167,
+    "intensity": 2
+   },
+   {
+    "id": "elephants-dream-loud-18",
+    "type": "loud",
+    "start": 359.708,
+    "intensity": 3
+   },
+   {
+    "id": "elephants-dream-loud-19",
+    "type": "loud",
+    "start": 369.0,
+    "intensity": 2
+   },
+   {
+    "id": "elephants-dream-loud-20",
+    "type": "loud",
+    "start": 373.75,
+    "intensity": 3
+   },
+   {
+    "id": "elephants-dream-loud-21",
+    "type": "loud",
+    "start": 417.958,
+    "intensity": 2
+   },
+   {
+    "id": "elephants-dream-loud-24",
+    "type": "loud",
+    "start": 431.75,
+    "intensity": 3
+   },
+   {
+    "id": "elephants-dream-loud-25",
+    "type": "loud",
+    "start": 444.542,
+    "intensity": 3
+   },
+   {
+    "id": "elephants-dream-loud-26",
+    "type": "loud",
+    "start": 466.125,
+    "intensity": 3
+   },
+   {
+    "id": "elephants-dream-loud-27",
+    "type": "loud",
+    "start": 503.167,
+    "intensity": 2
+   },
+   {
+    "id": "elephants-dream-loud-29",
+    "type": "loud",
+    "start": 568.417,
+    "intensity": 3
+   }
+  ],
+  "replaced_by_hand": [
+   {
+    "id": "elephants-dream-flash-1",
+    "type": "flash",
+    "start": 377.458,
+    "end": 380.458
+   }
+  ],
+  "added_by_hand": [
+   {
+    "id": "ed-flash-1",
+    "type": "flash",
+    "start": 377.5,
+    "end": 380.0
+   },
+   {
+    "id": "ed-flash-2",
+    "type": "flash",
+    "start": 385.25,
+    "end": 385.792
+   }
+  ],
+  "recipe_windows": 5
+ }
+}

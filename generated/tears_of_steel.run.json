@@ -1,0 +1,626 @@
+{
+ "version": 1,
+ "ok": true,
+ "model": "us.amazon.nova-pro-v1:0",
+ "usage": {
+  "input_tokens": 37294,
+  "output_tokens": 1853,
+  "cost_usd": 0.035765,
+  "usd_per_million_tokens": {
+   "input": 0.8,
+   "output": 3.2
+  }
+ },
+ "model_calls": 4,
+ "tool_calls": 33,
+ "repair_rounds": 0,
+ "elapsed_s": 23.9,
+ "source": {
+  "file": "tears-of-steel.mov",
+  "start_s": 0.0,
+  "duration_s": 734.167,
+  "fps": 24,
+  "measured_fps": 24.0,
+  "width": 1280,
+  "height": 534
+ },
+ "candidates": 23,
+ "inspections": [
+  {
+   "start_s": 415.25,
+   "end_s": 417.333,
+   "tiles": 8
+  },
+  {
+   "start_s": 463.833,
+   "end_s": 466.208,
+   "tiles": 8
+  },
+  {
+   "start_s": 490.583,
+   "end_s": 492.792,
+   "tiles": 8
+  },
+  {
+   "start_s": 307.0,
+   "end_s": 309.292,
+   "tiles": 8
+  }
+ ],
+ "skipped": {},
+ "cues": [
+  {
+   "candidate": "c1",
+   "id": "tears-of-steel-loud-1",
+   "type": "loud",
+   "start": 37.625,
+   "end": 38.625,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -39.5,
+    "peak_db": -7.2,
+    "jump_db": 32.3,
+    "rise_db": 26.8,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": 2.61,
+    "reasoning": "jump_db=32.3, peak_db=-7.2"
+   }
+  },
+  {
+   "candidate": "c2",
+   "id": "tears-of-steel-loud-2",
+   "type": "loud",
+   "start": 53.375,
+   "end": 54.375,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -26.2,
+    "peak_db": -9.8,
+    "jump_db": 16.4,
+    "rise_db": 17.5,
+    "cut_offset_s": 0.28,
+    "cuts_next_2s": 1,
+    "next_cut_s": 0.28,
+    "reasoning": "jump_db=16.4, peak_db=-9.8"
+   }
+  },
+  {
+   "candidate": "c3",
+   "id": "tears-of-steel-loud-3",
+   "type": "loud",
+   "start": 132.042,
+   "end": 133.042,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -32.5,
+    "peak_db": -8.9,
+    "jump_db": 23.6,
+    "rise_db": 18.5,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": 2.86,
+    "reasoning": "jump_db=23.6, peak_db=-8.9"
+   }
+  },
+  {
+   "candidate": "c4",
+   "id": "tears-of-steel-loud-4",
+   "type": "loud",
+   "start": 136.625,
+   "end": 137.625,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 3.5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -32.8,
+    "peak_db": -13.0,
+    "jump_db": 19.8,
+    "rise_db": 18.8,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db=19.8, peak_db=-13.0"
+   }
+  },
+  {
+   "candidate": "c5",
+   "id": "tears-of-steel-loud-5",
+   "type": "loud",
+   "start": 197.25,
+   "end": 198.667,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -33.3,
+    "peak_db": -9.0,
+    "jump_db": 24.4,
+    "rise_db": 15.1,
+    "cut_offset_s": null,
+    "cuts_next_2s": 1,
+    "next_cut_s": 1.27,
+    "reasoning": "jump_db=24.4, peak_db=-9.0"
+   }
+  },
+  {
+   "candidate": "c6",
+   "id": "tears-of-steel-loud-6",
+   "type": "loud",
+   "start": 203.792,
+   "end": 204.917,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -22.3,
+    "peak_db": -7.3,
+    "jump_db": 15.1,
+    "rise_db": 16.3,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": 2.89,
+    "reasoning": "jump_db=15.1, peak_db=-7.3"
+   }
+  },
+  {
+   "candidate": "c7",
+   "id": "tears-of-steel-loud-7",
+   "type": "loud",
+   "start": 241.667,
+   "end": 242.667,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -35.1,
+    "peak_db": -10.4,
+    "jump_db": 24.6,
+    "rise_db": 23.2,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db=24.6, peak_db=-10.4"
+   }
+  },
+  {
+   "candidate": "c8",
+   "id": "tears-of-steel-loud-8",
+   "type": "loud",
+   "start": 255.75,
+   "end": 256.75,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -31.0,
+    "peak_db": -16.0,
+    "jump_db": 15.0,
+    "rise_db": 15.4,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": 2.16,
+    "reasoning": "jump_db=15.0, peak_db=-16.0"
+   }
+  },
+  {
+   "candidate": "c9",
+   "id": "tears-of-steel-loud-9",
+   "type": "loud",
+   "start": 294.375,
+   "end": 295.583,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -31.7,
+    "peak_db": -5.9,
+    "jump_db": 25.8,
+    "rise_db": 18.3,
+    "cut_offset_s": null,
+    "cuts_next_2s": 1,
+    "next_cut_s": 0.75,
+    "reasoning": "jump_db=25.8, peak_db=-5.9"
+   }
+  },
+  {
+   "candidate": "c10+c11",
+   "id": "tears-of-steel-loud-10",
+   "type": "loud",
+   "start": 300.208,
+   "end": 303.667,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 4.6,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -24.9,
+    "peak_db": -3.3,
+    "jump_db": 21.5,
+    "rise_db": 24.1,
+    "cut_offset_s": null,
+    "cuts_next_2s": 1,
+    "next_cut_s": 0.68,
+    "reasoning": "jump_db=21.5, peak_db=-3.3",
+    "merged_from": [
+     "c10",
+     "c11"
+    ]
+   }
+  },
+  {
+   "candidate": "c12",
+   "id": "tears-of-steel-loud-11",
+   "type": "loud",
+   "start": 307.833,
+   "end": 308.833,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 4.1,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -33.1,
+    "peak_db": -16.8,
+    "jump_db": 16.3,
+    "rise_db": 18.9,
+    "cut_offset_s": -0.08,
+    "cuts_next_2s": 8,
+    "next_cut_s": 0.17,
+    "reasoning": "jump_db=16.3, peak_db=-16.8"
+   }
+  },
+  {
+   "candidate": "c13",
+   "id": "tears-of-steel-flash-1",
+   "type": "flash",
+   "start": 308.0,
+   "end": 309.292,
+   "anchor": "iris",
+   "intensity": 2,
+   "pre_s": 1.5,
+   "post_s": 1.0,
+   "preview": "Brief, rapid flashing.",
+   "evidence": {
+    "worst": "warning",
+    "channels": [
+     "luminance"
+    ],
+    "max_transitions": 6,
+    "peak_swing": 0.1104,
+    "flagged_frames": 23,
+    "reasoning": "Flashing is visible in the frames."
+   }
+  },
+  {
+   "candidate": "c14",
+   "id": "tears-of-steel-loud-12",
+   "type": "loud",
+   "start": 322.167,
+   "end": 323.167,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -30.7,
+    "peak_db": -11.9,
+    "jump_db": 18.8,
+    "rise_db": 15.1,
+    "cut_offset_s": 0.03,
+    "cuts_next_2s": 2,
+    "next_cut_s": 0.03,
+    "reasoning": "jump_db=18.8, peak_db=-11.9"
+   }
+  },
+  {
+   "candidate": "c15",
+   "id": "tears-of-steel-loud-13",
+   "type": "loud",
+   "start": 360.375,
+   "end": 361.375,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -28.0,
+    "peak_db": -12.5,
+    "jump_db": 15.5,
+    "rise_db": 19.1,
+    "cut_offset_s": null,
+    "cuts_next_2s": 1,
+    "next_cut_s": 1.75,
+    "reasoning": "jump_db=15.5, peak_db=-12.5"
+   }
+  },
+  {
+   "candidate": "c16+c17",
+   "id": "tears-of-steel-loud-14",
+   "type": "loud",
+   "start": 367.25,
+   "end": 372.375,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -32.1,
+    "peak_db": -8.7,
+    "jump_db": 23.4,
+    "rise_db": 15.4,
+    "cut_offset_s": 0.42,
+    "cuts_next_2s": 2,
+    "next_cut_s": 0.42,
+    "reasoning": "jump_db=23.4, peak_db=-8.7",
+    "merged_from": [
+     "c16",
+     "c17"
+    ]
+   }
+  },
+  {
+   "candidate": "c18",
+   "id": "tears-of-steel-flash-2",
+   "type": "flash",
+   "start": 416.25,
+   "end": 417.333,
+   "anchor": "iris",
+   "intensity": 2,
+   "pre_s": 1.5,
+   "post_s": 1.0,
+   "preview": "Brief, rapid flashing.",
+   "evidence": {
+    "worst": "warning",
+    "channels": [
+     "luminance"
+    ],
+    "max_transitions": 5,
+    "peak_swing": 0.1137,
+    "flagged_frames": 17,
+    "reasoning": "Flashing is visible in the frames."
+   }
+  },
+  {
+   "candidate": "c19",
+   "id": "tears-of-steel-loud-15",
+   "type": "loud",
+   "start": 419.75,
+   "end": 420.75,
+   "anchor": "onset",
+   "intensity": 2,
+   "lead_s": 5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -23.1,
+    "peak_db": -5.8,
+    "jump_db": 17.2,
+    "rise_db": 16.5,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db=17.2, peak_db=-5.8"
+   }
+  },
+  {
+   "candidate": "c20",
+   "id": "tears-of-steel-loud-16",
+   "type": "loud",
+   "start": 463.208,
+   "end": 466.208,
+   "anchor": "onset",
+   "intensity": 5,
+   "lead_s": 5,
+   "preview": "A sudden, very loud crash.",
+   "evidence": {
+    "baseline_db": -50.3,
+    "peak_db": -7.2,
+    "jump_db": 43.1,
+    "rise_db": 16.8,
+    "cut_offset_s": null,
+    "cuts_next_2s": 1,
+    "next_cut_s": 1.63,
+    "reasoning": "jump_db=43.1, peak_db=-7.2"
+   }
+  },
+  {
+   "candidate": "c21",
+   "id": "tears-of-steel-flash-3",
+   "type": "flash",
+   "start": 464.833,
+   "end": 465.833,
+   "anchor": "iris",
+   "intensity": 2,
+   "pre_s": 1.5,
+   "post_s": 1.0,
+   "preview": "Brief, rapid flashing.",
+   "evidence": {
+    "worst": "warning",
+    "channels": [
+     "luminance"
+    ],
+    "max_transitions": 4,
+    "peak_swing": 0.1248,
+    "flagged_frames": 7,
+    "reasoning": "Flashing is visible in the frames."
+   }
+  },
+  {
+   "candidate": "c22",
+   "id": "tears-of-steel-flash-4",
+   "type": "flash",
+   "start": 491.583,
+   "end": 492.792,
+   "anchor": "iris",
+   "intensity": 2,
+   "pre_s": 1.5,
+   "post_s": 1.0,
+   "preview": "Brief, rapid flashing.",
+   "evidence": {
+    "worst": "warning",
+    "channels": [
+     "luminance"
+    ],
+    "max_transitions": 6,
+    "peak_swing": 0.165,
+    "flagged_frames": 18,
+    "reasoning": "Flashing is visible in the frames."
+   }
+  },
+  {
+   "candidate": "c23",
+   "id": "tears-of-steel-loud-17",
+   "type": "loud",
+   "start": 559.333,
+   "end": 560.333,
+   "anchor": "onset",
+   "intensity": 3,
+   "lead_s": 5,
+   "preview": "A sudden, loud noise.",
+   "evidence": {
+    "baseline_db": -34.8,
+    "peak_db": -14.6,
+    "jump_db": 20.2,
+    "rise_db": 15.1,
+    "cut_offset_s": null,
+    "cuts_next_2s": 0,
+    "next_cut_s": null,
+    "reasoning": "jump_db=20.2, peak_db=-14.6"
+   }
+  }
+ ],
+ "open_problems": [],
+ "final_message": "All candidates have been reviewed and appropriate comfort cues have been recorded. The film contains several loud noises and brief, rapid flashing moments that may require viewer comfort. The recorded cues provide advance warnings for these moments, allowing viewers to prepare or adjust their viewing experience accordingly.",
+ "curation": {
+  "rule": "kept flash cues anchored by the flash analyzer and loud cues rated 4 or 5; dropped lower-rated loud cues; added hand cues",
+  "kept": [
+   "tears-of-steel-flash-1",
+   "tears-of-steel-flash-2",
+   "tears-of-steel-loud-16",
+   "tears-of-steel-flash-3",
+   "tears-of-steel-flash-4"
+  ],
+  "dropped": [
+   {
+    "id": "tears-of-steel-loud-1",
+    "type": "loud",
+    "start": 37.625,
+    "intensity": 3
+   },
+   {
+    "id": "tears-of-steel-loud-2",
+    "type": "loud",
+    "start": 53.375,
+    "intensity": 2
+   },
+   {
+    "id": "tears-of-steel-loud-3",
+    "type": "loud",
+    "start": 132.042,
+    "intensity": 3
+   },
+   {
+    "id": "tears-of-steel-loud-4",
+    "type": "loud",
+    "start": 136.625,
+    "intensity": 2
+   },
+   {
+    "id": "tears-of-steel-loud-5",
+    "type": "loud",
+    "start": 197.25,
+    "intensity": 3
+   },
+   {
+    "id": "tears-of-steel-loud-6",
+    "type": "loud",
+    "start": 203.792,
+    "intensity": 2
+   },
+   {
+    "id": "tears-of-steel-loud-7",
+    "type": "loud",
+    "start": 241.667,
+    "intensity": 3
+   },
+   {
+    "id": "tears-of-steel-loud-8",
+    "type": "loud",
+    "start": 255.75,
+    "intensity": 2
+   },
+   {
+    "id": "tears-of-steel-loud-9",
+    "type": "loud",
+    "start": 294.375,
+    "intensity": 3
+   },
+   {
+    "id": "tears-of-steel-loud-10",
+    "type": "loud",
+    "start": 300.208,
+    "intensity": 3
+   },
+   {
+    "id": "tears-of-steel-loud-11",
+    "type": "loud",
+    "start": 307.833,
+    "intensity": 2
+   },
+   {
+    "id": "tears-of-steel-loud-12",
+    "type": "loud",
+    "start": 322.167,
+    "intensity": 2
+   },
+   {
+    "id": "tears-of-steel-loud-13",
+    "type": "loud",
+    "start": 360.375,
+    "intensity": 2
+   },
+   {
+    "id": "tears-of-steel-loud-14",
+    "type": "loud",
+    "start": 367.25,
+    "intensity": 3
+   },
+   {
+    "id": "tears-of-steel-loud-15",
+    "type": "loud",
+    "start": 419.75,
+    "intensity": 2
+   },
+   {
+    "id": "tears-of-steel-loud-17",
+    "type": "loud",
+    "start": 559.333,
+    "intensity": 3
+   }
+  ],
+  "replaced_by_hand": [],
+  "added_by_hand": [
+   {
+    "id": "tos-scare-1",
+    "type": "scare",
+    "start": 463.208,
+    "end": 466.208
+   }
+  ],
+  "recipe_windows": 1
+ }
+}
