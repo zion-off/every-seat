@@ -137,10 +137,43 @@
       "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks."
     ]
   },
+  "18": {
+    "write": [
+      {
+        "no_submit": true
+      },
+      {
+        "no_submit": true
+      },
+      [
+        {
+          "at_s": 466.7,
+          "text": "Sintel climbs a steep stone stair."
+        },
+        {
+          "at_s": 475.2,
+          "text": "She reaches a ledge above the clouds."
+        }
+      ]
+    ]
+  },
   "19": {
     "write": [
       "Sintel fights a large, armored creature with a spear. The creature moves and reacts to her attacks.",
       "The armored creature rears back and strikes Sintel's shoulder. She stumbles, then lunges at it with her spear."
+    ]
+  },
+  "20": {
+    "write": [
+      {
+        "no_submit": true
+      },
+      {
+        "no_submit": true
+      },
+      {
+        "no_submit": true
+      }
     ]
   },
   "22": {
