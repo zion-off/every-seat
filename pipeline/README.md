@@ -96,15 +96,22 @@ AWS_PROFILE=personal AWS_REGION=us-east-1 \
   nothing essential is on screen.
 - **Anchoring:** a window can last 30 s and span several shots, so the writer answers with a list
   of items `{at_s, text}` through the submit tool (validated with Pydantic): `at_s` is the label
-  of the contact-sheet frame the sentence describes. Code, not the model, decides when each is
-  spoken: `at_s` snaps to the start of the shot that contains it (the shot cuts are already
-  computed), is clamped to the window start (an item after the window end is rejected), items are
-  sorted, and items that land on the same shot are merged. Each item gets a slot, from its start
-  to 0.3 s before the next item (or a frame before the window ends), and a word budget of 2.5
-  words a second of slot. Items are fitted from the last to the first; one whose measured clip
-  does not fit gets the shorten loop, and one that still does not fit (or whose slot holds fewer
-  than 4 words) is dropped, which gives its time to the item before it. Every snap, clamp, merge
-  and drop is printed and written to `item_decisions` in the run log.
+  of the contact-sheet frame the sentence describes, and the writer is asked for the 1 to 3 most
+  important moments, not every shot. Code, not the model, decides when each is spoken: an item
+  starts at its `at_s` plus a lag of 0.2 s so the speech follows the picture, on the frame grid.
+  It is pulled back to the start of its shot only when the shot began within 0.5 s before
+  `at_s`; in a long shot it stays at its frame, never earlier than `at_s` - 0.5 s. Items are
+  clamped to the window start (an item after the window end is rejected), sorted, and merged
+  when they land on the same frame. The film is left room to breathe: of two items less than
+  2.8 s apart the one with fewer words is dropped, as is an item within 2.5 s of the window end,
+  and a window keeps at most one item per 5 s. Each item gets a slot, from its start to 0.3 s
+  before the next item (or a frame before the window ends), of at most 8 s, with a word budget
+  of 2.5 words a second. Items are fitted from the last to the first; one whose measured clip
+  does not fit gets the shorten loop, and one that still does not fit, whose slot is under
+  2.5 s, or that a rewrite would cut under 5 words, is dropped. Every snap, clamp, merge and
+  drop is printed and written to `item_decisions` in the run log. A window where the model
+  never calls the submit tool or its call fails (for example by reaching the token limit) is
+  reminded twice and then skipped with the reason logged.
 - **Review:** the model does not reliably follow rules, so every answer, including each rewrite
   to shorten, goes through checks in code before it is kept, and a rejected answer goes back to
   the model with the reason:
@@ -113,7 +120,10 @@ AWS_PROFILE=personal AWS_REGION=us-east-1 \
   - a description is rejected when 70% or more of its content words (compared by word stem,
     without common words) already appear in a single earlier description anywhere in the film;
     the earlier text is quoted and the model is asked for what is new, or for nothing;
-  - more words than the budget, or fewer than 4, are rejected.
+  - more words than the budget, or fewer than 5, are rejected;
+  - a fragment is rejected: a short sentence without a verb, or a bare noun phrase after the
+    verb or after "with" ("Sintel jumps new location"), with a request for a complete sentence;
+  - "scene", "transition", "visible" and "lens" count as camera words too.
 
   The writer gets 5 answers per window. The review applies to each item. A window where none
   passes is left without a description and the reason is logged, rather than ending the run. Each
@@ -141,6 +151,17 @@ AWS_PROFILE=personal AWS_REGION=us-east-1 \
   ```sh
   everyseat describe film.mkv --subtitles film_en.srt --dry-run \
     --script fixtures/describe_script.json --plot fixtures/sintel.plot.txt
+  ```
+- **`--overrides FILE`:** human corrections applied after generation: a JSON list of
+  `{"near_s": seconds, "text": "..."}` (the nearest item within 1.5 s gets that text, checked by
+  the review, voiced and fitted again) or `{"near_s": seconds, "drop": true}` (the item and its clip
+  are removed). Each override, and why one changed nothing, is recorded under `overrides` in the
+  run log. `--apply-overrides-only` applies them to the existing cue file and clips without a
+  film, subtitles or a model run, so a correction voices only the changed items:
+
+  ```sh
+  everyseat describe --title sintel --overrides fixtures/sintel.ad-overrides.json \
+    --apply-overrides-only --cues generated/sintel.sensevtt --clips-dir build/ad
   ```
 - **Cost:** about 33 Nova Pro calls for Sintel (one contact sheet each) plus rewrites, a few cents;
   Polly neural is $16 per million characters.
