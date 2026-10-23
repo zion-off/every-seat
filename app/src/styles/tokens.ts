@@ -43,6 +43,8 @@ export const space = {
 export const safe = {
   x: dp(96),
   y: dp(56),
+  /** Where the title of a full-screen page starts, so every page opens at the same height. */
+  top: dp(168),
 };
 
 export const radius = {
@@ -104,6 +106,8 @@ export const size = {
   readable: dp(900),
   tileW: dp(408),
   tileH: dp(230),
+  /** A person card on the couch screen: eight fit in two rows inside the safe area. */
+  personH: dp(240),
   columns: 4,
   heroW: dp(1100),
   heroH: dp(619),
