@@ -125,9 +125,26 @@ const App = () => {
     return () => sub.remove();
   }, []);
 
-  // A lens from the companion names tonight's couch: the people it names are on the couch, with its settings.
+  // When the couch on screen was set, on the relay's clock, and whether a change made on the TV
+  // still has to be sent. A lens older than the couch on screen is ignored, so a TV that
+  // reconnects keeps the couch picked on it instead of an earlier one the relay replays.
+  const couchAt = useRef(0);
+  const sendCouch = useRef(false);
+  /** Changes the couch from the TV (remote, link or editor); the new couch goes to the relay. */
+  const localCouch = useCallback((update: (prev: string[]) => string[]) => {
+    sendCouch.current = true;
+    setCouch(update);
+  }, []);
+
+  // A lens from the relay names tonight's couch: the people it names are on the couch, with its settings.
   const lastLens = useRef('');
   const applyLens = useCallback((message: LensMessage) => {
+    if ((message.updatedAt ?? 0) < couchAt.current) {
+      console.info('relay', 'ignored a lens older than the couch on screen');
+      return;
+    }
+    couchAt.current = message.updatedAt ?? couchAt.current;
+    sendCouch.current = false;
     const incoming = message.people.map((p) => ({
       id: personId(p.name),
       name: p.name,
@@ -230,6 +247,19 @@ const App = () => {
     [],
   );
   relayRef.current = relay;
+  useEffect(() => {
+    if (!sendCouch.current) {
+      return;
+    }
+    sendCouch.current = false;
+    couchAt.current = Math.max(Math.round(relay.now()), couchAt.current + 1);
+    relay.sendLens({
+      t: 'lens',
+      people: people.map(({ name, settings }) => ({ name, settings })),
+      settings: lens,
+      updatedAt: couchAt.current,
+    });
+  }, [people, lens, relay]);
   // The relay starts once the stored household is read, so its first message never races the load.
   useEffect(() => {
     if (!loaded) {
@@ -261,7 +291,7 @@ const App = () => {
       console.info('link', 'no such person', pendingLink.people.join(','));
       return;
     }
-    setCouch(found.map((p) => p.id));
+    localCouch(() => found.map((p) => p.id));
     lastLens.current = '';
     AccessibilityInfo.announceForAccessibility(
       `Tonight's couch is now ${found.map((p) => p.name).join(', ')}`,
@@ -276,7 +306,7 @@ const App = () => {
     } else if (route !== 'player') {
       setRoute('titles');
     }
-  }, [pendingLink, route]);
+  }, [pendingLink, route, localCouch]);
 
   const acceptNotice = useCallback(() => {
     markNoticeSeen();
@@ -305,26 +335,30 @@ const App = () => {
           : current.map((p, i) => (i === at ? person : p)),
       );
       setLastEdited(person.id);
-      if (at === -1) {
-        setCouch((prev) => [...prev, person.id]);
-      } else if (editing !== person.id) {
-        setCouch((prev) => prev.map((id) => (id === editing ? person.id : id)));
-      }
+      // Sent even when the couch keeps its people, since their settings may have changed.
+      localCouch((prev) =>
+        at === -1
+          ? [...prev, person.id]
+          : prev.map((id) => (id === editing ? person.id : id)),
+      );
       setRoute('couch');
     },
-    [change, editing],
+    [change, editing, localCouch],
   );
 
   const deletePerson = useCallback(() => {
+    sendCouch.current = true;
     change(householdRef.current.people.filter((p) => p.id !== editing));
     setRoute('couch');
   }, [change, editing]);
 
-  const toggle = useCallback((id: string) => {
-    setCouch((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
-  }, []);
+  const toggle = useCallback(
+    (id: string) =>
+      localCouch((prev) =>
+        prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+      ),
+    [localCouch],
+  );
 
   const pick = useCallback((entry: TitleEntry) => {
     setTitle(entry);

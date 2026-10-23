@@ -101,7 +101,7 @@ configuration is needed. `sensevtt/react` imports resolve from the package's `re
 - Back closes the panel, then leaves the film for the picker, then returns to the couch screen, then
   exits the app.
 
-## Live lens from the companion
+## Live lens with the companion
 
 - On start the app opens a WebSocket to the companion's relay (`ws://10.0.2.2:8787/relay`),
   introduces itself as the TV for the `demo` household, and answers the relay's pings. Messages are
@@ -116,6 +116,11 @@ configuration is needed. `sensevtt/react` imports resolve from the package's `re
   after the card's window has started the card shows for the time that is left; if it is added
   after the deadline the moment is softened straight away. If the warning stays on, the card, its
   focus and its countdown are not touched.
+- A couch picked on the TV (with the remote, a deep link or the household editor) goes the other
+  way, as a `lens` stamped with the relay's time, so the companion answers for the people on screen
+  and a TV that connects later gets the same couch. A couch picked while the link is down is sent
+  after the next hello. A lens older than the couch on screen is ignored, so a reconnecting TV keeps
+  its own couch instead of an earlier one the relay replays.
 
 ## Household sync
 

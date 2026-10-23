@@ -5,11 +5,13 @@ export interface LensPerson {
   settings: LensSettings;
 }
 
-/** Companion to TV: who is on the couch tonight, and the combined lens. */
+/** Both directions: who is on the couch tonight, and the combined lens; the latest `updatedAt` wins. */
 export interface LensMessage {
   t: 'lens';
   people: LensPerson[];
   settings: LensSettings;
+  /** When the couch was set, in ms on the relay's clock; a lens without it is stamped by the relay. */
+  updatedAt?: number;
 }
 
 /** Both directions: everyone in the household; the latest `updatedAt` wins. */
@@ -98,7 +100,9 @@ export const readLensMessage = (value: any): LensMessage | null => {
     }
     people.push({ name: entry.name.trim(), settings: personSettings });
   }
-  return { t: 'lens', people, settings };
+  return Number.isFinite(value.updatedAt)
+    ? { t: 'lens', people, settings, updatedAt: Math.round(value.updatedAt) }
+    : { t: 'lens', people, settings };
 };
 
 /** A household message with valid people and a timestamp, or null. */
@@ -135,7 +139,7 @@ type Options = {
 };
 
 /**
- * The TV's end of the relay: joins a household, answers pings, passes on lens messages and
+ * The TV's end of the relay: joins a household, answers pings, passes lens messages both ways and
  * reconnects when the link drops or goes quiet. It also measures how far the TV's clock is from
  * the relay's, so the clock messages it sends are stamped in the relay's time.
  */
@@ -152,8 +156,15 @@ export class RelayClient {
   private syncTimer: ReturnType<typeof setInterval> | null = null;
   private samples: Array<{ rtt: number; offset: number; at: number }> = [];
   private offsetMs: number | null = null;
+  /** A couch set while the link was down, sent once it is back. */
+  private unsentLens: LensMessage | null = null;
 
   constructor(private options: Options) {}
+
+  /** The relay's time, in ms since the epoch, as far as it is known; the TV's own until then. */
+  now(): number {
+    return Date.now() + (this.offsetMs ?? 0);
+  }
 
   start() {
     if (this.stopped) {
@@ -200,6 +211,10 @@ export class RelayClient {
         role: 'tv',
         household: this.options.household,
       });
+      if (this.unsentLens) {
+        this.send(this.unsentLens as unknown as Record<string, unknown>);
+        this.unsentLens = null;
+      }
       this.pingTimer = setInterval(() => this.beat(), PING_MS);
       this.samples = [];
       this.offsetMs = null;
@@ -259,11 +274,25 @@ export class RelayClient {
       const lens = readLensMessage(json);
       if (lens) {
         console.info('relay', 'lens', lens.people.map((p) => p.name).join(','));
+        if ((lens.updatedAt ?? 0) >= (this.unsentLens?.updatedAt ?? Infinity)) {
+          this.unsentLens = null;
+        }
         this.options.onLens(lens);
       } else {
         console.info('relay', 'ignored an invalid lens message');
       }
     }
+  }
+
+  /** Sends the couch to the relay; one set while the link is down is sent after the next hello. */
+  sendLens(message: LensMessage): boolean {
+    if (!this.ws || this.ws.readyState !== 1) {
+      this.unsentLens = message;
+      return false;
+    }
+    this.unsentLens = null;
+    this.send(message as unknown as Record<string, unknown>);
+    return true;
   }
 
   /** Sends the household to the relay; it is dropped when the link is down, and sent again on connecting. */
