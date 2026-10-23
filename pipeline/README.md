@@ -75,8 +75,8 @@ AWS_PROFILE=personal AWS_REGION=us-east-1 \
 ## Audio description
 
 `everyseat describe` finds the dialogue-free stretches of a film, has Nova Pro write short
-descriptions of the picture for each, anchors each one to the shot it describes, voices them with
-Polly, and writes `ad` cues that point at the audio clips:
+descriptions of the picture for each, starts each one when the picture it describes is on screen,
+voices them with Polly, and writes `ad` cues that point at the audio clips:
 
 ```sh
 AWS_PROFILE=personal AWS_REGION=us-east-1 \
@@ -87,34 +87,48 @@ AWS_PROFILE=personal AWS_REGION=us-east-1 \
 - **Windows:** the gaps of at least `--min-gap` (10 s) between subtitle lines, trimmed by 0.5 s at
   each end and cut into equal windows of at most `--max-window` (30 s), all on the frame grid. The
   quiet stretch before the first line and after the last counts too.
-- **What the writer sees:** a contact sheet with one still per cut in the window (labelled in
-  plain seconds), the dialogue just before and after, the latest earlier descriptions, the
-  `--cast` notes, so names stay consistent, and the `--plot` file: a short plain-text synopsis
-  (up to 2000 characters, see `fixtures/sintel.plot.txt`) used only to recognise characters and
-  places. It writes to a budget of about 2.5 words a second, in the present tense, only what is
-  visible and essential, without interpretation or spoilers, and may decline a window where
-  nothing essential is on screen.
+- **What the writer sees:** a contact sheet of numbered tiles from the window, each labelled with
+  its number and its time in plain seconds (see Frames below), the dialogue just before and after,
+  the latest earlier descriptions, the `--cast` notes, so names stay consistent, and the `--plot`
+  file: a short plain-text synopsis (up to 2000 characters, see `fixtures/sintel.plot.txt`) used
+  only to recognise characters and places. It writes to a budget of about 2.5 words a second, in
+  the present tense, only what is visible and essential, without interpretation or spoilers, and
+  may decline a window where nothing essential is on screen.
+- **Frames:** the sheet has one frame at the start of every shot in the window and at least one
+  every 3 s inside a long shot, so an uncut stretch such as an opening flight is still sampled
+  every 3 s. Frames less than 0.5 s apart are merged, and a sheet is capped at 16 tiles (the
+  frames whose neighbours are closest are dropped first). Each frame is measured as it is
+  extracted: the mean luma (0 to 255) and the standard deviation of the luma. A tile with a mean
+  luma under 12 is black, one with a deviation under 5 is one flat colour, and neither can be
+  cited (on Sintel these thresholds exclude the black opening, the black credits and nothing
+  else: the darkest cave frames have a mean luma of 13.8 or more). The writer is told which tiles
+  cannot be cited and why, and a window where no tile can be cited is skipped without asking the
+  model.
 - **Anchoring:** a window can last 30 s and span several shots, so the writer answers with a list
-  of items `{at_s, text}` through the submit tool (validated with Pydantic): `at_s` is the label
-  of the contact-sheet frame the sentence describes, and the writer is asked for the 1 to 3 most
-  important moments, not every shot. Code, not the model, decides when each is spoken: an item
-  starts at its `at_s` plus a lag of 0.2 s so the speech follows the picture, on the frame grid.
-  It is pulled back to the start of its shot only when the shot began within 0.5 s before
-  `at_s`; in a long shot it stays at its frame, never earlier than `at_s` - 0.5 s. Items are
-  clamped to the window start (an item after the window end is rejected), sorted, and merged
-  when they land on the same frame. The film is left room to breathe: of two items less than
-  2.8 s apart the one with fewer words is dropped, as is an item within 2.5 s of the window end,
-  and a window keeps at most one item per 5 s. Each item gets a slot, from its start to 0.3 s
-  before the next item (or a frame before the window ends), of at most 8 s, with a word budget
-  of 2.5 words a second. Items are fitted from the last to the first; one whose measured clip
-  does not fit gets the shorten loop, and one that still does not fit, whose slot is under
-  2.5 s, or that a rewrite would cut under 5 words, is dropped. Every snap, clamp, merge and
-  drop is printed and written to `item_decisions` in the run log. A window where the model
-  never calls the submit tool or its call fails (for example by reaching the token limit) is
-  reminded twice and then skipped with the reason logged.
+  of items `{tile, text}` through the submit tool (validated with Pydantic): `tile` is the number
+  of the contact-sheet tile the sentence describes, the first one in which it can be seen, and
+  the writer is asked for the 1 to 3 most important moments, not every shot. Code, not the model,
+  decides when each is spoken: an item starts at the time of its tile's frame plus a lag of 0.2 s,
+  on the frame grid, so the speech follows the picture and never leads it. There is no free time
+  to get wrong and no snapping back to the start of a shot. The review turns an item down when
+  its tile is not on the sheet, is black or one flat colour, or comes before the tile of the item
+  above it (the tiles of a window must not decrease). Items on the same tile are merged. The film
+  is left room to breathe: of two items less than 2.8 s apart the one with fewer words is
+  dropped, as is an item within 2.5 s of the window end, and a window keeps at most one item per
+  5 s. Each item gets a slot, from its start to 0.3 s before the next item (or a frame before
+  the window ends), of at most 8 s, with a word budget of 2.5 words a second. Items are fitted
+  from the last to the first; one whose measured clip does not fit gets the shorten loop, and one
+  that still does not fit, whose slot is under 2.5 s, or that a rewrite would cut under 5 words,
+  is dropped. Every anchoring, merge and drop is printed and written to `item_decisions` in the
+  run log, and each window's tiles with their measurements are written to `sheets`. A window
+  where the model never calls the submit tool or its call fails (for example by reaching the
+  token limit) is reminded twice and then skipped with the reason logged.
 - **Review:** the model does not reliably follow rules, so every answer, including each rewrite
   to shorten, goes through checks in code before it is kept, and a rejected answer goes back to
   the model with the reason:
+  - a tile that is not on the sheet, is black or flat, or goes back to an earlier tile than the
+    item above it is rejected, with a request to cite the first tile where the thing is on screen
+    or to set nothing to describe;
   - camera and editing words (frame, shot, close-up, camera, image, shows, scene cuts) are
     rejected with a request to say what happens instead;
   - a description is rejected when 70% or more of its content words (compared by word stem,
@@ -133,20 +147,27 @@ AWS_PROFILE=personal AWS_REGION=us-east-1 \
   last resort is SSML prosody at 110%. An item that still does not fit is dropped and the reason
   logged; the run goes on.
 - **Outputs:** one `<title>-ad-<n>.wav` per kept item in `<clips-dir>/<title>/`, the cue file
-  (`generated/<title>.sensevtt`; each cue starts at the shot start its item was snapped to and
-  carries `audio_ref {uri, duration_s}`, a one-line `preview` and the full text in `evidence`) and
-  `<title>.run.json` beside it with every attempt, the answers the review rejected (and why), the
-  anchoring decisions, the skipped windows, token usage and the estimated cost. Clip addresses are relative
+  (`generated/<title>.sensevtt`; each cue starts at the frame time of the tile its item cites plus
+  the lag and carries `audio_ref {uri, duration_s}`, a one-line `preview` and the full text in
+  `evidence`) and `<title>.run.json` beside it with every attempt, the answers the review rejected
+  (and why), the anchoring decisions, each window's tiles with their luma and spread, the skipped
+  windows, token usage and the estimated cost. Clip addresses are relative
   (`ad/<title>/<id>.wav`) so the companion can serve them.
 - **`--dry-run`:** placeholder text and silent clips of the length a voice would take, written next
   to the clips as `<title>.dry-run.sensevtt`. Nothing touches AWS (no session is created, so no
-  credentials are read), which makes it the way to check the whole flow offline.
+  credentials are read), which makes it the way to check the whole flow offline. A run replaces
+  the `<title>-ad-*.wav` clips in `--clips-dir`, so when real clips are there, point `--clips-dir`,
+  `--cues` and `--work-dir` at scratch locations.
 - **`--script FILE`** (with `--dry-run`): scripted answers per window, in place of the model's, that
-  go through the same review. An answer is a list of items `{"at_s": seconds, "text": "..."}`, a
-  plain text (one item at the window start) or null; without a script the stand-in writes up to
-  three placeholder items per window, one per shot. `fixtures/describe_script.json` exercises each
-  rejection path on Sintel plus snapping, merging, clamping, rejecting and dropping items
-  (windows 8, 12, 14 and 15), and every decision is printed:
+  go through the same review. An answer is a list of items `{"tile": number, "text": "..."}`, a
+  plain text (one item at the window's first tile that can be cited) or null; without a script the
+  stand-in writes up to three placeholder items per window, spread over the tiles that can be
+  cited. `fixtures/describe_script.json` exercises each rejection path on Sintel: a sentence on a
+  black opening tile (window 1, where the opening is one long shot sampled every 3 s), tiles out
+  of order (window 8), a tile that is not on the sheet and items on one tile that merge (window
+  15), a black tile in a sentence that is also too long for its slot (window 30), and the pacing
+  drops (windows 13 and 15). A window of black credits (29) is skipped without a model call. Every
+  decision is printed, including each tile's time, luma and spread:
 
   ```sh
   everyseat describe film.mkv --subtitles film_en.srt --dry-run \

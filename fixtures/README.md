@@ -23,7 +23,7 @@ Relay message streams (one JSON object per line) can be checked with `everyseat-
 
 | File | Contents |
 |---|---|
-| `describe_script.json` | Scripted answers for a dry run of `everyseat describe` on the Sintel film, per window: each of the writer's rejection paths (repeats, camera words, too long, too short, nothing to add, no acceptable answer) and the shorten loop |
+| `describe_script.json` | Scripted answers for a dry run of `everyseat describe` on the Sintel film, per window, each item citing a contact-sheet tile: a sentence on a black opening tile, tiles out of order, a tile off the sheet, merged and dropped items, each of the writer's rejection paths (repeats, camera words, too long, too short, nothing to add, no acceptable answer) and the shorten loop |
 | `sintel.plot.txt` | A short, spoiler-light synopsis of Sintel, passed with `--plot` so the descriptions recognise the characters and places and keep their names consistent |
 | `sintel.ad-overrides.json` | An empty list of human corrections for the Sintel descriptions, passed with `--overrides`: add `{"near_s": 368.5, "text": "..."}` to replace the nearest item or `{"near_s": 368.5, "drop": true}` to remove it |
 
