@@ -5,17 +5,17 @@
  "voice": "polly neural Joanna",
  "plot_chars": 976,
  "usage": {
-  "input_tokens": 326113,
-  "output_tokens": 11149,
-  "model_calls": 92,
-  "model_cost_usd": 0.296567,
-  "voice_characters": 2555,
-  "voice_cost_usd": 0.04088
+  "input_tokens": 381236,
+  "output_tokens": 13697,
+  "model_calls": 116,
+  "model_cost_usd": 0.348819,
+  "voice_characters": 1901,
+  "voice_cost_usd": 0.030416
  },
  "review": {
   "similarity_limit": 0.7,
   "max_answers": 5,
-  "answers_rejected": 41
+  "answers_rejected": 76
  },
  "windows": [
   {
@@ -23,34 +23,115 @@
    "window": 1,
    "window_start": 0.5,
    "window_end": 27.042,
-   "start": 0.708,
+   "start": 6.583,
+   "tiles": [
+    3
+   ],
    "at_s": [
-    0.5
+    6.376
    ],
    "slot_s": 7.958,
-   "duration_s": 2.138,
-   "text": "Sintel fights an old man in the snow.",
+   "duration_s": 3.038,
+   "text": "Snowy mountain peaks drift past under a pale sky.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 8,
-     "duration_s": 2.138,
+     "words": 9,
+     "duration_s": 2.812,
      "rate": 100
     }
-   ]
+   ],
+   "overridden": true
   },
   {
    "cue": "sintel-ad-2",
    "window": 1,
    "window_start": 0.5,
    "window_end": 27.042,
-   "start": 9.5,
+   "start": 24.208,
+   "tiles": [
+    9
+   ],
    "at_s": [
-    9.3
+    24.004
+   ],
+   "slot_s": 2.792,
+   "duration_s": 2.638,
+   "text": "The fight continues without significant changes.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 6,
+     "duration_s": 2.638,
+     "rate": 100
+    }
+   ],
+   "dropped_by_override": true
+  },
+  {
+   "cue": "sintel-ad-3",
+   "window": 2,
+   "window_start": 27.042,
+   "window_end": 53.625,
+   "start": 27.25,
+   "tiles": [
+    1
+   ],
+   "at_s": [
+    27.042
    ],
    "slot_s": 7.958,
+   "duration_s": 2.8,
+   "text": "High in the snow, Sintel fights an old man.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 11,
+     "duration_s": 3.025,
+     "rate": 100
+    }
+   ],
+   "overridden": true
+  },
+  {
+   "cue": "sintel-ad-4",
+   "window": 2,
+   "window_start": 27.042,
+   "window_end": 53.625,
+   "start": 42.708,
+   "tiles": [
+    7
+   ],
+   "at_s": [
+    42.517
+   ],
+   "slot_s": 7.958,
+   "duration_s": 2.812,
+   "text": "Sintel dodges a spear thrust from the old man.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 9,
+     "duration_s": 2.812,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-5",
+   "window": 2,
+   "window_start": 27.042,
+   "window_end": 53.625,
+   "start": 51.042,
+   "tiles": [
+    14
+   ],
+   "at_s": [
+    50.829
+   ],
+   "slot_s": 2.541,
    "duration_s": 2.413,
-   "text": "Sintel continues the fight with the old man.",
+   "text": "The old man swings his spear at Sintel.",
    "rate_percent": 100,
    "attempts": [
     {
@@ -61,125 +142,25 @@
    ]
   },
   {
-   "cue": "sintel-ad-3",
-   "window": 2,
-   "window_start": 27.042,
-   "window_end": 53.625,
-   "start": 27.25,
-   "at_s": [
-    27.0
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.725,
-   "text": "Sintel and the old man engage in a fierce battle.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 10,
-     "duration_s": 2.725,
-     "rate": 100
-    }
-   ],
-   "rejected": [
-    {
-     "step": "write",
-     "answer": 1,
-     "accepted": false,
-     "text": "Sintel and the old man continue their fight in the snow.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "83% already said at 9.5 s"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-4",
-   "window": 2,
-   "window_start": 27.042,
-   "window_end": 53.625,
-   "start": 43.5,
-   "at_s": [
-    43.3
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.575,
-   "text": "Sintel knocks the old man down with her spear.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 9,
-     "duration_s": 2.575,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-5",
-   "window": 3,
-   "window_start": 53.625,
-   "window_end": 80.167,
-   "start": 55.833,
-   "at_s": [
-    55.7
-   ],
-   "slot_s": 4.658,
-   "duration_s": 3.3,
-   "text": "Sintel disarms the old man, who stumbles backward.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 8,
-     "duration_s": 3.3,
-     "rate": 100
-    }
-   ],
-   "rejected": [
-    {
-     "step": "write",
-     "answer": 1,
-     "accepted": false,
-     "text": "Sintel strikes the old man with her spear.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "80% already said at 43.5 s"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 3,
-     "accepted": false,
-     "text": "Sintel holds the old man down with her spear.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "83% already said at 43.5 s"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "cue": "sintel-ad-6",
    "window": 3,
    "window_start": 53.625,
    "window_end": 80.167,
-   "start": 60.833,
-   "at_s": [
-    60.7
+   "start": 54.292,
+   "tiles": [
+    1
    ],
-   "slot_s": 3.742,
-   "duration_s": 2.913,
-   "text": "Sintel pins the old man to the ground with her spear.",
+   "at_s": [
+    54.1
+   ],
+   "slot_s": 7.958,
+   "duration_s": 3.025,
+   "text": "Sintel and the old man engage in a fierce spear fight.",
    "rate_percent": 100,
    "attempts": [
     {
      "words": 11,
-     "duration_s": 2.913,
+     "duration_s": 3.025,
      "rate": 100
     }
    ]
@@ -189,39 +170,45 @@
    "window": 3,
    "window_start": 53.625,
    "window_end": 80.167,
-   "start": 64.917,
+   "start": 64.958,
+   "tiles": [
+    9
+   ],
    "at_s": [
-    64.8
+    64.767
    ],
    "slot_s": 7.958,
-   "duration_s": 3.663,
-   "text": "The old man struggles beneath Sintel, who maintains her grip.",
+   "duration_s": 2.312,
+   "text": "The old man knocks Sintel to the ground.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 10,
-     "duration_s": 3.663,
+     "words": 8,
+     "duration_s": 2.312,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-8",
-   "window": 4,
-   "window_start": 80.167,
-   "window_end": 106.75,
-   "start": 80.375,
-   "at_s": [
-    80.2
+   "window": 5,
+   "window_start": 156.375,
+   "window_end": 181.542,
+   "start": 156.583,
+   "tiles": [
+    1
    ],
-   "slot_s": 5.325,
-   "duration_s": 3.263,
-   "text": "Sintel lies on the snowy ground, holding her spear.",
+   "at_s": [
+    156.375
+   ],
+   "slot_s": 7.958,
+   "duration_s": 1.95,
+   "text": "Sintel runs through a ruined town.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 9,
-     "duration_s": 3.263,
+     "words": 6,
+     "duration_s": 1.95,
      "rate": 100
     }
    ],
@@ -230,35 +217,12 @@
      "step": "write",
      "answer": 2,
      "accepted": false,
-     "text": "A large, ornate sword is shown in close-up.",
+     "tile": 7,
+     "text": "Sintel climbs a wall.",
      "problems": [
       {
-       "kind": "banned",
-       "detail": "shown, close-up"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 5,
-     "accepted": false,
-     "text": "A large, ornate sword appears in the frame.",
-     "problems": [
-      {
-       "kind": "banned",
-       "detail": "frame"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 8,
-     "accepted": false,
-     "text": "A large, ornate sword is visible.",
-     "problems": [
-      {
-       "kind": "banned",
-       "detail": "visible"
+       "kind": "short",
+       "detail": "4 words"
       }
      ]
     }
@@ -266,252 +230,96 @@
   },
   {
    "cue": "sintel-ad-9",
-   "window": 4,
-   "window_start": 80.167,
-   "window_end": 106.75,
-   "start": 86.042,
-   "at_s": [
-    85.9
+   "window": 5,
+   "window_start": 156.375,
+   "window_end": 181.542,
+   "start": 173.833,
+   "tiles": [
+    7
    ],
-   "slot_s": 7.958,
-   "duration_s": 2.025,
-   "text": "A large, ornate sword appears.",
+   "at_s": [
+    173.65
+   ],
+   "slot_s": 7.667,
+   "duration_s": 2.0,
+   "text": "Sintel grips the wall and climbs.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 5,
-     "duration_s": 2.025,
+     "words": 6,
+     "duration_s": 2.0,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-10",
-   "window": 4,
-   "window_start": 80.167,
-   "window_end": 106.75,
-   "start": 101.417,
-   "at_s": [
-    101.3
+   "window": 7,
+   "window_start": 214.0,
+   "window_end": 227.75,
+   "start": 214.208,
+   "tiles": [
+    1
    ],
-   "slot_s": 5.291,
-   "duration_s": 2.388,
-   "text": "Sintel stands in a cave with a fire pit.",
+   "at_s": [
+    214.0
+   ],
+   "slot_s": 7.533,
+   "duration_s": 2.5,
+   "text": "Sintel holds Scales close to her chest.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 9,
-     "duration_s": 2.388,
+     "words": 7,
+     "duration_s": 2.5,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-11",
-   "window": 5,
-   "window_start": 156.375,
-   "window_end": 181.542,
-   "start": 156.583,
-   "at_s": [
-    156.4
+   "window": 7,
+   "window_start": 214.0,
+   "window_end": 227.75,
+   "start": 222.083,
+   "tiles": [
+    5
    ],
-   "slot_s": 7.958,
-   "duration_s": 2.288,
-   "text": "Sintel jumps from a rooftop to another.",
+   "at_s": [
+    221.892
+   ],
+   "slot_s": 5.625,
+   "duration_s": 2.85,
+   "text": "Sintel gently places Scales down on the ground.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 7,
-     "duration_s": 2.288,
+     "words": 8,
+     "duration_s": 2.85,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-12",
-   "window": 5,
-   "window_start": 156.375,
-   "window_end": 181.542,
-   "start": 176.625,
-   "at_s": [
-    176.5
-   ],
-   "slot_s": 4.875,
-   "duration_s": 2.812,
-   "text": "Sintel stands on a rooftop, looking around.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 7,
-     "duration_s": 2.812,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-13",
-   "window": 6,
-   "window_start": 181.542,
-   "window_end": 206.75,
-   "start": 181.75,
-   "at_s": [
-    181.5
-   ],
-   "slot_s": 7.908,
-   "duration_s": 3.038,
-   "text": "Sintel crouches on a rooftop, holding a spear.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 8,
-     "duration_s": 3.038,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-14",
-   "window": 6,
-   "window_start": 181.542,
-   "window_end": 206.75,
-   "start": 190.0,
-   "at_s": [
-    189.9
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.638,
-   "text": "Sintel looks down at a small dragon on the ground.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 10,
-     "duration_s": 2.638,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-15",
-   "window": 6,
-   "window_start": 181.542,
-   "window_end": 206.75,
-   "start": 203.333,
-   "at_s": [
-    203.2
-   ],
-   "slot_s": 3.375,
-   "duration_s": 2.725,
-   "text": "Sintel and the dragon walk through a ruined area.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 9,
-     "duration_s": 2.725,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-16",
-   "window": 7,
-   "window_start": 214.0,
-   "window_end": 227.75,
-   "start": 214.208,
-   "at_s": [
-    214.0
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.35,
-   "text": "Sintel holds Scales in a dark cave.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 7,
-     "duration_s": 2.35,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-17",
    "window": 8,
    "window_start": 232.75,
    "window_end": 249.833,
-   "start": 232.958,
-   "at_s": [
-    232.8
+   "start": 243.292,
+   "tiles": [
+    5
    ],
-   "slot_s": 7.958,
-   "duration_s": 2.962,
-   "text": "Sintel holds Scales in a dark, ruined area.",
+   "at_s": [
+    243.095
+   ],
+   "slot_s": 6.499,
+   "duration_s": 2.413,
+   "text": "Scales runs swiftly beside Sintel.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 8,
-     "duration_s": 2.962,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-18",
-   "window": 8,
-   "window_start": 232.75,
-   "window_end": 249.833,
-   "start": 244.292,
-   "at_s": [
-    244.1
-   ],
-   "slot_s": 5.499,
-   "duration_s": 3.388,
-   "text": "Sintel looks around the chaotic, debris-filled environment.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 7,
-     "duration_s": 3.388,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-19",
-   "window": 9,
-   "window_start": 254.375,
-   "window_end": 264.75,
-   "start": 254.583,
-   "at_s": [
-    254.4
-   ],
-   "slot_s": 7.958,
-   "duration_s": 3.112,
-   "text": "Sintel jumps off a wooden structure, spear in hand.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 9,
-     "duration_s": 3.112,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-20",
-   "window": 10,
-   "window_start": 268.75,
-   "window_end": 286.125,
-   "start": 275.833,
-   "at_s": [
-    275.7
-   ],
-   "slot_s": 7.958,
-   "duration_s": 3.263,
-   "text": "Scales flies above Sintel as she runs across rooftops.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 9,
-     "duration_s": 3.263,
+     "words": 5,
+     "duration_s": 2.413,
      "rate": 100
     }
    ],
@@ -520,42 +328,21 @@
      "step": "write",
      "answer": 1,
      "accepted": false,
-     "text": "Sintel stands on a rooftop, looking around.",
+     "tile": 1,
+     "text": "Sintel holds Scales close to her chest.",
      "problems": [
       {
        "kind": "similar",
-       "detail": "100% already said at 176.6 s"
+       "detail": "100% already said at 214.2 s"
       }
      ]
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-21",
-   "window": 11,
-   "window_start": 286.125,
-   "window_end": 303.5,
-   "start": 289.542,
-   "at_s": [
-    289.4
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.125,
-   "text": "Sintel runs across a ruined area.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 6,
-     "duration_s": 2.125,
-     "rate": 100
-    }
-   ],
-   "rejected": [
+    },
     {
      "step": "write",
-     "answer": 1,
+     "answer": 2,
      "accepted": false,
-     "text": "Sintel jumps from a rooftop to another.",
+     "tile": 5,
+     "text": "Sintel runs through a ruined town.",
      "problems": [
       {
        "kind": "similar",
@@ -567,46 +354,392 @@
      "step": "write",
      "answer": 3,
      "accepted": false,
-     "text": "Sintel and Scales stand on a rooftop.",
+     "tile": 8,
+     "text": "Scales runs alongside Sintel.",
      "problems": [
       {
-       "kind": "similar",
-       "detail": "75% already said at 275.8 s"
+       "kind": "short",
+       "detail": "4 words"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 4,
+     "accepted": false,
+     "tile": 5,
+     "text": "Scales runs alongside Sintel.",
+     "problems": [
+      {
+       "kind": "short",
+       "detail": "4 words"
       }
      ]
     }
    ]
   },
   {
-   "cue": "sintel-ad-22",
-   "window": 12,
-   "window_start": 308.0,
-   "window_end": 323.125,
-   "start": 308.208,
-   "at_s": [
-    308.0
+   "cue": "sintel-ad-13",
+   "window": 9,
+   "window_start": 254.375,
+   "window_end": 264.75,
+   "start": 255.0,
+   "tiles": [
+    1
    ],
-   "slot_s": 6.617,
-   "duration_s": 2.5,
-   "text": "Sintel looks up at Scales flying above her.",
+   "at_s": [
+    254.808
+   ],
+   "slot_s": 6.2,
+   "duration_s": 3.038,
+   "text": "Sintel and Scales walk through a bustling marketplace.",
    "rate_percent": 100,
    "attempts": [
     {
      "words": 8,
-     "duration_s": 2.5,
+     "duration_s": 3.038,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-14",
+   "window": 9,
+   "window_start": 254.375,
+   "window_end": 264.75,
+   "start": 261.542,
+   "tiles": [
+    5
+   ],
+   "at_s": [
+    261.329
+   ],
+   "slot_s": 3.166,
+   "duration_s": 3.1,
+   "text": "Sintel looks around, searching for something in the crowd.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 9,
+     "duration_s": 3.1,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-15",
+   "window": 10,
+   "window_start": 268.75,
+   "window_end": 286.125,
+   "start": 275.917,
+   "tiles": [
+    4
+   ],
+   "at_s": [
+    275.725
+   ],
+   "slot_s": 7.958,
+   "duration_s": 2.0,
+   "text": "Scales leaps over a wooden beam.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 6,
+     "duration_s": 2.0,
      "rate": 100
     }
    ],
    "rejected": [
     {
      "step": "write",
-     "answer": 3,
+     "answer": 1,
      "accepted": false,
-     "text": "Sintel runs across the ruined area.",
+     "tile": 1,
+     "text": "Sintel and Scales run through a ruined town.",
      "problems": [
       {
        "kind": "similar",
-       "detail": "100% already said at 289.5 s"
+       "detail": "83% already said at 156.6 s"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-16",
+   "window": 11,
+   "window_start": 286.125,
+   "window_end": 303.5,
+   "start": 297.542,
+   "tiles": [
+    6
+   ],
+   "at_s": [
+    297.35
+   ],
+   "slot_s": 5.916,
+   "duration_s": 2.575,
+   "text": "Sintel and Scales navigate through the ruins.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 7,
+     "duration_s": 2.575,
+     "rate": 100
+    }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel and Scales run through a ruined town.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "83% already said at 156.6 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 2,
+     "accepted": false,
+     "tile": 5,
+     "text": "Scales leaps over a wooden beam.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 275.9 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 4,
+     "accepted": false,
+     "tile": 3,
+     "text": "Sintel looks around, searching for something in the crowd.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 261.5 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 5,
+     "accepted": false,
+     "tile": 7,
+     "text": "Scales runs swiftly beside Sintel.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 243.3 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 7,
+     "accepted": false,
+     "tile": 4,
+     "text": "Sintel and Scales move through a bustling marketplace.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "83% already said at 255.0 s"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-17",
+   "window": 12,
+   "window_start": 308.0,
+   "window_end": 323.125,
+   "start": 315.25,
+   "tiles": [
+    5
+   ],
+   "at_s": [
+    315.058
+   ],
+   "slot_s": 7.833,
+   "duration_s": 3.237,
+   "text": "A large dragon flies overhead, casting a shadow.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 8,
+     "duration_s": 3.237,
+     "rate": 100
+    }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel and Scales navigate through the ruins.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 297.5 s"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-18",
+   "window": 13,
+   "window_start": 323.125,
+   "window_end": 338.25,
+   "start": 328.458,
+   "tiles": [
+    3
+   ],
+   "at_s": [
+    328.267
+   ],
+   "slot_s": 4.2,
+   "duration_s": 1.988,
+   "text": "Sintel reaches out towards Scales.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 5,
+     "duration_s": 1.988,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-19",
+   "window": 13,
+   "window_start": 323.125,
+   "window_end": 338.25,
+   "start": 333.0,
+   "tiles": [
+    6
+   ],
+   "at_s": [
+    332.808
+   ],
+   "slot_s": 5.208,
+   "duration_s": 2.55,
+   "text": "The large dragon swoops down towards Sintel.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 7,
+     "duration_s": 2.55,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-20",
+   "window": 14,
+   "window_start": 342.5,
+   "window_end": 368.167,
+   "start": 342.708,
+   "tiles": [
+    1
+   ],
+   "at_s": [
+    342.5
+   ],
+   "slot_s": 7.958,
+   "duration_s": 2.263,
+   "text": "Sintel runs through a desert landscape.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 6,
+     "duration_s": 2.263,
+     "rate": 100
+    }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 2,
+     "accepted": false,
+     "tile": 7,
+     "text": "Sintel looks around, searching for something.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 261.5 s"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-21",
+   "window": 14,
+   "window_start": 342.5,
+   "window_end": 368.167,
+   "start": 365.333,
+   "tiles": [
+    10
+   ],
+   "at_s": [
+    365.14
+   ],
+   "slot_s": 2.792,
+   "duration_s": 2.625,
+   "text": "Sintel continues running across the desert.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 6,
+     "duration_s": 2.625,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-22",
+   "window": 15,
+   "window_start": 368.167,
+   "window_end": 393.875,
+   "start": 380.833,
+   "tiles": [
+    6
+   ],
+   "at_s": [
+    380.642
+   ],
+   "slot_s": 7.958,
+   "duration_s": 2.663,
+   "text": "Sintel and Scales enter a bamboo forest.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 7,
+     "duration_s": 2.663,
+     "rate": 100
+    }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel runs through a desert landscape.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 342.7 s"
       }
      ]
     }
@@ -614,595 +747,132 @@
   },
   {
    "cue": "sintel-ad-23",
-   "window": 12,
-   "window_start": 308.0,
-   "window_end": 323.125,
-   "start": 315.167,
-   "at_s": [
-    315.1
+   "window": 15,
+   "window_start": 368.167,
+   "window_end": 393.875,
+   "start": 391.292,
+   "tiles": [
+    10
    ],
-   "slot_s": 7.916,
-   "duration_s": 2.663,
-   "text": "Scales flies above Sintel in the ruined area.",
+   "at_s": [
+    391.085
+   ],
+   "slot_s": 2.541,
+   "duration_s": 2.362,
+   "text": "Sintel and Scales reach a rocky cliff.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 8,
-     "duration_s": 2.663,
+     "words": 7,
+     "duration_s": 2.362,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-24",
-   "window": 13,
-   "window_start": 323.125,
-   "window_end": 338.25,
-   "start": 323.333,
-   "at_s": [
-    323.1
+   "window": 17,
+   "window_start": 419.583,
+   "window_end": 445.333,
+   "start": 440.375,
+   "tiles": [
+    11
    ],
-   "slot_s": 7.958,
-   "duration_s": 3.1,
-   "text": "Sintel reaches for Scales' tail as he flies above her.",
+   "at_s": [
+    440.169
+   ],
+   "slot_s": 4.916,
+   "duration_s": 3.5,
+   "text": "The old man parries Sintel's strike and swings his weapon again.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 10,
-     "duration_s": 3.1,
+     "words": 11,
+     "duration_s": 3.5,
      "rate": 100
+    }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel and an old man engage in a fierce battle in the snow.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "71% already said at 54.3 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 2,
+     "accepted": false,
+     "tile": 5,
+     "text": "Sintel strikes the old man with her spear.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "80% already said at 54.3 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 4,
+     "accepted": false,
+     "tile": 5,
+     "text": "Sintel dodges the old man's attack and counters with her spear.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "71% already said at 42.7 s"
+      }
+     ]
     }
    ]
   },
   {
    "cue": "sintel-ad-25",
-   "window": 13,
-   "window_start": 323.125,
-   "window_end": 338.25,
-   "start": 332.333,
-   "at_s": [
-    332.2
+   "window": 18,
+   "window_start": 464.5,
+   "window_end": 487.625,
+   "start": 464.708,
+   "tiles": [
+    1
    ],
-   "slot_s": 5.875,
-   "duration_s": 3.35,
-   "text": "Sintel grabs Scales' tail but loses her grip and falls.",
+   "at_s": [
+    464.5
+   ],
+   "slot_s": 7.45,
+   "duration_s": 3.237,
+   "text": "Sintel stands in a dark cave, holding her spear.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 10,
-     "duration_s": 3.35,
+     "words": 9,
+     "duration_s": 3.237,
      "rate": 100
     }
    ]
   },
   {
    "cue": "sintel-ad-26",
-   "window": 14,
-   "window_start": 342.5,
-   "window_end": 368.167,
-   "start": 342.708,
-   "at_s": [
-    342.5
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.575,
-   "text": "Sintel stands in front of a ruined structure.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 8,
-     "duration_s": 2.575,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-27",
-   "window": 14,
-   "window_start": 342.5,
-   "window_end": 368.167,
-   "start": 351.667,
-   "at_s": [
-    351.6
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.375,
-   "text": "Sintel runs across a sandy landscape.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 6,
-     "duration_s": 2.375,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-28",
-   "window": 15,
-   "window_start": 368.167,
-   "window_end": 393.875,
-   "start": 380.75,
-   "at_s": [
-    380.6
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.575,
-   "text": "Sintel runs through a dense bamboo forest.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 7,
-     "duration_s": 2.575,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-29",
-   "window": 16,
-   "window_start": 393.875,
-   "window_end": 419.583,
-   "start": 394.083,
-   "at_s": [
-    393.9
-   ],
-   "slot_s": 7.958,
-   "duration_s": 3.487,
-   "text": "Sintel and the old man exchange blows in the snowy landscape.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 11,
-     "duration_s": 3.487,
-     "rate": 100
-    }
-   ],
-   "rejected": [
-    {
-     "step": "write",
-     "answer": 1,
-     "accepted": false,
-     "text": "Sintel and the old man continue their fight in the snow.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "83% already said at 9.5 s"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 2,
-     "accepted": false,
-     "text": "Sintel strikes the old man with her spear.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "80% already said at 60.8 s"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-30",
-   "window": 16,
-   "window_start": 393.875,
-   "window_end": 419.583,
-   "start": 415.292,
-   "at_s": [
-    415.2
-   ],
-   "slot_s": 4.249,
-   "duration_s": 2.913,
-   "text": "Sintel attempts to strike the old man with her spear.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 10,
-     "duration_s": 2.913,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-31",
    "window": 18,
    "window_start": 464.5,
    "window_end": 487.625,
-   "start": 464.708,
+   "start": 472.5,
+   "tiles": [
+    4
+   ],
    "at_s": [
-    464.5
-   ],
-   "slot_s": 7.958,
-   "duration_s": 3.125,
-   "text": "Sintel stands in a dark cave, holding a spear.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 9,
-     "duration_s": 3.125,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-32",
-   "window": 18,
-   "window_start": 464.5,
-   "window_end": 487.625,
-   "start": 475.208,
-   "at_s": [
-    475.1
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.737,
-   "text": "Sintel looks down at glowing crystals on the ground.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 9,
-     "duration_s": 2.737,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-33",
-   "window": 18,
-   "window_start": 464.5,
-   "window_end": 487.625,
-   "start": 483.917,
-   "at_s": [
-    483.8
-   ],
-   "slot_s": 3.666,
-   "duration_s": 3.337,
-   "text": "Sintel steps forward, her shadow cast on the crystals.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 9,
-     "duration_s": 3.337,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-34",
-   "window": 19,
-   "window_start": 487.625,
-   "window_end": 510.75,
-   "start": 487.833,
-   "at_s": [
-    487.6
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.925,
-   "text": "Sintel walks through a dark cave with glowing crystals.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 9,
-     "duration_s": 2.925,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-35",
-   "window": 19,
-   "window_start": 487.625,
-   "window_end": 510.75,
-   "start": 502.667,
-   "at_s": [
-    502.6
-   ],
-   "slot_s": 7.958,
-   "duration_s": 3.275,
-   "text": "Sintel encounters a large, injured dragon in the cave.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 9,
-     "duration_s": 3.275,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-36",
-   "window": 20,
-   "window_start": 510.75,
-   "window_end": 533.917,
-   "start": 510.958,
-   "at_s": [
-    510.8
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.913,
-   "text": "Sintel stands before a large, injured dragon.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 7,
-     "duration_s": 2.913,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-37",
-   "window": 20,
-   "window_start": 510.75,
-   "window_end": 533.917,
-   "start": 523.625,
-   "at_s": [
-    523.5
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.788,
-   "text": "Sintel looks concerned as she approaches the dragon.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 8,
-     "duration_s": 2.788,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-38",
-   "window": 21,
-   "window_start": 533.917,
-   "window_end": 557.083,
-   "start": 536.542,
-   "at_s": [
-    536.4
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.538,
-   "text": "Sintel moves closer to the injured dragon.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 7,
-     "duration_s": 2.538,
-     "rate": 100
-    }
-   ],
-   "rejected": [
-    {
-     "step": "write",
-     "answer": 1,
-     "accepted": false,
-     "text": "Sintel stands in a dark cave, holding a spear.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "100% already said at 464.7 s"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 2,
-     "accepted": false,
-     "text": "Sintel looks concerned as she approaches the dragon.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "100% already said at 523.6 s"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 3,
-     "accepted": false,
-     "text": "Sintel reaches out to the injured dragon.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "75% already said at 511.0 s"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-39",
-   "window": 21,
-   "window_start": 533.917,
-   "window_end": 557.083,
-   "start": 546.208,
-   "at_s": [
-    546.1
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.475,
-   "text": "The dragon lies motionless on the cave floor.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 8,
-     "duration_s": 2.475,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-40",
-   "window": 22,
-   "window_start": 560.0,
-   "window_end": 580.333,
-   "start": 560.208,
-   "at_s": [
-    560.0
-   ],
-   "slot_s": 7.033,
-   "duration_s": 2.938,
-   "text": "Sintel charges at the huge dragon as it rears up.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 8,
-     "duration_s": 2.837,
-     "rate": 100
-    }
-   ],
-   "overridden": true
-  },
-  {
-   "cue": "sintel-ad-41",
-   "window": 22,
-   "window_start": 560.0,
-   "window_end": 580.333,
-   "start": 567.583,
-   "at_s": [
-    567.5
-   ],
-   "slot_s": 5.242,
-   "duration_s": 2.538,
-   "text": "The dragon retaliates with a powerful strike.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 7,
-     "duration_s": 2.538,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-42",
-   "window": 22,
-   "window_start": 560.0,
-   "window_end": 580.333,
-   "start": 573.167,
-   "at_s": [
-    573.1
-   ],
-   "slot_s": 7.124,
-   "duration_s": 2.763,
-   "text": "Sintel dodges and prepares for another attack.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 7,
-     "duration_s": 2.763,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-43",
-   "window": 23,
-   "window_start": 580.333,
-   "window_end": 600.708,
-   "start": 587.375,
-   "at_s": [
-    587.3
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.538,
-   "text": "The dragon's strike knocks Sintel off her feet.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 8,
-     "duration_s": 2.538,
-     "rate": 100
-    }
-   ],
-   "rejected": [
-    {
-     "step": "write",
-     "answer": 1,
-     "accepted": false,
-     "text": "Sintel launches a fireball at the large dragon.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "100% already said at 560.2 s"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 2,
-     "accepted": false,
-     "text": "The dragon retaliates with a powerful strike.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "100% already said at 567.6 s"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-44",
-   "window": 24,
-   "window_start": 600.708,
-   "window_end": 621.083,
-   "start": 600.917,
-   "at_s": [
-    600.7
-   ],
-   "slot_s": 7.958,
-   "duration_s": 2.725,
-   "text": "Sintel strikes the large dragon with her spear.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 8,
-     "duration_s": 2.725,
-     "rate": 100
-    }
-   ],
-   "rejected": [
-    {
-     "step": "write",
-     "answer": 2,
-     "accepted": false,
-     "text": "The dragon retaliates with a powerful strike.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "100% already said at 567.6 s"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 3,
-     "accepted": false,
-     "text": "Sintel dodges the dragon's attack and prepares for another strike.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "71% already said at 573.2 s"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-45",
-   "window": 24,
-   "window_start": 600.708,
-   "window_end": 621.083,
-   "start": 610.625,
-   "at_s": [
-    610.5
+    472.308
    ],
    "slot_s": 7.958,
    "duration_s": 2.35,
-   "text": "The dragon's tail swipes towards Sintel.",
+   "text": "She examines a large, glowing crystal.",
    "rate_percent": 100,
    "attempts": [
     {
@@ -1213,17 +883,242 @@
    ]
   },
   {
-   "cue": "sintel-ad-46",
-   "window": 25,
-   "window_start": 630.333,
-   "window_end": 658.875,
-   "start": 630.542,
+   "cue": "sintel-ad-27",
+   "window": 18,
+   "window_start": 464.5,
+   "window_end": 487.625,
+   "start": 481.458,
+   "tiles": [
+    8
+   ],
    "at_s": [
-    630.3
+    481.245
+   ],
+   "slot_s": 6.125,
+   "duration_s": 4.338,
+   "text": "Sintel continues exploring the cave, illuminated by glowing crystals.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 9,
+     "duration_s": 4.338,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-28",
+   "window": 19,
+   "window_start": 487.625,
+   "window_end": 510.75,
+   "start": 487.833,
+   "tiles": [
+    1
+   ],
+   "at_s": [
+    487.625
    ],
    "slot_s": 7.958,
+   "duration_s": 3.55,
+   "text": "Sintel walks through a dark cave illuminated by glowing crystals.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 10,
+     "duration_s": 3.55,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-29",
+   "window": 19,
+   "window_start": 487.625,
+   "window_end": 510.75,
+   "start": 502.75,
+   "tiles": [
+    7
+   ],
+   "at_s": [
+    502.558
+   ],
+   "slot_s": 7.958,
+   "duration_s": 2.85,
+   "text": "A large, skeletal dragon appears in the cave.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 8,
+     "duration_s": 2.85,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-30",
+   "window": 21,
+   "window_start": 533.917,
+   "window_end": 557.083,
+   "start": 534.125,
+   "tiles": [
+    1
+   ],
+   "at_s": [
+    533.917
+   ],
+   "slot_s": 7.958,
+   "duration_s": 3.675,
+   "text": "Sintel fights a large, skeletal dragon in a dark cave.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 10,
+     "duration_s": 3.675,
+     "rate": 100
+    }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 2,
+     "accepted": false,
+     "tile": 5,
+     "text": "Sintel continues the fight with the dragon.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "75% already said at 27.2 s"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-31",
+   "window": 21,
+   "window_start": 533.917,
+   "window_end": 557.083,
+   "start": 543.417,
+   "tiles": [
+    5
+   ],
+   "at_s": [
+    543.225
+   ],
+   "slot_s": 5.658,
+   "duration_s": 2.413,
+   "text": "Sintel strikes the dragon with her spear.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 7,
+     "duration_s": 2.413,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-32",
+   "window": 21,
+   "window_start": 533.917,
+   "window_end": 557.083,
+   "start": 549.417,
+   "tiles": [
+    9
+   ],
+   "at_s": [
+    549.225
+   ],
+   "slot_s": 7.624,
+   "duration_s": 2.788,
+   "text": "Sintel discovers something significant in the cave.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 7,
+     "duration_s": 2.788,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-33",
+   "window": 22,
+   "window_start": 560.0,
+   "window_end": 580.333,
+   "start": 567.667,
+   "tiles": [
+    5
+   ],
+   "at_s": [
+    567.475
+   ],
+   "slot_s": 7.658,
+   "duration_s": 2.413,
+   "text": "The dragon roars in pain and retaliates.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 7,
+     "duration_s": 2.413,
+     "rate": 100
+    }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel strikes the dragon with her spear.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 543.4 s"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-34",
+   "window": 22,
+   "window_start": 560.0,
+   "window_end": 580.333,
+   "start": 575.667,
+   "tiles": [
+    9
+   ],
+   "at_s": [
+    575.45
+   ],
+   "slot_s": 4.624,
+   "duration_s": 3.025,
+   "text": "Sintel dodges the dragon's attack and strikes again.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 8,
+     "duration_s": 3.025,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-35",
+   "window": 24,
+   "window_start": 600.708,
+   "window_end": 621.083,
+   "start": 604.167,
+   "tiles": [
+    3
+   ],
+   "at_s": [
+    603.975
+   ],
+   "slot_s": 7.658,
    "duration_s": 3.263,
-   "text": "Sintel looks up, searching for something in the dark cave.",
+   "text": "Sintel engages in a fierce battle with the skeletal dragon.",
    "rate_percent": 100,
    "attempts": [
     {
@@ -1237,55 +1132,87 @@
      "step": "write",
      "answer": 1,
      "accepted": false,
-     "text": "Sintel stands in a dark cave, looking up.",
+     "tile": 3,
+     "text": "Sintel fights a large, skeletal dragon in a dark cave.",
      "problems": [
       {
        "kind": "similar",
-       "detail": "80% already said at 464.7 s"
+       "detail": "100% already said at 534.1 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 2,
+     "accepted": false,
+     "tile": 7,
+     "text": "Sintel dodges the dragon's attack and strikes again.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 575.7 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 3,
+     "accepted": false,
+     "tile": 11,
+     "text": "Sintel continues to fight the dragon in the cave.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "80% already said at 534.1 s"
       }
      ]
     }
    ]
   },
   {
-   "cue": "sintel-ad-47",
-   "window": 25,
-   "window_start": 630.333,
-   "window_end": 658.875,
-   "start": 647.667,
+   "cue": "sintel-ad-36",
+   "window": 24,
+   "window_start": 600.708,
+   "window_end": 621.083,
+   "start": 612.167,
+   "tiles": [
+    7
+   ],
    "at_s": [
-    647.6
+    611.975
    ],
    "slot_s": 7.958,
-   "duration_s": 2.288,
-   "text": "Sintel raises her hand toward the dragon.",
+   "duration_s": 2.575,
+   "text": "The dragon retaliates with a powerful attack.",
+   "rate_percent": 100,
+   "attempts": [
+    {
+     "words": 7,
+     "duration_s": 2.575,
+     "rate": 100
+    }
+   ]
+  },
+  {
+   "cue": "sintel-ad-37",
+   "window": 27,
+   "window_start": 687.458,
+   "window_end": 716.042,
+   "start": 687.667,
+   "tiles": [
+    1
+   ],
+   "at_s": [
+    687.458
+   ],
+   "slot_s": 7.958,
+   "duration_s": 3.375,
+   "text": "Sintel stands in a dark cave, searching for Scales.",
    "rate_percent": 100,
    "attempts": [
     {
      "words": 9,
-     "duration_s": 3.1,
-     "rate": 100
-    }
-   ],
-   "overridden": true
-  },
-  {
-   "cue": "sintel-ad-48",
-   "window": 26,
-   "window_start": 658.875,
-   "window_end": 687.458,
-   "start": 659.083,
-   "at_s": [
-    658.9
-   ],
-   "slot_s": 6.992,
-   "duration_s": 3.075,
-   "text": "Sintel stands in a dark cave, looking upwards.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 8,
-     "duration_s": 3.075,
+     "duration_s": 3.375,
      "rate": 100
     }
    ],
@@ -1294,80 +1221,34 @@
      "step": "write",
      "answer": 2,
      "accepted": false,
-     "text": "Sintel climbs a steep rock face with determination.",
+     "tile": 13,
+     "text": "Scales is found, lying on the ground.",
      "problems": [
       {
        "kind": "grammar",
-       "detail": "\"with determination\" lacks an article"
-      }
-     ]
-    },
-    {
-     "step": "shorten",
-     "answer": 1,
-     "accepted": false,
-     "text": "Sintel stands on a ledge with a dragon.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "75% already said at 511.0 s"
-      }
-     ]
-    },
-    {
-     "step": "shorten",
-     "answer": 2,
-     "accepted": false,
-     "text": "Sintel on ledge, dragon behind her.",
-     "problems": [
-      {
-       "kind": "grammar",
-       "detail": "no verb in \"Sintel on ledge, dragon behind her.\""
+       "detail": "\"is found\" lacks an article or a preposition"
       }
      ]
     }
    ]
   },
   {
-   "cue": "sintel-ad-49",
-   "window": 26,
-   "window_start": 658.875,
-   "window_end": 687.458,
-   "start": 666.417,
+   "cue": "sintel-ad-38",
+   "window": 28,
+   "window_start": 716.042,
+   "window_end": 744.625,
+   "start": 716.25,
+   "tiles": [
+    1
+   ],
    "at_s": [
-    666.3
+    716.042
    ],
    "slot_s": 7.958,
-   "duration_s": 3.413,
-   "text": "Sintel climbs a steep rock face with a determined expression.",
-   "rate_percent": 100,
-   "attempts": [
-    {
-     "words": 10,
-     "duration_s": 3.413,
-     "rate": 100
-    }
-   ]
-  },
-  {
-   "cue": "sintel-ad-50",
-   "window": 26,
-   "window_start": 658.875,
-   "window_end": 687.458,
-   "start": 684.625,
-   "at_s": [
-    684.5
-   ],
-   "slot_s": 2.791,
    "duration_s": 2.788,
-   "text": "Sintel stands on ledge, dragon is behind her.",
+   "text": "Sintel walks through a landscape with white flowers.",
    "rate_percent": 100,
    "attempts": [
-    {
-     "words": 11,
-     "duration_s": 3.163,
-     "rate": 100
-    },
     {
      "words": 8,
      "duration_s": 2.788,
@@ -1376,788 +1257,1248 @@
    ]
   },
   {
-   "cue": "sintel-ad-51",
-   "window": 27,
-   "window_start": 687.458,
-   "window_end": 716.042,
-   "start": 687.667,
+   "cue": "sintel-ad-39",
+   "window": 28,
+   "window_start": 716.042,
+   "window_end": 744.625,
+   "start": 727.5,
+   "tiles": [
+    5
+   ],
    "at_s": [
-    687.5
+    727.298
    ],
    "slot_s": 7.958,
-   "duration_s": 4.062,
-   "text": "Sintel stands on a rocky ledge, looking out over a vast landscape.",
+   "duration_s": 3.1,
+   "text": "She continues walking, looking around the rocky terrain.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 12,
-     "duration_s": 4.062,
+     "words": 8,
+     "duration_s": 3.1,
      "rate": 100
     }
    ]
   },
   {
-   "cue": "sintel-ad-52",
-   "window": 27,
-   "window_start": 687.458,
-   "window_end": 716.042,
-   "start": 700.5,
-   "at_s": [
-    700.4
+   "cue": "sintel-ad-40",
+   "window": 28,
+   "window_start": 716.042,
+   "window_end": 744.625,
+   "start": 738.75,
+   "tiles": [
+    9
    ],
-   "slot_s": 7.958,
-   "duration_s": 3.725,
-   "text": "Sintel walks along a narrow path between large roots and rocks.",
+   "at_s": [
+    738.555
+   ],
+   "slot_s": 5.833,
+   "duration_s": 2.35,
+   "text": "Sintel stops and looks up at the mountains.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 11,
-     "duration_s": 3.725,
+     "words": 8,
+     "duration_s": 2.35,
      "rate": 100
     }
    ]
   },
   {
-   "cue": "sintel-ad-53",
-   "window": 27,
-   "window_start": 687.458,
-   "window_end": 716.042,
-   "start": 710.25,
-   "at_s": [
-    710.1
+   "cue": "sintel-ad-41",
+   "window": 30,
+   "window_start": 773.167,
+   "window_end": 801.75,
+   "start": 787.625,
+   "tiles": [
+    6
    ],
-   "slot_s": 5.75,
-   "duration_s": 2.788,
-   "text": "Sintel reaches a clearing with a few white flowers.",
+   "at_s": [
+    787.409
+   ],
+   "slot_s": 7.958,
+   "duration_s": 2.038,
+   "text": "A knife with a wooden handle appears.",
    "rate_percent": 100,
    "attempts": [
     {
-     "words": 9,
-     "duration_s": 2.788,
+     "words": 7,
+     "duration_s": 2.038,
      "rate": 100
     }
+   ],
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "tile": 6,
+     "text": "A close-up of a knife is shown.",
+     "problems": [
+      {
+       "kind": "banned",
+       "detail": "close-up, shown"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 2,
+     "accepted": false,
+     "tile": 11,
+     "text": "A drawing of two people is shown.",
+     "problems": [
+      {
+       "kind": "banned",
+       "detail": "shown"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 3,
+     "accepted": false,
+     "tile": 6,
+     "text": "A knife appears.",
+     "problems": [
+      {
+       "kind": "short",
+       "detail": "3 words"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "sheets": [
+  {
+   "window": 1,
+   "tiles": [
+    "0.5 s, luma 0.0, spread 0.0: not describable, black",
+    "3.438 s, luma 10.3, spread 4.7: not describable, black",
+    "6.376 s, luma 144.2, spread 44.3",
+    "9.314 s, luma 163.7, spread 43.0",
+    "12.252 s, luma 164.2, spread 55.4",
+    "15.19 s, luma 172.2, spread 32.2",
+    "18.128 s, luma 167.9, spread 35.2",
+    "21.066 s, luma 159.6, spread 33.0",
+    "24.004 s, luma 152.6, spread 42.9",
+    "26.942 s, luma 171.8, spread 31.3"
+   ]
+  },
+  {
+   "window": 2,
+   "tiles": [
+    "27.042 s, luma 172.6, spread 30.5",
+    "29.238 s, luma 174.7, spread 30.6",
+    "31.433 s, luma 204.3, spread 45.2",
+    "34.204 s, luma 210.7, spread 49.6",
+    "36.975 s, luma 159.0, spread 71.8",
+    "39.746 s, luma 166.6, spread 72.2",
+    "42.517 s, luma 193.0, spread 40.1",
+    "43.183 s, luma 201.5, spread 57.6",
+    "44.1 s, luma 115.5, spread 89.4",
+    "45.017 s, luma 137.4, spread 75.4",
+    "45.933 s, luma 138.1, spread 70.5",
+    "47.433 s, luma 117.1, spread 63.5",
+    "48.808 s, luma 136.3, spread 65.0",
+    "50.829 s, luma 98.5, spread 64.0",
+    "52.85 s, luma 60.5, spread 43.8",
+    "53.525 s, luma 57.3, spread 44.0"
+   ]
+  },
+  {
+   "window": 3,
+   "tiles": [
+    "54.1 s, luma 82.0, spread 73.2",
+    "55.058 s, luma 146.5, spread 69.4",
+    "55.725 s, luma 115.0, spread 56.2",
+    "57.183 s, luma 164.1, spread 52.9",
+    "58.392 s, luma 145.2, spread 49.3",
+    "59.475 s, luma 99.4, spread 63.4",
+    "60.725 s, luma 174.6, spread 55.4",
+    "62.35 s, luma 132.2, spread 53.0",
+    "64.767 s, luma 84.0, spread 62.0",
+    "65.6 s, luma 118.5, spread 65.8",
+    "68.308 s, luma 131.7, spread 44.0",
+    "69.392 s, luma 97.6, spread 59.1",
+    "71.767 s, luma 92.8, spread 54.9",
+    "74.142 s, luma 93.7, spread 51.8",
+    "77.105 s, luma 88.8, spread 49.7",
+    "80.067 s, luma 85.1, spread 47.2"
+   ]
+  },
+  {
+   "window": 4,
+   "tiles": [
+    "80.167 s, luma 85.5, spread 47.0",
+    "81.558 s, luma 125.9, spread 38.0",
+    "83.746 s, luma 123.3, spread 41.1",
+    "85.933 s, luma 74.6, spread 39.7",
+    "88.642 s, luma 130.5, spread 24.4",
+    "91.175 s, luma 127.5, spread 23.7",
+    "93.708 s, luma 125.0, spread 24.0",
+    "96.242 s, luma 123.7, spread 23.5",
+    "98.775 s, luma 125.4, spread 23.0",
+    "101.308 s, luma 0.0, spread 0.0: not describable, black",
+    "103.979 s, luma 4.7, spread 5.3: not describable, black",
+    "106.65 s, luma 25.8, spread 23.3"
+   ]
+  },
+  {
+   "window": 5,
+   "tiles": [
+    "156.375 s, luma 84.4, spread 55.7",
+    "159.279 s, luma 79.9, spread 55.8",
+    "162.183 s, luma 43.2, spread 68.3",
+    "165.05 s, luma 55.3, spread 65.9",
+    "167.917 s, luma 86.1, spread 76.2",
+    "170.783 s, luma 114.5, spread 70.6",
+    "173.65 s, luma 111.5, spread 71.7",
+    "176.517 s, luma 106.7, spread 64.7",
+    "177.642 s, luma 114.8, spread 61.2",
+    "180.183 s, luma 108.3, spread 69.5",
+    "181.442 s, luma 121.4, spread 78.3"
+   ]
+  },
+  {
+   "window": 6,
+   "tiles": [
+    "181.542 s, luma 122.2, spread 78.3",
+    "182.1 s, luma 98.1, spread 59.4",
+    "184.475 s, luma 102.9, spread 59.9",
+    "186.808 s, luma 103.6, spread 47.4",
+    "188.35 s, luma 109.8, spread 52.6",
+    "189.892 s, luma 90.0, spread 58.1",
+    "191.975 s, luma 112.9, spread 63.0",
+    "194.725 s, luma 117.3, spread 65.1",
+    "196.517 s, luma 81.8, spread 53.6",
+    "197.725 s, luma 105.0, spread 62.1",
+    "200.475 s, luma 117.2, spread 62.9",
+    "203.225 s, luma 85.4, spread 56.5",
+    "205.1 s, luma 57.5, spread 53.9",
+    "206.1 s, luma 58.7, spread 44.6",
+    "206.65 s, luma 59.2, spread 44.5"
+   ]
+  },
+  {
+   "window": 7,
+   "tiles": [
+    "214 s, luma 99.4, spread 55.8",
+    "215.017 s, luma 80.4, spread 48.0",
+    "217.287 s, luma 78.6, spread 47.7",
+    "219.558 s, luma 29.8, spread 31.3",
+    "221.892 s, luma 30.5, spread 31.7",
+    "224.225 s, luma 20.8, spread 22.7",
+    "225.938 s, luma 20.8, spread 22.6",
+    "227.65 s, luma 21.1, spread 23.4"
+   ]
+  },
+  {
+   "window": 8,
+   "tiles": [
+    "232.75 s, luma 22.5, spread 23.8",
+    "235.336 s, luma 39.0, spread 45.6",
+    "237.922 s, luma 62.7, spread 56.5",
+    "240.508 s, luma 91.6, spread 56.2",
+    "243.095 s, luma 60.1, spread 64.1",
+    "245.681 s, luma 99.0, spread 81.0",
+    "248.267 s, luma 85.2, spread 63.0",
+    "249.733 s, luma 78.5, spread 49.1"
+   ]
+  },
+  {
+   "window": 9,
+   "tiles": [
+    "254.808 s, luma 118.9, spread 48.5",
+    "255.892 s, luma 55.0, spread 32.2",
+    "257.6 s, luma 68.3, spread 61.2",
+    "259.308 s, luma 75.3, spread 51.7",
+    "261.329 s, luma 81.5, spread 50.6",
+    "263.35 s, luma 54.6, spread 51.0",
+    "264.65 s, luma 67.2, spread 52.1"
+   ]
+  },
+  {
+   "window": 10,
+   "tiles": [
+    "268.75 s, luma 113.5, spread 67.5",
+    "271.725 s, luma 120.7, spread 79.6",
+    "273.35 s, luma 163.1, spread 64.9",
+    "275.725 s, luma 103.8, spread 59.7",
+    "277.308 s, luma 100.3, spread 58.3",
+    "278.892 s, luma 160.8, spread 66.6",
+    "281.225 s, luma 173.8, spread 57.5",
+    "283.558 s, luma 101.6, spread 78.2",
+    "286.025 s, luma 143.4, spread 85.6"
+   ]
+  },
+  {
+   "window": 11,
+   "tiles": [
+    "286.125 s, luma 145.2, spread 85.0",
+    "287.6 s, luma 74.6, spread 40.3",
+    "289.433 s, luma 134.1, spread 84.3",
+    "292.072 s, luma 101.3, spread 88.2",
+    "294.711 s, luma 83.0, spread 65.3",
+    "297.35 s, luma 119.3, spread 77.9",
+    "300.1 s, luma 120.2, spread 76.5",
+    "302.85 s, luma 213.7, spread 65.4",
+    "303.4 s, luma 211.3, spread 53.0"
+   ]
+  },
+  {
+   "window": 12,
+   "tiles": [
+    "308 s, luma 175.0, spread 57.9",
+    "309.017 s, luma 153.1, spread 53.7",
+    "311.225 s, luma 168.7, spread 58.1",
+    "312.725 s, luma 205.2, spread 35.7",
+    "315.058 s, luma 153.3, spread 66.0",
+    "315.642 s, luma 143.5, spread 61.1",
+    "317.683 s, luma 81.5, spread 38.3",
+    "319.1 s, luma 217.2, spread 27.3",
+    "320.704 s, luma 201.5, spread 37.2",
+    "322.308 s, luma 120.4, spread 86.6",
+    "323.025 s, luma 120.1, spread 83.9"
+   ]
+  },
+  {
+   "window": 13,
+   "tiles": [
+    "323.808 s, luma 146.7, spread 53.7",
+    "326.038 s, luma 110.4, spread 65.0",
+    "328.267 s, luma 152.1, spread 67.0",
+    "330.475 s, luma 145.2, spread 68.8",
+    "332.225 s, luma 198.6, spread 64.0",
+    "332.808 s, luma 80.8, spread 64.6",
+    "335.392 s, luma 143.6, spread 64.3",
+    "337.558 s, luma 134.9, spread 67.5",
+    "338.15 s, luma 141.4, spread 60.7"
+   ]
+  },
+  {
+   "window": 14,
+   "tiles": [
+    "342.5 s, luma 128.0, spread 59.8",
+    "344.95 s, luma 125.8, spread 61.3",
+    "347.4 s, luma 112.7, spread 63.4",
+    "349.85 s, luma 47.5, spread 20.3",
+    "351.558 s, luma 29.4, spread 13.3",
+    "353.433 s, luma 63.8, spread 44.9",
+    "356.36 s, luma 54.3, spread 24.1",
+    "359.287 s, luma 43.2, spread 15.1",
+    "362.213 s, luma 41.9, spread 15.2",
+    "365.14 s, luma 37.5, spread 14.2",
+    "368.067 s, luma 215.1, spread 24.7"
+   ]
+  },
+  {
+   "window": 15,
+   "tiles": [
+    "368.167 s, luma 213.6, spread 26.5",
+    "370.662 s, luma 221.9, spread 23.8",
+    "373.157 s, luma 218.0, spread 22.1",
+    "375.652 s, luma 202.0, spread 28.1",
+    "378.147 s, luma 177.2, spread 21.5",
+    "380.642 s, luma 102.7, spread 50.3",
+    "383.017 s, luma 103.2, spread 51.1",
+    "385.707 s, luma 73.1, spread 42.5",
+    "388.396 s, luma 62.6, spread 54.6",
+    "391.085 s, luma 61.3, spread 53.5",
+    "393.775 s, luma 106.6, spread 33.1"
+   ]
+  },
+  {
+   "window": 16,
+   "tiles": [
+    "393.875 s, luma 108.2, spread 32.1",
+    "395.425 s, luma 100.2, spread 34.5",
+    "396.975 s, luma 87.8, spread 43.4",
+    "399.576 s, luma 107.9, spread 46.7",
+    "402.177 s, luma 107.6, spread 43.4",
+    "404.778 s, luma 87.7, spread 47.4",
+    "407.38 s, luma 144.0, spread 40.3",
+    "409.981 s, luma 160.7, spread 56.3",
+    "412.582 s, luma 181.9, spread 55.5",
+    "415.183 s, luma 207.5, spread 18.3",
+    "417.333 s, luma 182.6, spread 54.6",
+    "419.483 s, luma 160.1, spread 27.8"
+   ]
+  },
+  {
+   "window": 17,
+   "tiles": [
+    "419.583 s, luma 161.2, spread 24.4",
+    "421.7 s, luma 165.6, spread 7.0",
+    "423.816 s, luma 177.9, spread 31.6",
+    "425.933 s, luma 197.7, spread 22.6",
+    "428.808 s, luma 192.7, spread 47.1",
+    "431.683 s, luma 169.0, spread 73.6",
+    "434.433 s, luma 194.7, spread 41.7",
+    "435.017 s, luma 132.4, spread 78.2",
+    "435.558 s, luma 0.0, spread 0.0: not describable, black",
+    "437.864 s, luma 1.6, spread 4.9: not describable, black",
+    "440.169 s, luma 13.8, spread 22.8",
+    "442.475 s, luma 14.9, spread 13.1",
+    "445.233 s, luma 18.6, spread 23.2"
+   ]
+  },
+  {
+   "window": 18,
+   "tiles": [
+    "464.5 s, luma 23.9, spread 27.4",
+    "466.725 s, luma 25.7, spread 24.3",
+    "469.517 s, luma 45.6, spread 38.9",
+    "472.308 s, luma 30.1, spread 20.1",
+    "475.1 s, luma 33.8, spread 31.6",
+    "476.892 s, luma 33.2, spread 28.9",
+    "478.683 s, luma 33.1, spread 20.0",
+    "481.245 s, luma 63.3, spread 49.3",
+    "483.808 s, luma 20.1, spread 29.4",
+    "485.704 s, luma 20.2, spread 29.4",
+    "487.6 s, luma 38.4, spread 41.8"
+   ]
+  },
+  {
+   "window": 19,
+   "tiles": [
+    "487.625 s, luma 38.4, spread 41.8",
+    "489.341 s, luma 38.2, spread 41.8",
+    "491.058 s, luma 13.7, spread 17.9",
+    "493.933 s, luma 15.6, spread 21.9",
+    "496.808 s, luma 13.1, spread 23.3",
+    "499.683 s, luma 18.7, spread 25.6",
+    "502.558 s, luma 37.9, spread 46.1",
+    "504.225 s, luma 35.1, spread 48.0",
+    "505.892 s, luma 18.7, spread 28.2",
+    "508.85 s, luma 21.5, spread 22.9",
+    "510.65 s, luma 19.5, spread 20.0"
+   ]
+  },
+  {
+   "window": 20,
+   "tiles": [
+    "510.75 s, luma 19.3, spread 19.9",
+    "512.767 s, luma 30.7, spread 32.7",
+    "514.663 s, luma 29.3, spread 31.7",
+    "516.558 s, luma 4.8, spread 10.4: not describable, black",
+    "518.878 s, luma 14.7, spread 24.5",
+    "521.197 s, luma 17.2, spread 20.1",
+    "523.517 s, luma 23.2, spread 26.5",
+    "525.1 s, luma 14.8, spread 22.2",
+    "526.683 s, luma 21.5, spread 30.2",
+    "529.03 s, luma 13.9, spread 22.9",
+    "531.378 s, luma 28.1, spread 48.6",
+    "533.725 s, luma 39.4, spread 43.7"
+   ]
+  },
+  {
+   "window": 21,
+   "tiles": [
+    "533.917 s, luma 40.6, spread 44.7",
+    "536.433 s, luma 45.5, spread 47.7",
+    "539.433 s, luma 23.3, spread 31.4",
+    "541.183 s, luma 28.3, spread 28.7",
+    "543.225 s, luma 23.4, spread 27.7",
+    "543.725 s, luma 38.2, spread 64.3",
+    "546.1 s, luma 29.8, spread 34.5",
+    "547.183 s, luma 41.1, spread 34.1",
+    "549.225 s, luma 37.9, spread 39.1",
+    "552.141 s, luma 14.9, spread 14.5",
+    "555.058 s, luma 14.9, spread 23.6",
+    "556.983 s, luma 24.0, spread 32.1"
+   ]
+  },
+  {
+   "window": 22,
+   "tiles": [
+    "560 s, luma 138.0, spread 84.9",
+    "561.308 s, luma 19.3, spread 25.0",
+    "563.364 s, luma 24.3, spread 30.4",
+    "565.419 s, luma 33.4, spread 33.3",
+    "567.475 s, luma 19.3, spread 22.7",
+    "568.85 s, luma 31.8, spread 37.0",
+    "570.954 s, luma 36.5, spread 46.8",
+    "573.058 s, luma 26.6, spread 37.9",
+    "575.45 s, luma 31.4, spread 37.6",
+    "577.841 s, luma 20.7, spread 38.9",
+    "580.233 s, luma 21.1, spread 25.9"
+   ]
+  },
+  {
+   "window": 23,
+   "tiles": [
+    "580.333 s, luma 20.6, spread 25.9",
+    "583.071 s, luma 17.1, spread 34.7",
+    "585.808 s, luma 17.1, spread 35.3",
+    "587.267 s, luma 19.2, spread 30.9",
+    "588.225 s, luma 15.2, spread 39.5",
+    "589.267 s, luma 16.1, spread 30.9",
+    "590.808 s, luma 14.7, spread 25.8",
+    "593.767 s, luma 23.7, spread 40.0",
+    "595.433 s, luma 18.6, spread 26.6",
+    "598.183 s, luma 32.8, spread 41.9",
+    "599.058 s, luma 38.9, spread 54.4",
+    "600.608 s, luma 10.8, spread 22.6: not describable, black"
+   ]
+  },
+  {
+   "window": 24,
+   "tiles": [
+    "600.708 s, luma 10.8, spread 23.4: not describable, black",
+    "602.341 s, luma 11.8, spread 34.8: not describable, black",
+    "603.975 s, luma 25.3, spread 39.8",
+    "606.433 s, luma 9.6, spread 16.4: not describable, black",
+    "609.267 s, luma 13.5, spread 27.5",
+    "610.517 s, luma 24.3, spread 35.3",
+    "611.975 s, luma 18.4, spread 38.6",
+    "613.892 s, luma 16.4, spread 30.3",
+    "616.85 s, luma 13.9, spread 20.3",
+    "618.391 s, luma 13.5, spread 19.8",
+    "619.933 s, luma 20.7, spread 32.5",
+    "620.983 s, luma 19.5, spread 31.3"
+   ]
+  },
+  {
+   "window": 25,
+   "tiles": [
+    "630.333 s, luma 11.9, spread 7.9: not describable, black",
+    "633.025 s, luma 13.1, spread 12.8",
+    "635.716 s, luma 25.6, spread 12.8",
+    "638.408 s, luma 39.6, spread 17.0",
+    "641.1 s, luma 22.8, spread 37.4",
+    "643.253 s, luma 19.9, spread 31.4",
+    "645.405 s, luma 19.8, spread 31.5",
+    "647.558 s, luma 23.8, spread 27.7",
+    "650.058 s, luma 23.6, spread 27.3",
+    "652.558 s, luma 23.6, spread 27.3",
+    "655.058 s, luma 17.2, spread 31.6",
+    "656.917 s, luma 19.3, spread 34.1",
+    "658.775 s, luma 17.9, spread 33.4"
+   ]
+  },
+  {
+   "window": 26,
+   "tiles": [
+    "658.875 s, luma 17.7, spread 33.2",
+    "659.475 s, luma 21.1, spread 18.8",
+    "661.225 s, luma 34.1, spread 33.0",
+    "662.642 s, luma 17.3, spread 35.5",
+    "664.475 s, luma 15.9, spread 34.2",
+    "666.308 s, luma 12.8, spread 21.1",
+    "667.767 s, luma 27.1, spread 24.1",
+    "669.538 s, luma 24.7, spread 22.4",
+    "671.308 s, luma 15.7, spread 23.4",
+    "673.808 s, luma 15.0, spread 43.1",
+    "676.183 s, luma 35.0, spread 37.4",
+    "678.961 s, luma 0.0, spread 0.0: not describable, black",
+    "681.739 s, luma 19.8, spread 17.5",
+    "684.517 s, luma 124.3, spread 87.7",
+    "687.358 s, luma 124.3, spread 87.7"
+   ]
+  },
+  {
+   "window": 27,
+   "tiles": [
+    "687.458 s, luma 124.3, spread 87.7",
+    "688.058 s, luma 129.8, spread 83.2",
+    "690.525 s, luma 130.0, spread 83.1",
+    "692.992 s, luma 129.9, spread 83.0",
+    "695.458 s, luma 129.8, spread 83.1",
+    "697.925 s, luma 129.8, spread 83.1",
+    "700.392 s, luma 78.3, spread 60.0",
+    "702.83 s, luma 79.9, spread 57.9",
+    "705.267 s, luma 79.4, spread 58.4",
+    "707.705 s, luma 83.3, spread 59.7",
+    "710.142 s, luma 78.4, spread 38.4",
+    "710.808 s, luma 56.8, spread 42.5",
+    "713.375 s, luma 66.8, spread 49.5",
+    "715.942 s, luma 137.1, spread 78.3"
+   ]
+  },
+  {
+   "window": 28,
+   "tiles": [
+    "716.042 s, luma 138.2, spread 78.4",
+    "718.856 s, luma 144.8, spread 77.0",
+    "721.67 s, luma 146.8, spread 77.9",
+    "724.484 s, luma 148.9, spread 77.4",
+    "727.298 s, luma 149.6, spread 77.5",
+    "730.112 s, luma 149.9, spread 77.7",
+    "732.927 s, luma 149.1, spread 78.6",
+    "735.741 s, luma 149.6, spread 78.6",
+    "738.555 s, luma 150.4, spread 77.8",
+    "741.369 s, luma 150.4, spread 77.8",
+    "744.183 s, luma 0.0, spread 0.0: not describable, black"
+   ]
+  },
+  {
+   "window": 29,
+   "tiles": [
+    "744.625 s, luma 0.0, spread 0.0: not describable, black",
+    "747.469 s, luma 1.8, spread 16.7: not describable, black",
+    "750.313 s, luma 1.1, spread 9.7: not describable, black",
+    "753.158 s, luma 3.0, spread 21.6: not describable, black",
+    "756.002 s, luma 3.7, spread 22.5: not describable, black",
+    "758.846 s, luma 2.3, spread 19.0: not describable, black",
+    "761.69 s, luma 3.1, spread 21.9: not describable, black",
+    "764.534 s, luma 2.1, spread 18.6: not describable, black",
+    "767.379 s, luma 1.3, spread 10.8: not describable, black",
+    "770.223 s, luma 2.6, spread 20.3: not describable, black",
+    "773.067 s, luma 2.8, spread 18.6: not describable, black"
+   ]
+  },
+  {
+   "window": 30,
+   "tiles": [
+    "773.167 s, luma 2.9, spread 18.6: not describable, black",
+    "776.015 s, luma 4.6, spread 24.3: not describable, black",
+    "778.864 s, luma 4.4, spread 23.1: not describable, black",
+    "781.712 s, luma 3.0, spread 18.8: not describable, black",
+    "784.56 s, luma 2.8, spread 16.6: not describable, black",
+    "787.409 s, luma 43.1, spread 33.0",
+    "790.257 s, luma 58.8, spread 40.0",
+    "793.105 s, luma 68.0, spread 46.7",
+    "795.953 s, luma 66.4, spread 49.4",
+    "798.802 s, luma 59.2, spread 47.1",
+    "801.65 s, luma 53.5, spread 42.8"
+   ]
+  },
+  {
+   "window": 31,
+   "tiles": [
+    "801.75 s, luma 53.3, spread 42.5",
+    "804.598 s, luma 46.0, spread 32.9",
+    "807.447 s, luma 45.0, spread 31.9",
+    "810.295 s, luma 54.2, spread 40.8",
+    "813.143 s, luma 58.0, spread 46.0",
+    "815.991 s, luma 64.9, spread 50.0",
+    "818.84 s, luma 75.0, spread 50.1",
+    "821.688 s, luma 68.1, spread 41.2",
+    "824.536 s, luma 60.3, spread 32.8",
+    "827.385 s, luma 60.3, spread 32.1",
+    "830.233 s, luma 69.1, spread 38.0"
+   ]
+  },
+  {
+   "window": 32,
+   "tiles": [
+    "830.333 s, luma 69.3, spread 38.5",
+    "833.181 s, luma 75.8, spread 43.3",
+    "836.03 s, luma 76.5, spread 45.5",
+    "838.878 s, luma 73.5, spread 44.3",
+    "841.727 s, luma 75.0, spread 44.4",
+    "844.575 s, luma 74.4, spread 41.4",
+    "847.423 s, luma 72.3, spread 40.9",
+    "850.272 s, luma 69.1, spread 41.9",
+    "853.12 s, luma 71.2, spread 44.3",
+    "855.969 s, luma 80.3, spread 49.1",
+    "858.817 s, luma 84.7, spread 48.0"
+   ]
+  },
+  {
+   "window": 33,
+   "tiles": [
+    "858.917 s, luma 84.4, spread 47.9",
+    "861.765 s, luma 75.1, spread 42.2",
+    "864.614 s, luma 63.2, spread 34.8",
+    "867.462 s, luma 56.9, spread 31.6",
+    "870.31 s, luma 65.4, spread 43.3",
+    "873.159 s, luma 70.7, spread 52.1",
+    "876.007 s, luma 68.2, spread 52.7",
+    "878.855 s, luma 66.6, spread 53.6",
+    "881.703 s, luma 58.2, spread 57.6",
+    "884.552 s, luma 5.1, spread 27.3: not describable, black",
+    "887.4 s, luma 5.1, spread 27.3: not describable, black"
    ]
   }
  ],
  "item_decisions": [
   {
    "window": 1,
-   "kind": "kept",
-   "at_s": 0.5,
-   "to": 0.708,
-   "reason": "snapped to its shot start, 0.00 s before",
-   "text": "Sintel fights an old man in the snow."
+   "kind": "anchored",
+   "tile": 3,
+   "at_s": 6.376,
+   "to": 6.583,
+   "text": "Sintel fights an old man in a snowy landscape."
   },
   {
    "window": 1,
-   "kind": "kept",
-   "at_s": 9.3,
-   "to": 9.5,
-   "reason": "kept at its frame: its shot began 8.8 s earlier",
-   "text": "Sintel continues the fight with the old man."
+   "kind": "anchored",
+   "tile": 9,
+   "at_s": 24.004,
+   "to": 24.208,
+   "text": "The fight continues without significant changes."
   },
   {
-   "window": 1,
-   "kind": "kept",
-   "at_s": 26.9,
-   "to": 27.083,
-   "reason": "kept at its frame: its shot began 26.4 s earlier",
-   "text": "Sintel defeats the old man and stands victorious."
+   "window": 2,
+   "kind": "anchored",
+   "tile": 1,
+   "at_s": 27.042,
+   "to": 27.25,
+   "text": "Sintel and the old man continue their fight in the snow."
   },
   {
-   "window": 1,
+   "window": 2,
+   "kind": "anchored",
+   "tile": 7,
+   "at_s": 42.517,
+   "to": 42.708,
+   "text": "Sintel dodges a spear thrust from the old man."
+  },
+  {
+   "window": 2,
+   "kind": "anchored",
+   "tile": 14,
+   "at_s": 50.829,
+   "to": 51.042,
+   "text": "The old man swings his spear at Sintel."
+  },
+  {
+   "window": 3,
+   "kind": "anchored",
+   "tile": 1,
+   "at_s": 54.1,
+   "to": 54.292,
+   "text": "Sintel and the old man engage in a fierce spear fight."
+  },
+  {
+   "window": 3,
+   "kind": "anchored",
+   "tile": 9,
+   "at_s": 64.767,
+   "to": 64.958,
+   "text": "The old man knocks Sintel to the ground."
+  },
+  {
+   "window": 3,
+   "kind": "anchored",
+   "tile": 16,
+   "at_s": 80.067,
+   "to": 80.25,
+   "text": "Sintel gets back up, ready to continue the fight."
+  },
+  {
+   "window": 3,
    "kind": "dropped",
-   "start": 27.083,
-   "text": "Sintel defeats the old man and stands victorious.",
+   "start": 80.25,
+   "text": "Sintel gets back up, ready to continue the fight.",
    "reason": "too close to the window's end"
-  },
-  {
-   "window": 2,
-   "kind": "clamped",
-   "at_s": 27.0,
-   "to": 27.042,
-   "reason": "at 27 s, before the window starts at 27.042 s"
-  },
-  {
-   "window": 2,
-   "kind": "snapped",
-   "at_s": 43.3,
-   "to": 43.5,
-   "reason": "snapped to its shot start, 0.01 s before",
-   "text": "Sintel knocks the old man down with her spear."
-  },
-  {
-   "window": 2,
-   "kind": "kept",
-   "at_s": 53.5,
-   "to": 53.708,
-   "reason": "kept at its frame: its shot began 0.8 s earlier",
-   "text": "Sintel stands victorious over the fallen old man."
-  },
-  {
-   "window": 2,
-   "kind": "dropped",
-   "start": 53.708,
-   "text": "Sintel stands victorious over the fallen old man.",
-   "reason": "too close to the window's end"
-  },
-  {
-   "window": 3,
-   "kind": "snapped",
-   "at_s": 55.7,
-   "to": 55.833,
-   "reason": "snapped to its shot start, 0.08 s before",
-   "text": "Sintel disarms the old man, who stumbles backward."
-  },
-  {
-   "window": 3,
-   "kind": "snapped",
-   "at_s": 60.7,
-   "to": 60.833,
-   "reason": "snapped to its shot start, 0.08 s before",
-   "text": "Sintel pins the old man to the ground with her spear."
-  },
-  {
-   "window": 3,
-   "kind": "snapped",
-   "at_s": 64.8,
-   "to": 64.917,
-   "reason": "snapped to its shot start, 0.09 s before",
-   "text": "The old man struggles beneath Sintel, who maintains her grip."
-  },
-  {
-   "window": 4,
-   "kind": "snapped",
-   "at_s": 80.2,
-   "to": 80.375,
-   "reason": "snapped to its shot start, 0.03 s before",
-   "text": "Sintel lies on the snowy ground, holding her spear."
-  },
-  {
-   "window": 4,
-   "kind": "snapped",
-   "at_s": 85.9,
-   "to": 86.042,
-   "reason": "snapped to its shot start, 0.07 s before",
-   "text": "A large, ornate sword appears."
-  },
-  {
-   "window": 4,
-   "kind": "snapped",
-   "at_s": 101.3,
-   "to": 101.417,
-   "reason": "snapped to its shot start, 0.09 s before",
-   "text": "Sintel stands in a cave with a fire pit."
   },
   {
    "window": 5,
-   "kind": "snapped",
-   "at_s": 156.4,
+   "kind": "anchored",
+   "tile": 1,
+   "at_s": 156.375,
    "to": 156.583,
-   "reason": "snapped to its shot start, 0.03 s before",
-   "text": "Sintel jumps from a rooftop to another."
+   "text": "Sintel runs through a ruined town."
   },
   {
    "window": 5,
-   "kind": "snapped",
-   "at_s": 176.5,
-   "to": 176.625,
-   "reason": "snapped to its shot start, 0.08 s before",
-   "text": "Sintel stands on a rooftop, looking around."
+   "kind": "anchored",
+   "tile": 7,
+   "at_s": 173.65,
+   "to": 173.833,
+   "text": "Sintel grips the wall and climbs."
   },
   {
    "window": 5,
-   "kind": "snapped",
-   "at_s": 180.2,
-   "to": 180.333,
-   "reason": "snapped to its shot start, 0.07 s before",
-   "text": "Sintel climbs down a wall using a rope."
+   "kind": "anchored",
+   "tile": 10,
+   "at_s": 180.183,
+   "to": 180.375,
+   "text": "Sintel continues climbing the wall."
   },
   {
    "window": 5,
    "kind": "dropped",
-   "start": 180.333,
-   "text": "Sintel climbs down a wall using a rope.",
+   "start": 180.375,
+   "text": "Sintel continues climbing the wall.",
    "reason": "too close to the window's end"
-  },
-  {
-   "window": 6,
-   "kind": "clamped",
-   "at_s": 181.5,
-   "to": 181.542,
-   "reason": "at 181.5 s, before the window starts at 181.542 s"
-  },
-  {
-   "window": 6,
-   "kind": "snapped",
-   "at_s": 189.9,
-   "to": 190.0,
-   "reason": "snapped to its shot start, 0.11 s before",
-   "text": "Sintel looks down at a small dragon on the ground."
-  },
-  {
-   "window": 6,
-   "kind": "snapped",
-   "at_s": 203.2,
-   "to": 203.333,
-   "reason": "snapped to its shot start, 0.07 s before",
-   "text": "Sintel and the dragon walk through a ruined area."
   },
   {
    "window": 7,
-   "kind": "kept",
+   "kind": "anchored",
+   "tile": 1,
    "at_s": 214.0,
    "to": 214.208,
-   "reason": "snapped to its shot start, 0.00 s before",
-   "text": "Sintel holds Scales in a dark cave."
+   "text": "Sintel holds Scales close to her chest."
   },
   {
    "window": 7,
-   "kind": "kept",
-   "at_s": 227.7,
-   "to": 227.917,
-   "reason": "kept at its frame: its shot began 3.6 s earlier",
-   "text": "Sintel lies down with Scales in her arms."
-  },
-  {
-   "window": 7,
-   "kind": "dropped",
-   "start": 227.917,
-   "text": "Sintel lies down with Scales in her arms.",
-   "reason": "too close to the window's end"
+   "kind": "anchored",
+   "tile": 5,
+   "at_s": 221.892,
+   "to": 222.083,
+   "text": "Sintel gently places Scales down on the ground."
   },
   {
    "window": 8,
-   "kind": "snapped",
-   "at_s": 232.8,
-   "to": 232.958,
-   "reason": "snapped to its shot start, 0.05 s before",
-   "text": "Sintel holds Scales in a dark, ruined area."
+   "kind": "anchored",
+   "tile": 5,
+   "at_s": 243.095,
+   "to": 243.292,
+   "text": "Scales runs swiftly beside Sintel."
   },
   {
    "window": 8,
-   "kind": "kept",
-   "at_s": 244.1,
-   "to": 244.292,
-   "reason": "kept at its frame: its shot began 11.3 s earlier",
-   "text": "Sintel looks around the chaotic, debris-filled environment."
-  },
-  {
-   "window": 8,
-   "kind": "kept",
-   "at_s": 249.7,
+   "kind": "anchored",
+   "tile": 8,
+   "at_s": 249.733,
    "to": 249.917,
-   "reason": "kept at its frame: its shot began 1.5 s earlier",
-   "text": "Scales looks up at Sintel, who holds him tightly."
+   "text": "They navigate through the ruins."
   },
   {
    "window": 8,
    "kind": "dropped",
    "start": 249.917,
-   "text": "Scales looks up at Sintel, who holds him tightly.",
+   "text": "They navigate through the ruins.",
    "reason": "too close to the window's end"
   },
   {
    "window": 9,
-   "kind": "snapped",
-   "at_s": 254.4,
-   "to": 254.583,
-   "reason": "snapped to its shot start, 0.03 s before",
-   "text": "Sintel jumps off a wooden structure, spear in hand."
+   "kind": "anchored",
+   "tile": 1,
+   "at_s": 254.808,
+   "to": 255.0,
+   "text": "Sintel and Scales walk through a bustling marketplace."
   },
   {
    "window": 9,
-   "kind": "kept",
-   "at_s": 264.6,
-   "to": 264.792,
-   "reason": "kept at its frame: its shot began 1.4 s earlier",
-   "text": "Sintel fights an opponent in a debris-filled area."
+   "kind": "anchored",
+   "tile": 5,
+   "at_s": 261.329,
+   "to": 261.542,
+   "text": "Sintel looks around, searching for something in the crowd."
   },
   {
-   "window": 9,
+   "window": 10,
+   "kind": "anchored",
+   "tile": 4,
+   "at_s": 275.725,
+   "to": 275.917,
+   "text": "Scales leaps over a wooden beam."
+  },
+  {
+   "window": 10,
+   "kind": "anchored",
+   "tile": 8,
+   "at_s": 283.558,
+   "to": 283.75,
+   "text": "Sintel climbs a wooden structure."
+  },
+  {
+   "window": 10,
+   "kind": "anchored",
+   "tile": 9,
+   "at_s": 286.025,
+   "to": 286.208,
+   "text": "Sintel and Scales continue through the ruins."
+  },
+  {
+   "window": 10,
    "kind": "dropped",
-   "start": 264.792,
-   "text": "Sintel fights an opponent in a debris-filled area.",
-   "reason": "too close to the window's end"
-  },
-  {
-   "window": 10,
-   "kind": "snapped",
-   "at_s": 275.7,
-   "to": 275.833,
-   "reason": "snapped to its shot start, 0.07 s before",
-   "text": "Scales flies above Sintel as she runs across rooftops."
-  },
-  {
-   "window": 10,
-   "kind": "snapped",
-   "at_s": 283.6,
-   "to": 283.708,
-   "reason": "snapped to its shot start, 0.10 s before",
-   "text": "Sintel jumps from one rooftop to another, spear in hand."
+   "start": 283.75,
+   "text": "Sintel climbs a wooden structure.",
+   "reason": "less than 2.8 s to the next item"
   },
   {
    "window": 10,
    "kind": "dropped",
-   "start": 283.708,
-   "text": "Sintel jumps from one rooftop to another, spear in hand.",
+   "start": 286.208,
+   "text": "Sintel and Scales continue through the ruins.",
    "reason": "too close to the window's end"
   },
   {
    "window": 11,
-   "kind": "snapped",
-   "at_s": 289.4,
-   "to": 289.542,
-   "reason": "snapped to its shot start, 0.07 s before",
-   "text": "Sintel runs across a ruined area."
+   "kind": "anchored",
+   "tile": 6,
+   "at_s": 297.35,
+   "to": 297.542,
+   "text": "Sintel and Scales navigate through the ruins."
   },
   {
    "window": 11,
-   "kind": "snapped",
-   "at_s": 302.9,
-   "to": 302.958,
-   "reason": "snapped to its shot start, 0.15 s before",
-   "text": "Sintel and Scales stand still on a rooftop."
+   "kind": "anchored",
+   "tile": 8,
+   "at_s": 302.85,
+   "to": 303.042,
+   "text": "Sintel and Scales continue their journey through the ruins."
   },
   {
    "window": 11,
    "kind": "dropped",
-   "start": 302.958,
-   "text": "Sintel and Scales stand still on a rooftop.",
+   "start": 303.042,
+   "text": "Sintel and Scales continue their journey through the ruins.",
    "reason": "too close to the window's end"
   },
   {
    "window": 12,
-   "kind": "kept",
-   "at_s": 308.0,
-   "to": 308.208,
-   "reason": "snapped to its shot start, 0.00 s before",
-   "text": "Sintel looks up at Scales flying above her."
+   "kind": "anchored",
+   "tile": 5,
+   "at_s": 315.058,
+   "to": 315.25,
+   "text": "A large dragon flies overhead, casting a shadow."
   },
   {
    "window": 12,
-   "kind": "snapped",
-   "at_s": 315.1,
-   "to": 315.167,
-   "reason": "snapped to its shot start, 0.14 s before",
-   "text": "Scales flies above Sintel in the ruined area."
-  },
-  {
-   "window": 12,
-   "kind": "snapped",
-   "at_s": 322.3,
-   "to": 322.417,
-   "reason": "snapped to its shot start, 0.09 s before",
-   "text": "Sintel runs through a ruined area with a large structure in the background."
+   "kind": "anchored",
+   "tile": 9,
+   "at_s": 320.704,
+   "to": 320.917,
+   "text": "Sintel and Scales continue their journey through the ruins."
   },
   {
    "window": 12,
    "kind": "dropped",
-   "start": 322.417,
-   "text": "Sintel runs through a ruined area with a large structure in the background.",
+   "start": 320.917,
+   "text": "Sintel and Scales continue their journey through the ruins.",
    "reason": "too close to the window's end"
   },
   {
    "window": 13,
-   "kind": "clamped",
-   "at_s": 323.1,
-   "to": 323.125,
-   "reason": "at 323.1 s, before the window starts at 323.125 s"
+   "kind": "anchored",
+   "tile": 3,
+   "at_s": 328.267,
+   "to": 328.458,
+   "text": "Sintel reaches out towards Scales."
   },
   {
    "window": 13,
-   "kind": "snapped",
-   "at_s": 332.2,
-   "to": 332.333,
-   "reason": "snapped to its shot start, 0.07 s before",
-   "text": "Sintel grabs Scales' tail but loses her grip and falls."
+   "kind": "anchored",
+   "tile": 6,
+   "at_s": 332.808,
+   "to": 333.0,
+   "text": "The large dragon swoops down towards Sintel."
   },
   {
    "window": 13,
-   "kind": "kept",
-   "at_s": 338.1,
-   "to": 338.292,
-   "reason": "kept at its frame: its shot began 0.6 s earlier",
-   "text": "Sintel lands on the ground, looking up at Scales."
+   "kind": "anchored",
+   "tile": 8,
+   "at_s": 337.558,
+   "to": 337.75,
+   "text": "Sintel looks up in alarm as the large dragon approaches."
   },
   {
    "window": 13,
    "kind": "dropped",
-   "start": 338.292,
-   "text": "Sintel lands on the ground, looking up at Scales.",
+   "start": 337.75,
+   "text": "Sintel looks up in alarm as the large dragon approaches.",
    "reason": "too close to the window's end"
   },
   {
    "window": 14,
-   "kind": "kept",
+   "kind": "anchored",
+   "tile": 1,
    "at_s": 342.5,
    "to": 342.708,
-   "reason": "snapped to its shot start, 0.00 s before",
-   "text": "Sintel stands in front of a ruined structure."
+   "text": "Sintel runs through a desert landscape."
   },
   {
    "window": 14,
-   "kind": "snapped",
-   "at_s": 351.6,
-   "to": 351.667,
-   "reason": "snapped to its shot start, 0.14 s before",
-   "text": "Sintel runs across a sandy landscape."
+   "kind": "anchored",
+   "tile": 10,
+   "at_s": 365.14,
+   "to": 365.333,
+   "text": "Sintel continues running across the desert."
   },
   {
    "window": 14,
-   "kind": "kept",
-   "at_s": 368.1,
-   "to": 368.292,
-   "reason": "kept at its frame: its shot began 14.8 s earlier",
-   "text": "Sintel looks out over a vast, desolate landscape."
+   "kind": "anchored",
+   "tile": 11,
+   "at_s": 368.067,
+   "to": 368.25,
+   "text": "Sintel looks determined as she runs."
   },
   {
    "window": 14,
    "kind": "dropped",
-   "start": 368.292,
-   "text": "Sintel looks out over a vast, desolate landscape.",
+   "start": 368.25,
+   "text": "Sintel looks determined as she runs.",
    "reason": "too close to the window's end"
   },
   {
    "window": 15,
-   "kind": "snapped",
-   "at_s": 380.6,
-   "to": 380.75,
-   "reason": "snapped to its shot start, 0.06 s before",
-   "text": "Sintel runs through a dense bamboo forest."
+   "kind": "anchored",
+   "tile": 6,
+   "at_s": 380.642,
+   "to": 380.833,
+   "text": "Sintel and Scales enter a bamboo forest."
   },
   {
    "window": 15,
-   "kind": "kept",
-   "at_s": 393.8,
-   "to": 394.0,
-   "reason": "kept at its frame: its shot began 10.9 s earlier",
-   "text": "Sintel stands on a hill, looking out over the landscape."
+   "kind": "anchored",
+   "tile": 10,
+   "at_s": 391.085,
+   "to": 391.292,
+   "text": "Sintel and Scales reach a rocky cliff."
   },
   {
-   "window": 15,
+   "window": 17,
+   "kind": "anchored",
+   "tile": 11,
+   "at_s": 440.169,
+   "to": 440.375,
+   "text": "The old man parries Sintel's strike and swings his weapon again."
+  },
+  {
+   "window": 17,
+   "kind": "anchored",
+   "tile": 13,
+   "at_s": 445.233,
+   "to": 445.417,
+   "text": "Sintel blocks the old man's attack and prepares for another strike."
+  },
+  {
+   "window": 17,
    "kind": "dropped",
-   "start": 394.0,
-   "text": "Sintel stands on a hill, looking out over the landscape.",
-   "reason": "too close to the window's end"
-  },
-  {
-   "window": 16,
-   "kind": "snapped",
-   "at_s": 393.9,
-   "to": 394.083,
-   "reason": "snapped to its shot start, 0.02 s before",
-   "text": "Sintel and the old man exchange blows in the snowy landscape."
-  },
-  {
-   "window": 16,
-   "kind": "snapped",
-   "at_s": 415.2,
-   "to": 415.292,
-   "reason": "snapped to its shot start, 0.12 s before",
-   "text": "Sintel attempts to strike the old man with her spear."
-  },
-  {
-   "window": 16,
-   "kind": "kept",
-   "at_s": 419.5,
-   "to": 419.708,
-   "reason": "kept at its frame: its shot began 4.4 s earlier",
-   "text": "The old man defends against Sintel's attack with his staff."
-  },
-  {
-   "window": 16,
-   "kind": "dropped",
-   "start": 419.708,
-   "text": "The old man defends against Sintel's attack with his staff.",
+   "start": 445.417,
+   "text": "Sintel blocks the old man's attack and prepares for another strike.",
    "reason": "too close to the window's end"
   },
   {
    "window": 18,
-   "kind": "kept",
+   "kind": "anchored",
+   "tile": 1,
    "at_s": 464.5,
    "to": 464.708,
-   "reason": "snapped to its shot start, 0.00 s before",
-   "text": "Sintel stands in a dark cave, holding a spear."
+   "text": "Sintel stands in a dark cave, holding her spear."
   },
   {
    "window": 18,
-   "kind": "snapped",
-   "at_s": 475.1,
-   "to": 475.208,
-   "reason": "snapped to its shot start, 0.10 s before",
-   "text": "Sintel looks down at glowing crystals on the ground."
+   "kind": "anchored",
+   "tile": 4,
+   "at_s": 472.308,
+   "to": 472.5,
+   "text": "She examines a large, glowing crystal."
   },
   {
    "window": 18,
-   "kind": "snapped",
-   "at_s": 483.8,
-   "to": 483.917,
-   "reason": "snapped to its shot start, 0.09 s before",
-   "text": "Sintel steps forward, her shadow cast on the crystals."
+   "kind": "anchored",
+   "tile": 8,
+   "at_s": 481.245,
+   "to": 481.458,
+   "text": "Sintel continues exploring the cave, illuminated by glowing crystals."
   },
   {
    "window": 19,
-   "kind": "clamped",
-   "at_s": 487.6,
-   "to": 487.625,
-   "reason": "at 487.6 s, before the window starts at 487.625 s"
+   "kind": "anchored",
+   "tile": 1,
+   "at_s": 487.625,
+   "to": 487.833,
+   "text": "Sintel walks through a dark cave illuminated by glowing crystals."
   },
   {
    "window": 19,
-   "kind": "snapped",
-   "at_s": 502.6,
-   "to": 502.667,
-   "reason": "snapped to its shot start, 0.14 s before",
-   "text": "Sintel encounters a large, injured dragon in the cave."
+   "kind": "anchored",
+   "tile": 7,
+   "at_s": 502.558,
+   "to": 502.75,
+   "text": "A large, skeletal dragon appears in the cave."
   },
   {
    "window": 19,
-   "kind": "snapped",
-   "at_s": 508.9,
-   "to": 508.958,
-   "reason": "snapped to its shot start, 0.15 s before",
-   "text": "Sintel approaches the injured dragon cautiously."
+   "kind": "anchored",
+   "tile": 10,
+   "at_s": 508.85,
+   "to": 509.042,
+   "text": "Sintel approaches the skeletal dragon."
   },
   {
    "window": 19,
    "kind": "dropped",
-   "start": 508.958,
-   "text": "Sintel approaches the injured dragon cautiously.",
-   "reason": "too close to the window's end"
-  },
-  {
-   "window": 20,
-   "kind": "snapped",
-   "at_s": 510.8,
-   "to": 510.958,
-   "reason": "snapped to its shot start, 0.05 s before",
-   "text": "Sintel stands before a large, injured dragon."
-  },
-  {
-   "window": 20,
-   "kind": "snapped",
-   "at_s": 523.5,
-   "to": 523.625,
-   "reason": "snapped to its shot start, 0.08 s before",
-   "text": "Sintel looks concerned as she approaches the dragon."
-  },
-  {
-   "window": 20,
-   "kind": "snapped",
-   "at_s": 533.7,
-   "to": 533.833,
-   "reason": "snapped to its shot start, 0.08 s before",
-   "text": "Sintel reaches out to the dragon with her spear."
-  },
-  {
-   "window": 20,
-   "kind": "dropped",
-   "start": 533.833,
-   "text": "Sintel reaches out to the dragon with her spear.",
+   "start": 509.042,
+   "text": "Sintel approaches the skeletal dragon.",
    "reason": "too close to the window's end"
   },
   {
    "window": 21,
-   "kind": "snapped",
-   "at_s": 536.4,
-   "to": 536.542,
-   "reason": "snapped to its shot start, 0.07 s before",
-   "text": "Sintel moves closer to the injured dragon."
+   "kind": "anchored",
+   "tile": 1,
+   "at_s": 533.917,
+   "to": 534.125,
+   "text": "Sintel fights a large, skeletal dragon in a dark cave."
   },
   {
    "window": 21,
-   "kind": "snapped",
-   "at_s": 546.1,
-   "to": 546.208,
-   "reason": "snapped to its shot start, 0.10 s before",
-   "text": "The dragon lies motionless on the cave floor."
+   "kind": "anchored",
+   "tile": 5,
+   "at_s": 543.225,
+   "to": 543.417,
+   "text": "Sintel strikes the dragon with her spear."
   },
   {
    "window": 21,
-   "kind": "snapped",
-   "at_s": 555.1,
-   "to": 555.167,
-   "reason": "snapped to its shot start, 0.14 s before",
-   "text": "Sintel kneels beside the dragon, examining its injuries."
-  },
-  {
-   "window": 21,
-   "kind": "dropped",
-   "start": 555.167,
-   "text": "Sintel kneels beside the dragon, examining its injuries.",
-   "reason": "too close to the window's end"
+   "kind": "anchored",
+   "tile": 9,
+   "at_s": 549.225,
+   "to": 549.417,
+   "text": "Sintel discovers something significant in the cave."
   },
   {
    "window": 22,
-   "kind": "kept",
-   "at_s": 560.0,
-   "to": 560.208,
-   "reason": "snapped to its shot start, 0.00 s before",
-   "text": "Sintel launches a fireball at the large dragon."
+   "kind": "anchored",
+   "tile": 5,
+   "at_s": 567.475,
+   "to": 567.667,
+   "text": "The dragon roars in pain and retaliates."
   },
   {
    "window": 22,
-   "kind": "snapped",
-   "at_s": 567.5,
-   "to": 567.583,
-   "reason": "snapped to its shot start, 0.12 s before",
-   "text": "The dragon retaliates with a powerful strike."
-  },
-  {
-   "window": 22,
-   "kind": "snapped",
-   "at_s": 573.1,
-   "to": 573.167,
-   "reason": "snapped to its shot start, 0.14 s before",
-   "text": "Sintel dodges and prepares for another attack."
-  },
-  {
-   "window": 23,
-   "kind": "snapped",
-   "at_s": 587.3,
-   "to": 587.375,
-   "reason": "snapped to its shot start, 0.13 s before",
-   "text": "The dragon's strike knocks Sintel off her feet."
-  },
-  {
-   "window": 23,
-   "kind": "snapped",
-   "at_s": 598.2,
-   "to": 598.333,
-   "reason": "snapped to its shot start, 0.08 s before",
-   "text": "Sintel lies on the ground, visibly hurt."
-  },
-  {
-   "window": 23,
-   "kind": "dropped",
-   "start": 598.333,
-   "text": "Sintel lies on the ground, visibly hurt.",
-   "reason": "too close to the window's end"
+   "kind": "anchored",
+   "tile": 9,
+   "at_s": 575.45,
+   "to": 575.667,
+   "text": "Sintel dodges the dragon's attack and strikes again."
   },
   {
    "window": 24,
-   "kind": "clamped",
-   "at_s": 600.7,
-   "to": 600.708,
-   "reason": "at 600.7 s, before the window starts at 600.708 s"
+   "kind": "anchored",
+   "tile": 3,
+   "at_s": 603.975,
+   "to": 604.167,
+   "text": "Sintel engages in a fierce battle with the skeletal dragon."
   },
   {
    "window": 24,
-   "kind": "snapped",
-   "at_s": 610.5,
-   "to": 610.625,
-   "reason": "snapped to its shot start, 0.08 s before",
-   "text": "The dragon's tail swipes towards Sintel."
+   "kind": "anchored",
+   "tile": 7,
+   "at_s": 611.975,
+   "to": 612.167,
+   "text": "The dragon retaliates with a powerful attack."
   },
   {
    "window": 24,
-   "kind": "snapped",
-   "at_s": 619.9,
-   "to": 620.042,
-   "reason": "snapped to its shot start, 0.07 s before",
-   "text": "Sintel rolls to the side to avoid the dragon's tail."
+   "kind": "anchored",
+   "tile": 11,
+   "at_s": 619.933,
+   "to": 620.125,
+   "text": "Sintel narrowly avoids the dragon's strike and counters."
+  },
+  {
+   "window": 24,
+   "kind": "anchored",
+   "tile": 12,
+   "at_s": 620.983,
+   "to": 621.167,
+   "text": "The fight intensifies as both combatants exchange blows."
   },
   {
    "window": 24,
    "kind": "dropped",
-   "start": 620.042,
-   "text": "Sintel rolls to the side to avoid the dragon's tail.",
-   "reason": "too close to the window's end"
+   "start": 621.167,
+   "text": "The fight intensifies as both combatants exchange blows.",
+   "reason": "less than 2.8 s to the next item"
   },
   {
-   "window": 25,
-   "kind": "clamped",
-   "at_s": 630.3,
-   "to": 630.333,
-   "reason": "at 630.3 s, before the window starts at 630.333 s"
-  },
-  {
-   "window": 25,
-   "kind": "snapped",
-   "at_s": 647.6,
-   "to": 647.667,
-   "reason": "snapped to its shot start, 0.14 s before",
-   "text": "Sintel raises her hand, preparing to cast a spell."
-  },
-  {
-   "window": 25,
-   "kind": "kept",
-   "at_s": 658.8,
-   "to": 659.0,
-   "reason": "kept at its frame: its shot began 3.8 s earlier",
-   "text": "Sintel casts a spell, and a bright light illuminates the cave."
-  },
-  {
-   "window": 25,
+   "window": 24,
    "kind": "dropped",
-   "start": 659.0,
-   "text": "Sintel casts a spell, and a bright light illuminates the cave.",
+   "start": 620.125,
+   "text": "Sintel narrowly avoids the dragon's strike and counters.",
    "reason": "too close to the window's end"
-  },
-  {
-   "window": 26,
-   "kind": "snapped",
-   "at_s": 658.9,
-   "to": 659.083,
-   "reason": "snapped to its shot start, 0.02 s before",
-   "text": "Sintel stands in a dark cave, looking upwards."
-  },
-  {
-   "window": 26,
-   "kind": "snapped",
-   "at_s": 666.3,
-   "to": 666.417,
-   "reason": "snapped to its shot start, 0.09 s before",
-   "text": "Sintel climbs a steep rock face with a determined expression."
-  },
-  {
-   "window": 26,
-   "kind": "snapped",
-   "at_s": 684.5,
-   "to": 684.625,
-   "reason": "snapped to its shot start, 0.08 s before",
-   "text": "Sintel stands on a ledge with a large dragon behind her."
   },
   {
    "window": 27,
-   "kind": "snapped",
-   "at_s": 687.5,
+   "kind": "anchored",
+   "tile": 1,
+   "at_s": 687.458,
    "to": 687.667,
-   "reason": "snapped to its shot start, 0.04 s before",
-   "text": "Sintel stands on a rocky ledge, looking out over a vast landscape."
+   "text": "Sintel stands in a dark cave, searching for Scales."
   },
   {
    "window": 27,
-   "kind": "snapped",
-   "at_s": 700.4,
-   "to": 700.5,
-   "reason": "snapped to its shot start, 0.11 s before",
-   "text": "Sintel walks along a narrow path between large roots and rocks."
+   "kind": "anchored",
+   "tile": 13,
+   "at_s": 713.375,
+   "to": 713.583,
+   "text": "Sintel finds Scales, who is lying on the ground."
   },
   {
    "window": 27,
-   "kind": "snapped",
-   "at_s": 710.1,
-   "to": 710.25,
-   "reason": "snapped to its shot start, 0.06 s before",
-   "text": "Sintel reaches a clearing with a few white flowers."
+   "kind": "anchored",
+   "tile": 14,
+   "at_s": 715.942,
+   "to": 716.125,
+   "text": "Sintel approaches Scales, who is injured."
+  },
+  {
+   "window": 27,
+   "kind": "dropped",
+   "start": 716.125,
+   "text": "Sintel approaches Scales, who is injured.",
+   "reason": "less than 2.8 s to the next item"
+  },
+  {
+   "window": 27,
+   "kind": "dropped",
+   "start": 713.583,
+   "text": "Sintel finds Scales, who is lying on the ground.",
+   "reason": "too close to the window's end"
+  },
+  {
+   "window": 28,
+   "kind": "anchored",
+   "tile": 1,
+   "at_s": 716.042,
+   "to": 716.25,
+   "text": "Sintel walks through a landscape with white flowers."
+  },
+  {
+   "window": 28,
+   "kind": "anchored",
+   "tile": 5,
+   "at_s": 727.298,
+   "to": 727.5,
+   "text": "She continues walking, looking around the rocky terrain."
+  },
+  {
+   "window": 28,
+   "kind": "anchored",
+   "tile": 9,
+   "at_s": 738.555,
+   "to": 738.75,
+   "text": "Sintel stops and looks up at the mountains."
+  },
+  {
+   "window": 30,
+   "kind": "anchored",
+   "tile": 6,
+   "at_s": 787.409,
+   "to": 787.625,
+   "text": "A knife with a wooden handle appears."
+  },
+  {
+   "window": 30,
+   "kind": "anchored",
+   "tile": 11,
+   "at_s": 801.65,
+   "to": 801.833,
+   "text": "A drawing of two people appears."
+  },
+  {
+   "window": 30,
+   "kind": "dropped",
+   "start": 801.833,
+   "text": "A drawing of two people appears.",
+   "reason": "too close to the window's end"
   }
  ],
  "skipped": [
   {
-   "window": 17,
-   "reason": "no acceptable description after 7 answers (last: short: 3 words)",
+   "window": 4,
+   "reason": "no acceptable description after 7 answers (last: similar: 100% already said at 54.3 s)",
    "rejected": [
     {
      "step": "write",
      "answer": 1,
      "accepted": false,
+     "tile": 1,
      "text": "Sintel and the old man continue their fight in the snow.",
      "problems": [
       {
        "kind": "similar",
-       "detail": "83% already said at 9.5 s"
+       "detail": "100% already said at 27.2 s"
       }
      ]
     },
@@ -2165,11 +2506,109 @@
      "step": "write",
      "answer": 2,
      "accepted": false,
-     "text": "Sintel strikes the old man with her spear.",
+     "tile": 5,
+     "text": "The old man knocks Sintel to the ground.",
      "problems": [
       {
        "kind": "similar",
-       "detail": "100% already said at 415.3 s"
+       "detail": "100% already said at 65.0 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 4,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel dodges a spear thrust from the old man.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 42.7 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 7,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel and the old man engage in a fierce spear fight.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 54.3 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 10,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel dodges a spear thrust from the old man.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 42.7 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 13,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel and the old man engage in a fierce spear fight.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 54.3 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 16,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel dodges a spear thrust from the old man.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 42.7 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 19,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel and the old man engage in a fierce spear fight.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 54.3 s"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "window": 6,
+   "reason": "no acceptable description after 7 answers (last: similar: 80% already said at 54.3 s)",
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 2,
+     "accepted": false,
+     "tile": 5,
+     "text": "Sintel and an old man engage in a fierce spear fight.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 54.3 s"
       }
      ]
     },
@@ -2177,23 +2616,12 @@
      "step": "write",
      "answer": 5,
      "accepted": false,
-     "text": "nothing to describe",
+     "tile": 5,
+     "text": "Sintel and an old man engage in combat with spears.",
      "problems": [
       {
-       "kind": "short",
-       "detail": "3 words"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 6,
-     "accepted": false,
-     "text": "nothing to describe",
-     "problems": [
-      {
-       "kind": "short",
-       "detail": "3 words"
+       "kind": "similar",
+       "detail": "83% already said at 54.3 s"
       }
      ]
     },
@@ -2201,8 +2629,411 @@
      "step": "write",
      "answer": 8,
      "accepted": false,
+     "tile": 5,
+     "text": "Sintel and an old man engage in combat.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "80% already said at 54.3 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 11,
+     "accepted": false,
+     "tile": 5,
+     "text": "Sintel and an old man continue their combat.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "80% already said at 27.2 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 14,
+     "accepted": false,
+     "tile": 5,
+     "text": "Sintel and an old man engage in combat.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "80% already said at 54.3 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 17,
+     "accepted": false,
+     "tile": 5,
+     "text": "Sintel and an old man engage in combat.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "80% already said at 54.3 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 20,
+     "accepted": false,
+     "tile": 5,
+     "text": "Sintel and an old man engage in combat.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "80% already said at 54.3 s"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "window": 16,
+   "reason": "nothing to describe",
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel and an old man fight in the snow.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 27.2 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 2,
+     "accepted": false,
+     "tile": 7,
+     "text": "Sintel strikes the old man with her spear.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "80% already said at 54.3 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 3,
+     "accepted": false,
+     "tile": 12,
+     "text": "The old man falls to the ground.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "75% already said at 65.0 s"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "window": 20,
+   "reason": "nothing to describe",
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "tile": 2,
+     "text": "A large, skeletal dragon appears in the cave.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 502.8 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 2,
+     "accepted": false,
+     "tile": 8,
+     "text": "Sintel continues exploring the cave, illuminated by glowing crystals.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 481.5 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 3,
+     "accepted": false,
+     "tile": 12,
+     "text": "Sintel stands in a dark cave, holding her spear.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 464.7 s"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "window": 23,
+   "reason": "no acceptable description after 7 answers (last: grammar: \"is thrown\" lacks an article or a preposition)",
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel dodges the dragon's attack.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 575.7 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 2,
+     "accepted": false,
+     "tile": 5,
+     "text": "Sintel strikes the dragon with her spear.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 543.4 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 5,
+     "accepted": false,
+     "tile": 9,
+     "text": "Sintel is thrown back by the dragon's attack.",
+     "problems": [
+      {
+       "kind": "grammar",
+       "detail": "\"is thrown\" lacks an article or a preposition"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 8,
+     "accepted": false,
+     "tile": 9,
+     "text": "Sintel is thrown back by the dragon's attack.",
+     "problems": [
+      {
+       "kind": "grammar",
+       "detail": "\"is thrown\" lacks an article or a preposition"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 11,
+     "accepted": false,
+     "tile": 9,
+     "text": "Sintel is thrown back by the dragon's powerful attack.",
+     "problems": [
+      {
+       "kind": "grammar",
+       "detail": "\"is thrown\" lacks an article or a preposition"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 14,
+     "accepted": false,
+     "tile": 9,
+     "text": "Sintel is thrown back by the dragon's powerful attack.",
+     "problems": [
+      {
+       "kind": "grammar",
+       "detail": "\"is thrown\" lacks an article or a preposition"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 17,
+     "accepted": false,
+     "tile": 9,
+     "text": "Sintel is thrown back by the dragon's powerful attack.",
+     "problems": [
+      {
+       "kind": "grammar",
+       "detail": "\"is thrown\" lacks an article or a preposition"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 20,
+     "accepted": false,
+     "tile": 9,
+     "text": "Sintel is thrown back by the dragon's powerful attack.",
+     "problems": [
+      {
+       "kind": "grammar",
+       "detail": "\"is thrown\" lacks an article or a preposition"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "window": 25,
+   "reason": "nothing to describe",
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "tile": 2,
+     "text": "Sintel faces the skeletal dragon in a dark cave.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "83% already said at 534.1 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 2,
+     "accepted": false,
+     "tile": 7,
+     "text": "Sintel strikes the dragon with her spear.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 543.4 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 3,
+     "accepted": false,
+     "tile": 13,
+     "text": "The dragon roars in pain and retaliates.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 567.7 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 4,
+     "accepted": false,
+     "tile": 5,
+     "text": "Sintel dodges the dragon's attack and strikes again.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 575.7 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 5,
+     "accepted": false,
+     "tile": 9,
+     "text": "Sintel engages in a fierce battle with the skeletal dragon.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 604.2 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 6,
+     "accepted": false,
+     "tile": 11,
+     "text": "The dragon retaliates with a powerful attack.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 612.2 s"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "window": 26,
+   "reason": "no acceptable description after 7 answers (last: order: tile 1 after tile 15; short: 3 words)",
+   "rejected": [
+    {
+     "step": "write",
+     "answer": 1,
+     "accepted": false,
+     "tile": 1,
+     "text": "Sintel fights a large, skeletal dragon in a dark cave.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 534.1 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 2,
+     "accepted": false,
+     "tile": 10,
+     "text": "Sintel dodges the dragon's attack and strikes again.",
+     "problems": [
+      {
+       "kind": "similar",
+       "detail": "100% already said at 575.7 s"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 5,
+     "accepted": false,
+     "tile": 1,
      "text": "nothing to describe",
      "problems": [
+      {
+       "kind": "order",
+       "detail": "tile 1 after tile 15"
+      },
+      {
+       "kind": "short",
+       "detail": "3 words"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 7,
+     "accepted": false,
+     "tile": 1,
+     "text": "nothing to describe",
+     "problems": [
+      {
+       "kind": "order",
+       "detail": "tile 1 after tile 15"
+      },
       {
        "kind": "short",
        "detail": "3 words"
@@ -2213,8 +3044,13 @@
      "step": "write",
      "answer": 9,
      "accepted": false,
+     "tile": 1,
      "text": "nothing to describe",
      "problems": [
+      {
+       "kind": "order",
+       "detail": "tile 1 after tile 15"
+      },
       {
        "kind": "short",
        "detail": "3 words"
@@ -2225,8 +3061,13 @@
      "step": "write",
      "answer": 11,
      "accepted": false,
+     "tile": 1,
      "text": "nothing to describe",
      "problems": [
+      {
+       "kind": "order",
+       "detail": "tile 1 after tile 15"
+      },
       {
        "kind": "short",
        "detail": "3 words"
@@ -2235,22 +3076,15 @@
     },
     {
      "step": "write",
-     "answer": 12,
+     "answer": 13,
      "accepted": false,
+     "tile": 1,
      "text": "nothing to describe",
      "problems": [
       {
-       "kind": "short",
-       "detail": "3 words"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 14,
-     "accepted": false,
-     "text": "nothing to describe",
-     "problems": [
+       "kind": "order",
+       "detail": "tile 1 after tile 15"
+      },
       {
        "kind": "short",
        "detail": "3 words"
@@ -2261,77 +3095,16 @@
      "step": "write",
      "answer": 15,
      "accepted": false,
+     "tile": 1,
      "text": "nothing to describe",
      "problems": [
       {
-       "kind": "short",
-       "detail": "3 words"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 17,
-     "accepted": false,
-     "text": "nothing to describe",
-     "problems": [
+       "kind": "order",
+       "detail": "tile 1 after tile 15"
+      },
       {
        "kind": "short",
        "detail": "3 words"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 18,
-     "accepted": false,
-     "text": "nothing to describe",
-     "problems": [
-      {
-       "kind": "short",
-       "detail": "3 words"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 20,
-     "accepted": false,
-     "text": "nothing to describe",
-     "problems": [
-      {
-       "kind": "short",
-       "detail": "3 words"
-      }
-     ]
-    },
-    {
-     "step": "write",
-     "answer": 21,
-     "accepted": false,
-     "text": "nothing to describe",
-     "problems": [
-      {
-       "kind": "short",
-       "detail": "3 words"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "window": 28,
-   "reason": "nothing to describe",
-   "rejected": [
-    {
-     "step": "write",
-     "answer": 3,
-     "accepted": false,
-     "text": "Sintel lies down on the ground.",
-     "problems": [
-      {
-       "kind": "similar",
-       "detail": "75% already said at 475.2 s"
       }
      ]
     }
@@ -2339,11 +3112,7 @@
   },
   {
    "window": 29,
-   "reason": "nothing to describe"
-  },
-  {
-   "window": 30,
-   "reason": "nothing to describe"
+   "reason": "every frame of the window is black or one flat colour"
   },
   {
    "window": 31,
@@ -2351,41 +3120,96 @@
   },
   {
    "window": 32,
-   "reason": "nothing to describe",
+   "reason": "no acceptable description after 7 answers (last: grammar: \"moves deeper\" lacks an article or a preposition)",
    "rejected": [
     {
      "step": "write",
      "answer": 1,
      "accepted": false,
-     "text": "Sintel stands in a dark cave, holding a spear.",
+     "tile": 1,
+     "text": "Sintel walks through a dark cave with glowing crystals.",
      "problems": [
       {
        "kind": "similar",
-       "detail": "100% already said at 464.7 s"
+       "detail": "100% already said at 487.8 s"
       }
      ]
     },
     {
      "step": "write",
-     "answer": 2,
+     "answer": 5,
      "accepted": false,
-     "text": "Sintel looks up, searching for something in the cave.",
+     "tile": 9,
+     "text": "Sintel moves deeper into the cave, searching for Scales.",
      "problems": [
       {
-       "kind": "similar",
-       "detail": "100% already said at 630.5 s"
+       "kind": "grammar",
+       "detail": "\"moves deeper\" lacks an article or a preposition"
       }
      ]
     },
     {
      "step": "write",
-     "answer": 3,
+     "answer": 7,
      "accepted": false,
-     "text": "Sintel climbs a steep rock face with a determined expression.",
+     "tile": 9,
+     "text": "Sintel moves deeper into the cave, continuing her search.",
      "problems": [
       {
-       "kind": "similar",
-       "detail": "100% already said at 666.4 s"
+       "kind": "grammar",
+       "detail": "\"moves deeper\" lacks an article or a preposition"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 9,
+     "accepted": false,
+     "tile": 9,
+     "text": "Sintel moves deeper into the cave, searching for Scales.",
+     "problems": [
+      {
+       "kind": "grammar",
+       "detail": "\"moves deeper\" lacks an article or a preposition"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 11,
+     "accepted": false,
+     "tile": 9,
+     "text": "Sintel moves deeper into the cave, searching for Scales.",
+     "problems": [
+      {
+       "kind": "grammar",
+       "detail": "\"moves deeper\" lacks an article or a preposition"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 13,
+     "accepted": false,
+     "tile": 9,
+     "text": "Sintel moves deeper into the cave, searching for Scales.",
+     "problems": [
+      {
+       "kind": "grammar",
+       "detail": "\"moves deeper\" lacks an article or a preposition"
+      }
+     ]
+    },
+    {
+     "step": "write",
+     "answer": 15,
+     "accepted": false,
+     "tile": 9,
+     "text": "Sintel moves deeper into the cave, searching for Scales.",
+     "problems": [
+      {
+       "kind": "grammar",
+       "detail": "\"moves deeper\" lacks an article or a preposition"
       }
      ]
     }
@@ -2399,45 +3223,52 @@
  "overrides": [
   {
    "near_s": 560.2,
-   "cue": "sintel-ad-40",
-   "start": 560.208,
-   "old_text": "Sintel launches a fireball at the large dragon.",
-   "status": "rejected",
-   "reason": "similar: 80% already said at 600.9 s",
-   "new_text": "Sintel lunges at the large dragon with her spear."
+   "status": "no match",
+   "reason": "no item within 1.5 s"
   },
   {
    "near_s": 647.7,
-   "cue": "sintel-ad-47",
-   "start": 647.667,
-   "old_text": "Sintel raises her hand, preparing to cast a spell.",
+   "status": "no match",
+   "reason": "no item within 1.5 s"
+  },
+  {
+   "near_s": 6.6,
+   "cue": "sintel-ad-1",
+   "start": 6.583,
+   "old_text": "Sintel fights an old man in a snowy landscape.",
    "status": "replaced",
-   "new_text": "Sintel raises her hand toward the dragon.",
-   "duration_s": 2.288,
+   "new_text": "Snowy mountain peaks drift past under a pale sky.",
+   "duration_s": 3.038,
    "slot_s": 7.958,
-   "words": 7
+   "words": 9
+  },
+  {
+   "near_s": 24.2,
+   "cue": "sintel-ad-2",
+   "start": 24.208,
+   "old_text": "The fight continues without significant changes.",
+   "status": "dropped"
+  },
+  {
+   "near_s": 27.2,
+   "cue": "sintel-ad-3",
+   "start": 27.25,
+   "old_text": "Sintel and the old man continue their fight in the snow.",
+   "status": "replaced",
+   "new_text": "High in the snow, Sintel fights an old man.",
+   "duration_s": 2.8,
+   "slot_s": 7.958,
+   "words": 9
   },
   {
    "near_s": 560.2,
-   "cue": "sintel-ad-40",
-   "start": 560.208,
-   "old_text": "Sintel launches a fireball at the large dragon.",
-   "status": "replaced",
-   "new_text": "Sintel charges at the huge dragon as it rears up.",
-   "duration_s": 2.938,
-   "slot_s": 7.033,
-   "words": 10
+   "status": "no match",
+   "reason": "no item within 1.5 s"
   },
   {
    "near_s": 647.7,
-   "cue": "sintel-ad-47",
-   "start": 647.667,
-   "old_text": "Sintel raises her hand toward the dragon.",
-   "status": "replaced",
-   "new_text": "Sintel raises her hand toward the dragon.",
-   "duration_s": 2.288,
-   "slot_s": 7.958,
-   "words": 7
+   "status": "no match",
+   "reason": "no item within 1.5 s"
   }
  ]
 }
