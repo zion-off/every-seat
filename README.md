@@ -9,7 +9,7 @@ film and then, for each person watching, can:
 - **cap sudden loud sounds** with a comfort audio track that holds peaks down,
 - **give a heads-up before scares**, and
 - **describe the picture** as audio description that plays on your phone, in step with the TV, so
-  only the people who want it hear it.
+  only the people who want it hear it (through the phone's speaker or any earphones).
 
 The household is set up by remote or by voice: each person has their own settings, and the TV plays
 the film for the combined couch. Every Seat offers comfort, not safety, and it is not a medical
@@ -132,8 +132,9 @@ else works without them. All settings are in [companion/README.md](companion/REA
 
 On a phone on the same Wi-Fi, open the `phone page:` address from the companion's log, for example
 `http://192.168.1.20:8787/phone/`. Tap **Start** once (that turns on audio), set Auto-Lock to Never
-so the screen stays on, and turn the volume up. Then play a film on the TV: the page follows it and
-speaks the audio description in step. The audio description clips for Sintel are in
+so the screen stays on, and turn the volume up. Then play a film on the TV: the page follows it live,
+through play, pause and seek, and speaks the audio description in step. Listen through the phone's
+speaker or any earphones. The audio description clips for Sintel are in
 `generated/ad/`; `tools/media/export_ad.py` makes more from `everyseat describe` output.
 
 ## Deploy the analysis pipeline (optional)
