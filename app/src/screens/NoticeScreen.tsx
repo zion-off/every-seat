@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   layout: {
     flex: 1,
     paddingHorizontal: safe.x,
-    paddingTop: safe.y + space.xxl + space.xl,
+    paddingTop: safe.top,
     paddingBottom: safe.y,
   },
   column: {

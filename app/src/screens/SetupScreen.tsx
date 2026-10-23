@@ -22,11 +22,11 @@ const SetupScreen = ({ onSetUp, onDemo }: Props) => {
             Who watches here?
           </Text>
           <Text style={styles.lead}>
-            Add the people in your household and the comfort settings each of
+            Add the people who watch here, with the comfort settings each of
             them likes. You can change them any time.
           </Text>
           <Text style={styles.note}>
-            Or look around first with a made-up household of four people.
+            The demo household is four made-up people, for looking around first.
           </Text>
           <View style={styles.actions}>
             <Button
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   layout: {
     flex: 1,
     paddingHorizontal: safe.x,
-    paddingTop: safe.y + space.xxl + space.xl,
+    paddingTop: safe.top,
     paddingBottom: safe.y,
   },
   column: {
@@ -79,10 +79,11 @@ const styles = StyleSheet.create({
   },
   actions: {
     marginTop: space.xl,
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   gap: {
-    height: space.md,
+    width: space.md,
   },
 });
 
