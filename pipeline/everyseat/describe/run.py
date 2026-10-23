@@ -302,6 +302,7 @@ def describe(
             plot=plot,
             times=picture.times,
             cuts=cuts,
+            note=say,
         )
         say(
             f"window {window.index}/{len(windows)}: {window.start:g}-{window.end:g} s "

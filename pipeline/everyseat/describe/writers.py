@@ -1,6 +1,7 @@
 """What a writer is asked, and the stand-in writer used for dry runs."""
 
 import json
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Protocol
@@ -11,6 +12,9 @@ from everyseat.describe.review import MIN_WORDS, Check, Earlier, gave_up
 from everyseat.describe.subtitles import Line, Window
 
 STUB_ITEMS = 3  # items a placeholder answer has at most
+NO_SUBMIT_RETRIES = 2  # reminders after an answer that never called the submit tool
+NO_SUBMIT_REASON = "no description (model did not submit)"
+NO_SUBMIT_REPLY = "Call submit_description with your items, or with nothing_to_describe=true."
 MAX_ANSWERS = 5  # answers a writer may give for one window, the first and its corrections
 
 
@@ -30,6 +34,7 @@ class Request:
     plot: str = ""  # a short synopsis of the film, for recognising characters and places
     times: list[float] = field(default_factory=list)  # the contact-sheet frame times
     cuts: list[float] = field(default_factory=list)  # every shot cut of the film
+    note: Callable[[str], None] = lambda _line: None  # where a writer reports what it does
 
     @property
     def budget(self) -> int:
@@ -83,9 +88,14 @@ class Script:
     shorten: dict[int, list[str | None]] = field(default_factory=dict)
 
 
+NO_SUBMIT = "<no_submit>"  # a scripted answer in which the model never calls the tool
+
+
 def _answer(given: object, where: str) -> list[Item] | str | None:
     if given is None or isinstance(given, str):
         return given
+    if given == {"no_submit": True}:
+        return NO_SUBMIT
     if isinstance(given, list) and given:
         try:
             return [Item(float(g["at_s"]), str(g["text"])) for g in given]
@@ -182,12 +192,22 @@ class StubWriter:
     def _ask_items(self, request: Request, queue: list) -> list[Item] | None:
         verdict = None
         asked = 0
+        silent = 0
         while queue and asked < MAX_ANSWERS:
             given = queue.pop(0)
             asked += 1
             self.usage.calls += 1
             if given is None:
                 return None
+            if given == NO_SUBMIT:
+                silent += 1
+                if silent > NO_SUBMIT_RETRIES:
+                    raise Rejected(NO_SUBMIT_REASON)
+                request.note(
+                    f"    the model did not call submit_description; reminding it "
+                    f"({silent}/{NO_SUBMIT_RETRIES})"
+                )
+                continue
             if isinstance(given, str):
                 given = [Item(request.window.start, given)]
             checked = [(item, request.check(item.text, request.budget, "write")) for item in given]

@@ -1,18 +1,27 @@
 """The description writer on Amazon Nova Pro: a Strands agent that answers through a tool."""
 
+from collections.abc import Callable
+
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from strands import Agent, tool
 from strands.agent.conversation_manager import NullConversationManager
 from strands.hooks import BeforeModelCallEvent, HookProvider, HookRegistry
 
 from everyseat.agent import model
-from everyseat.describe import DescribeError, Rejected
+from everyseat.describe import Rejected
 from everyseat.describe.anchor import Item
 from everyseat.describe.review import Check, Verdict, gave_up
-from everyseat.describe.writers import MAX_ANSWERS, Request, Usage
+from everyseat.describe.writers import (
+    MAX_ANSWERS,
+    NO_SUBMIT_REASON,
+    NO_SUBMIT_REPLY,
+    NO_SUBMIT_RETRIES,
+    Request,
+    Usage,
+)
 from everyseat.detectors import sheet
 
-MAX_MODEL_CALLS = MAX_ANSWERS  # one call per answer; a wrap-up call after the last is cut off
+MAX_MODEL_CALLS = MAX_ANSWERS + NO_SUBMIT_RETRIES  # one call per answer, and per reminder
 MAX_ITEMS = 8  # items one answer may have
 EARLIER_SHOWN = 8  # the model is shown this many of the latest descriptions; the review sees all
 
@@ -67,6 +76,38 @@ class Draft(BaseModel):
 
     items: list[DraftItem] = Field(default_factory=list, max_length=MAX_ITEMS)
     nothing_to_describe: bool = False
+
+
+SUBMIT_SCHEMA = {
+    "json": {
+        "type": "object",
+        "properties": {
+            "items": {
+                "type": "array",
+                "description": "Items in time order, one per shot that matters.",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "at_s": {
+                            "type": "number",
+                            "description": "Time label (seconds) of the contact-sheet frame "
+                            "the text describes.",
+                        },
+                        "text": {
+                            "type": "string",
+                            "description": "One short plain sentence for that shot.",
+                        },
+                    },
+                    "required": ["at_s", "text"],
+                },
+            },
+            "nothing_to_describe": {
+                "type": "boolean",
+                "description": "True when nothing essential is visible in the window.",
+            },
+        },
+    }
+}
 
 
 class _CallLimit(HookProvider):
@@ -137,7 +178,7 @@ class NovaWriter:
             {"text": request_text(request)},
             {"image": {"format": "jpeg", "source": {"bytes": request.picture}}},
         ]
-        return self._ask(content, request.budget, request.check, "write")
+        return self._ask(content, request.budget, request.check, "write", request.note)
 
     def shorten(
         self, request: Request, text: str, target_words: int, start_s: float, slot_s: float
@@ -150,16 +191,20 @@ class NovaWriter:
             "same order, in the same style. Call submit_description with one item whose at_s is "
             f"{_time(start_s)} and whose text is the shorter version."
         )
-        shorter = self._ask([{"text": message}], target_words, request.check, "shorten")
+        shorter = self._ask(
+            [{"text": message}], target_words, request.check, "shorten", request.note
+        )
         if not shorter:
             raise Rejected("the model dropped a description it was asked to shorten")
         return " ".join(item.text for item in shorter)
 
-    def _ask(self, content: list, limit: int, check: Check, step: str) -> list[Item] | None:
+    def _ask(
+        self, content: list, limit: int, check: Check, step: str, note: Callable[[str], None]
+    ) -> list[Item] | None:
         answers: list[list[Item] | None] = []
         rejected: list[Verdict] = []
 
-        @tool
+        @tool(inputSchema=SUBMIT_SCHEMA)
         def submit_description(
             items: list[dict] | None = None, nothing_to_describe: bool = False
         ) -> str:
@@ -205,6 +250,11 @@ class NovaWriter:
             hooks=[watch],
         )
         agent(content)
+        for retry in range(1, NO_SUBMIT_RETRIES + 1):
+            if answers or rejected:
+                break
+            note(f"    the model did not call submit_description; reminding it ({retry}/2)")
+            agent(NO_SUBMIT_REPLY)
         usage = agent.event_loop_metrics.accumulated_usage
         self.usage.input_tokens += int(usage.get("inputTokens", 0))
         self.usage.output_tokens += int(usage.get("outputTokens", 0))
@@ -212,7 +262,7 @@ class NovaWriter:
         if not answers:
             if rejected:
                 raise gave_up(len(rejected), rejected[-1])
-            raise DescribeError("the model did not submit a description")
+            raise Rejected(NO_SUBMIT_REASON)
         return answers[-1]
 
     @property
